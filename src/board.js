@@ -17,6 +17,12 @@ class MeetingBoard extends Component {
     }
     componentDidMount() {
         this.load();
+        setInterval(() => {
+            this.setState({
+                loading: true
+            });
+            this.load();
+        }, 60000);
     }
     load() {
         fetch.get('/api/board/list', {
@@ -37,15 +43,13 @@ class MeetingBoard extends Component {
     }
     render () {
         const { data, loading } = this.state;
-        if(loading) {
-            return <Spin size="large" />
-        }
         return (
             <div className="meeting-board-container">
                 <div className="meeting-header">
                     <div className="meeting-logo" />
                     <div className="meeting-sub-logo" />
                 </div>
+                {loading && <Spin size="large" />}
                 <table className="meeting-table">
                     <tr>
                         <th>Brand</th>
