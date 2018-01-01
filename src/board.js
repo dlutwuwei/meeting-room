@@ -2,8 +2,17 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import fetch from './lib/fetch';
 import { Spin } from 'antd';
+import QueueAnim from 'rc-queue-anim';
+import classnames from 'classNames';
 import './style/board.less';
 
+const statusMap = ['Started', 'Scheduled', 'Free'];
+
+function convertToTime(str) {
+    const span = str.split('-');
+    const start = span[0], end = span[1];
+    return `${parseInt(start/2)}:${start%2?'3':'0'}0-${parseInt(end/2)}:${end%2?'3':'0'}0`
+}
 class MeetingBoard extends Component {
     state = {
         loading: true,
@@ -18,22 +27,23 @@ class MeetingBoard extends Component {
     componentDidMount() {
         this.load();
         setInterval(() => {
-            this.setState({
-                loading: true
-            });
             this.load();
-        }, 60000);
+        }, 3000);
     }
     load() {
         fetch.get('/api/board/list', {
             page: 1,
             page_size: 15
         }).then(r => {
-            console.log(r)
             this.setState({
-                loading: false,
-                data: r.data
+                loading: true
             });
+            setTimeout(() => {
+                this.setState({
+                    loading: false,
+                    data: r.data
+                });
+            }, 500);
         }).catch(e => {
             console.log(e)
             this.setState({
@@ -49,31 +59,46 @@ class MeetingBoard extends Component {
                     <div className="meeting-logo" />
                     <div className="meeting-sub-logo" />
                 </div>
-                {loading && <Spin size="large" />}
+                {/* {loading && <Spin size="large" />} */}
                 <table className="meeting-table">
-                    <tr>
-                        <th>Brand</th>
-                        <th>Meeting</th>
-                        <th>State</th>
-                        <th>Time</th>
-                        <th>Floor</th>
-                        <th>Room</th>
-                        <th>Organizer</th>
-                    </tr>
-                    { data.list.map(item => {
-                        return (<tr>
-                            <th>{item.brand}</th>
-                            <th>{item.meeting_topic}</th>
-                            <th>{item.state}</th>
-                            <th>{item.time_span}</th>
-                            <th>{item.floor}</th>
-                            <th>{item.room_name}</th>
-                            <th>{item.organizer}</th>
-                        </tr>);
-                    })}
+                    <thead>
+                        <tr>
+                            <th>Brand</th>
+                            <th>Meeting</th>
+                            <th>State</th>
+                            <th>Time</th>
+                            <th>Floor</th>
+                            <th>Room</th>
+                            <th>Organizer</th>
+                        </tr>
+                    </thead>
+                    <QueueAnim component="tbody">
+                        <tr style={{display : 'none'}}>
+                            <td>LOREAL</td>
+                            <td>Happy new year</td>
+                            <td>Scheduled</td>
+                            <td>5:30-6:00</td>
+                            <td>5F</td>
+                            <td>这个项目是外包的</td>
+                            <td>Leo</td>
+                        </tr>
+                        {loading ? null : [
+                            ...data.list.map((item, i) => {
+                                return (<tr key={i+1}>
+                                    <td>{item.brand}</td>
+                                    <td>{item.meeting_topic}</td>
+                                    <td className={classnames({'active': item.state === 0})}>{statusMap[item.state]}</td>
+                                    <td>{convertToTime(item.time_span)}</td>
+                                    <td>{item.floor}</td>
+                                    <td>{item.room_name}</td>
+                                    <td>{item.organizer}</td>
+                                </tr>);
+                            }) 
+                        ]}
+                    </QueueAnim>
                 </table>
                 <div className="meeting-footer">
-                    <span>Last Update:</span><span>{new Date(data.update_time).toLocaleString()}</span>
+                        <span>Last Update:</span><span>{new Date(data.update_time).toLocaleString()}</span>
                 </div>
             </div>
         )

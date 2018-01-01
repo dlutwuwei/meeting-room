@@ -1,6 +1,14 @@
+@import './ui.reset.less';
+
 .meeting-board-container {
     background: #000;
     color: #fff;
+    height: 100%;
+    .meeting-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 50px;
+    }
     .meeting-logo {
         background: url(~img/logo.png) no-repeat;
         background-size: contain;
@@ -14,5 +22,36 @@
         width: 370px;
         height: 140px;
         display: inline-block;
+    }
+    .meeting-table {
+        width: 100%;
+        padding-bottom: 90px;
+        overflow: hidden;
+        thead {
+            color: #bb913d;
+            font-size: 36px;
+            border: 1px solid #fff;
+        }
+        tbody {
+            font-size: 28px;
+            text-align: center;
+            tr {
+                height: 98px;
+                line-height: 98px;
+                td.active {
+                    color: #e63b43;
+                }
+            }
+        }
+    }
+    .meeting-footer {
+        width: 100%;
+        font-size: 28px;
+        line-height: 90px;
+        height: 90px;
+        padding-left: 68px;
+        position: absolute;
+        bottom: 0;
+        background: #000;
     }
 }
