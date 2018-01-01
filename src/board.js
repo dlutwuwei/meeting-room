@@ -4,6 +4,8 @@ import fetch from './lib/fetch';
 import { Spin } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import classnames from 'classNames';
+import { Modal } from 'antd';
+
 import './style/board.less';
 
 const statusMap = ['Started', 'Scheduled', 'Free'];
@@ -26,7 +28,7 @@ class MeetingBoard extends Component {
     }
     componentDidMount() {
         this.load();
-        setInterval(() => {
+        this.timer = setInterval(() => {
             this.load();
         }, 3000);
     }
@@ -45,7 +47,10 @@ class MeetingBoard extends Component {
                 });
             }, 500);
         }).catch(e => {
-            console.log(e)
+            Modal.error({
+                content: e.message || e
+            });
+            clearInterval(this.timer);
             this.setState({
                 loading: false
             });
@@ -63,13 +68,13 @@ class MeetingBoard extends Component {
                 <table className="meeting-table">
                     <thead>
                         <tr>
-                            <th>Brand</th>
-                            <th>Meeting</th>
-                            <th>State</th>
-                            <th>Time</th>
-                            <th>Floor</th>
-                            <th>Room</th>
-                            <th>Organizer</th>
+                            <th width="14%">Brand</th>
+                            <th width="16%">Meeting</th>
+                            <th width="14%">State</th>
+                            <th width="14%">Time</th>
+                            <th width="14%">Floor</th>
+                            <th width="14%">Room</th>
+                            <th width="14%">Organizer</th>
                         </tr>
                     </thead>
                     <QueueAnim component="tbody">

@@ -30,17 +30,31 @@
         thead {
             color: #bb913d;
             font-size: 36px;
-            border: 1px solid #fff;
+            border-top: 1px solid #fff;
+            height: 83px;
+            line-height: 83px;
+            text-align: center;
         }
         tbody {
             font-size: 28px;
             text-align: center;
+            white-space: nowrap;
             tr {
                 height: 98px;
                 line-height: 98px;
+                td {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
                 td.active {
                     color: #e63b43;
                 }
+            }
+            tr:nth-child(even) {
+                background-color: #2f6ba0;
+            }
+            tr:nth-child(odd) {
+                background-color: #191d43;
             }
         }
     }

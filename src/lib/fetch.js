@@ -57,7 +57,7 @@ function request(method, url, data, opts) {
             if (res.status == 200) {
                 return Promise.resolve(res)
             } else {
-                return Promise.reject({ s: res.status })
+                return Promise.reject(res)
             }
         })
         .then((res) => {
@@ -77,6 +77,15 @@ function request(method, url, data, opts) {
             } else {
                 Promise.reject({ code: data.code, msg: `错误码${data.code}` })
             }
+        }).catch(res => {
+            return res.text().then((data) => {
+                try {
+                    const d = JSON.parse(data);
+                    return Promise.reject(d.error);
+                } catch(e) {
+                    return Promise.reject(data);
+                }
+            });
         })
 }
 
