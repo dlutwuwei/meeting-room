@@ -8,6 +8,8 @@ import '../style/home.less';
 
 const TabPane = Tabs.TabPane;
 
+import NewMeeting from './new-meeting';
+
 const Home = () => (
   <div>
     <header className="app-header">
@@ -15,7 +17,7 @@ const Home = () => (
     </header>
     <div className="app-main card-container">
       <Tabs type="card">
-        <TabPane className="pane" tab="New Meeting" key="1">New Meeting</TabPane>
+        <TabPane className="pane" tab="New Meeting" key="1"><NewMeeting /></TabPane>
         <TabPane className="pane"tab="My Meeting" key="2">My Meeting</TabPane>
         <TabPane className="pane" tab="Tourist" key="3">Tour</TabPane>
       </Tabs>
