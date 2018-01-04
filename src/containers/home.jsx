@@ -1,18 +1,25 @@
 import React from 'react';
-import logo from 'img/logo.svg';
+import logo from 'img/logo.png';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Tabs } from 'antd';
 import { hello } from '../redux/home-redux';
+import '../style/home.less';
+
+const TabPane = Tabs.TabPane;
 
 const Home = () => (
   <div>
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <h1 className="App-title">Welcome to React</h1>
+    <header className="app-header">
+      <img src={logo} className="app-logo" alt="logo" />
     </header>
-    <p className="App-intro">
-      To get started, edit <code>app.js</code> and save to reload.
-    </p>
+    <div className="app-main card-container">
+      <Tabs type="card">
+        <TabPane className="pane" tab="New Meeting" key="1">New Meeting</TabPane>
+        <TabPane className="pane"tab="My Meeting" key="2">My Meeting</TabPane>
+        <TabPane className="pane" tab="Tourist" key="3">Tour</TabPane>
+      </Tabs>
+    </div>
   </div>
 )
 
