@@ -1,0 +1,32 @@
+.appointment-container {
+    display: flex;
+    padding-top: 15px;
+    .appoint-left {
+        width: 85px;
+        .send-btn {
+            border: 1px solid #eee;
+            height: 80px;
+            font-size: 20px;
+            text-align: center;
+            padding-top: 20px;
+            font-size: 16px;
+            line-height: 22px;
+            &::before {
+                content: '';
+                width: 39px;
+                height: 23px;
+                display: block;
+                margin: auto;
+                background: url(~img/icons/icon-11.png) center center no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+    .appoint-main {
+        flex: 1;
+        padding-left: 23px;
+        .item {
+            display: flex;
+        }
+    }
+}

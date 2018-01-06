@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Nav from './meeting-nav';
 
-import Appointment from './appointment';
+import '../style/schedule.less';
 
 class Schedule extends Component {
     render () {
