@@ -24,7 +24,7 @@ module.exports = Object.keys(languages).map(lan => {
     output: {
         publicPath: isDev ? '/' : '/static/',
         path: path.join(__dirname, 'dist'),
-        filename: `js/[name]-${lan}-[chunkhash:6].js`
+        filename: `js/[name]-${lan}-[hash:6].js`
     },
     devServer: {
         hot: false,
@@ -103,6 +103,7 @@ module.exports = Object.keys(languages).map(lan => {
               },{
                 loader: 'postcss-loader',
                 options: {
+                  sourceMap: true,
                   plugins: function () {
                     return [
                       require('autoprefixer')({
@@ -121,6 +122,7 @@ module.exports = Object.keys(languages).map(lan => {
               use: ['css-loader', {
                 loader: 'postcss-loader',
                 options: {
+                  sourceMap: true,
                   plugins: function () {
                     return [
                       require('autoprefixer')({
@@ -170,7 +172,6 @@ module.exports = Object.keys(languages).map(lan => {
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {
-          '~': path.resolve(__dirname, './src/'),
           img: path.resolve(__dirname, './src/img'),
           app: path.resolve(__dirname, './src/app'),
           utils: path.resolve(__dirname, './src/utils'),

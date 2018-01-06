@@ -48,7 +48,7 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack",
-    "start": "webpack-dev-server --progress --devtool cheap-module-source-map",
+    "start": "webpack-dev-server --progress --devtool cheap-module-source-map --hot",
     "setup": "npm i --registry=https://registry.npm.taobao.org"
   }
 }

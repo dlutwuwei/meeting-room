@@ -1,18 +1,119 @@
 .nav-container {
     display: flex;
+    font-size: 14px;
+    border-bottom: 2px solid #eee;
+    .option-title {
+        text-align: center;
+        line-height: 28px;
+    }
     .nav-zone {
-        display: flex;
         height: 110px;
         border-right: 1px solid #eee;
-        border-bottom: 2px solid #eee;
-        align-items: center;
+        .zone-horizonal {
+            display: flex;
+            align-items: center;
+        }
+        .zone-vertical {
+            margin: 0 10px;
+            .nav-item1 {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                .title {
+                    white-space: nowrap;
+                    display: flex;
+                    align-items: center;
+                    width: 100px;
+                    margin-right: 10px;
+                    &::before {
+                        width: 20px;
+                        height: 20px;
+                        content: '';
+                        display: inline-block;
+                        margin-right: 10px;
+                    }
+                    &.showas::before {
+                        background: url('~img/icons/icon-3.png') center center no-repeat;
+                    }
+                    &.reminder::before {
+                        background: url('~img/icons/icon-4.png') center center no-repeat;
+                    }
+                }
+            }
+        }
+        .nav-item {
+            width: 100px;
+            height: 80px;
+            margin: 0 30px 0 0;
+            text-align: center;
+            &.active {
+                background-color: #caedfe;
+            }
+            &.appointment {
+                padding-top: 12px;
+                line-height: 28px;
+            }
+            &.schedule {
+                padding-top: 12px;
+                line-height: 14px;
+            }
+            &.recurrence, &.time-zone {
+                width: 76px;
+                margin: 0 15px;
+            }
+            .appointment-icon {
+                width: 40px;
+                height: 40px;
+                background: url(~img/icons/icon-1.png) center center no-repeat;
+                margin: auto;
+            }
+            .schedule-icon {
+                width: 40px;
+                height: 40px;
+                background: url(~img/icons/icon-2.png) center center no-repeat;
+                margin: auto;
+            }
+            .recurrence-icon {
+                width: 40px;
+                height: 40px;
+                background: url(~img/icons/icon-6.png) center center no-repeat;
+                margin: auto;
+            }
+            .time-zone-icon {
+                width: 40px;
+                height: 40px;
+                background: url(~img/icons/icon-7.png) center center no-repeat;
+                margin: auto;
+            }
+        }
+        .nav-item1 {
+            display: flex;
+        }
     }
     .nav-zone1 {
-        display: table;
-        width: 9999px;
         height: 110px;
         // border-left: 1px solid #eee;
-        border-bottom: 2px solid #eee;
         border-right: none;
+        padding: 0 20px;
+        .nav-item2 {
+            line-height: 22px;
+            padding-bottom: 5px;
+            &::before {
+                height: 10px;
+                width: 10px;
+                display: inline-block;
+                content: '';
+                margin-right: 5px;
+            }
+            &.private::before {
+                background: url(~img/icons/icon-8.png) center center no-repeat;
+            }
+            &.high::before {
+                background: url(~img/icons/icon-9.png) center center no-repeat;
+            }
+            &.low::before {
+                background: url(~img/icons/icon-10.png) center center no-repeat;
+            }
+        }
     }
 }
