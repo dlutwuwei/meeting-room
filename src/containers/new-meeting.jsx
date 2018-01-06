@@ -8,6 +8,11 @@ class NMeeting extends Component {
     state = {
         current_show: 0
     }
+    handleChange(val) {
+        this.setState({
+            current_show: val === 'appointment'? 1 : 0
+        });
+    }
     render () {
         const { current_show } = this.state;
         let content;
@@ -18,7 +23,7 @@ class NMeeting extends Component {
         }
         return (
             <div className="new-contianer">
-                <div className="top"><Nav /></div>
+                <div className="top"><Nav onChange={(val) => { this.handleChange(val); }}/></div>
                 <div className="new-content">
                     {content}
                 </div>

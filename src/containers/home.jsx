@@ -1,9 +1,6 @@
 import React from 'react';
 import logo from 'img/logo.png';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { Tabs } from 'antd';
-import { hello } from '../redux/home-redux';
 import '../style/home.less';
 
 const TabPane = Tabs.TabPane;
@@ -25,15 +22,4 @@ const Home = () => (
   </div>
 )
 
-const mapStateToProps = state => ({
-});
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({
-      hello
-    }, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

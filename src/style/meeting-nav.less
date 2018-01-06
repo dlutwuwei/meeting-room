@@ -6,6 +6,9 @@
         text-align: center;
         line-height: 28px;
     }
+    .pt12 {
+        padding-top: 12px;
+    }
     .nav-zone {
         height: 110px;
         border-right: 1px solid #eee;
@@ -18,7 +21,9 @@
             .nav-item1 {
                 display: flex;
                 align-items: center;
-                margin-bottom: 10px;
+                &:nth-child(1) {
+                    margin-bottom: 3px;
+                }
                 .title {
                     white-space: nowrap;
                     display: flex;
@@ -52,14 +57,17 @@
             &.appointment {
                 padding-top: 12px;
                 line-height: 28px;
+                cursor: pointer;
             }
             &.schedule {
                 padding-top: 12px;
                 line-height: 14px;
+                cursor: pointer;
             }
             &.recurrence, &.time-zone {
                 width: 76px;
                 margin: 0 15px;
+                cursor: pointer;
             }
             .appointment-icon {
                 width: 40px;
@@ -88,6 +96,12 @@
         }
         .nav-item1 {
             display: flex;
+        }
+    }
+    .nav-zone2 {
+        padding-top: 12px;
+        .nav-item{
+            height: 68px;
         }
     }
     .nav-zone1 {

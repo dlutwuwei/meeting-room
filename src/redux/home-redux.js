@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+// ---------------- export default is reducer -------------
 // reducers
 function reducer1(state, action) {
   return {};
@@ -15,6 +16,8 @@ export default combineReducers(
     reducer2
   }
 );
+
+// ------------------ export others is action creators ---------------------
 
 // action creators
 function hello(text) {

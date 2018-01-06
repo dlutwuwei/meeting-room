@@ -1,21 +1,36 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import classNames from 'classnames';
 import '../style/meeting-nav.less';
+import { hello } from '../redux/home-redux';
 
 import Select from 'components/select';
 import Button from 'components/button';
 
 class Nav extends Component {
+    state = {
+        current: 'appointment'
+    }
+    handleChange(val) {
+        const { onChange } = this.props;
+        this.setState({
+            current: val
+        });
+        onChange(val);
+    }
     render () {
+        const { current } = this.state;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
                     <div className="zone-horizonal">
-                        <div className="nav-item appointment"><div className="appointment-icon"/>Appointment</div>
-                        <div className="nav-item schedule active"><div className="schedule-icon"></div>Scheduling Assistant</div>
+                        <div className={classNames(['nav-item appointment', { active: current === 'appointment'}])} onClick={() => { this.handleChange('appointment'); }}><div className="appointment-icon"/>Appointment</div>
+                        <div className={classNames(['nav-item schedule', { active: current === 'schedule'}])} onClick={() => { this.handleChange('schedule'); }}><div className="schedule-icon"></div>Scheduling Assistant</div>
                     </div>
                     <div className="option-title">Show</div>
                 </div>
-                <div className="nav-zone">
+                <div className="nav-zone nav-zone2">
                     <div className="zone-horizonal">
                         <div className="zone-vertical">
                             <div className="nav-item1">
@@ -54,4 +69,19 @@ class Nav extends Component {
     }
 }
 
-export default Nav
+Nav.defaultProps = {
+    onChange: () => {}
+};
+
+const mapStateToProps = state => ({
+});
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({
+      hello
+    }, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
