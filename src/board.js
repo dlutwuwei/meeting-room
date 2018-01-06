@@ -78,18 +78,9 @@ class MeetingBoard extends Component {
                         </tr>
                     </thead>
                     <QueueAnim component="tbody">
-                        <tr style={{display : 'none'}}>
-                            <td>LOREAL</td>
-                            <td>Happy new year</td>
-                            <td>Scheduled</td>
-                            <td>5:30-6:00</td>
-                            <td>5F</td>
-                            <td>这个项目是外包的</td>
-                            <td>Leo</td>
-                        </tr>
                         {loading ? null : [
                             ...data.list.map((item, i) => {
-                                return (<tr key={i+1}>
+                                return (<tr key={i+Math.random()}>
                                     <td>{item.brand}</td>
                                     <td>{item.meeting_topic}</td>
                                     <td className={classnames({'active': item.state === 0})}>{statusMap[item.state]}</td>

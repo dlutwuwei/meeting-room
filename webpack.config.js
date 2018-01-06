@@ -13,6 +13,7 @@ var languages = {
 	"cn": require("./src/locale/cn.js")
 };
 
+const mockserver = "http://47.95.238.222:9001/mock/11/mt/"
 module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
@@ -38,7 +39,7 @@ module.exports = Object.keys(languages).map(lan => {
         },
         proxy: {
           '/api': {
-              target: 'https://8e2a6ecd-1216-48bd-9bc2-77f6b24e1485.mock.pstmn.io/',
+              target:  `${mockserver}`,
               changeOrigin: true,
               bypass: function(req, res, proxyOptions) {
                 if (req.headers.accept.indexOf('html') !== -1) {
