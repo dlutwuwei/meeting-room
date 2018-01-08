@@ -48,7 +48,7 @@ class Appointment extends Component {
                     <div className="item">
                         <div className="label">Start Time</div>
                         <DatePicker
-                            format="YYYY-MM-DD HH:mm:ss"
+                            format="YYYY-MM-DD"
                             placeholder="Select Date"
                             onChange={() => {}}
                             onOk={() => {}}
@@ -73,7 +73,7 @@ class Appointment extends Component {
                     <div className="item">
                         <div className="label">End Time</div>
                         <DatePicker
-                            format="YYYY-MM-DD HH:mm:ss"
+                            format="YYYY-MM-DD"
                             placeholder="Select Date"
                             onChange={() => {}}
                             onOk={() => {}}
