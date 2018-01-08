@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input } from antd;
+import { Input } from 'antd';
 import './input.less';
 
 class MyInput extends Component {
@@ -9,5 +9,7 @@ class MyInput extends Component {
         )
     }
 }
+
+MyInput.TextArea = Input.TextArea;
 
 export default MyInput

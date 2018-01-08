@@ -19,6 +19,7 @@ const Home = () => (
         <TabPane className="pane" tab="Tourist" key="3">Tour</TabPane>
       </Tabs>
     </div>
+    <div className="app-footer">版权@2017</div>
   </div>
 )
 

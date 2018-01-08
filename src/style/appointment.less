@@ -28,10 +28,25 @@
         .item {
             display: flex;
             margin-bottom: 22px;
+            align-items: center;
             .label {
                 width: 85px;
                 margin-right: 8px;
                 flex-shrink: 0
+            }
+            .rooms {
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    background: url(~img/icons/icon-15.png) no-repeat;
+                    width: 79px;
+                    height: 20px;
+                    background-size: contain;
+                    margin-left: 10px;
+                }
+            }
+            .my-date-picker {
+                margin-right: 20px;
             }
         }
     }
