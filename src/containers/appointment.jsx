@@ -11,6 +11,16 @@ import '../style/appointment.less';
 const dateFormat = 'YYYY/MM/DD';
 const { TextArea } = Input;
 
+function generateOptions(length, include) {
+    const arr = [];
+    for (let value = 0; value < length; value++) {
+        if (include(value)) {
+            arr.push(value);
+        }
+    }
+    return arr;
+}
+
 class Appointment extends Component {
     render () {
         return (
@@ -49,6 +59,15 @@ class Appointment extends Component {
                             placeholder="Select Time"
                             showSecond={false}
                             defaultValue={moment()}
+                            hideDisabledOptions={true}
+                            disabledHours={(h) => {
+                                return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
+                            }}
+                            disabledMinutes={(m) => {
+                                return generateOptions(60, (m) => {
+                                    return m % 30 !== 0
+                                });
+                            }}
                         />
                     </div>
                     <div className="item">
@@ -65,6 +84,15 @@ class Appointment extends Component {
                             placeholder="Select Time"
                             showSecond={false}
                             defaultValue={moment()}
+                            hideDisabledOptions={true}
+                            disabledHours={(h) => {
+                                return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
+                            }}
+                            disabledMinutes={(m) => {
+                                return generateOptions(60, (m) => {
+                                    return m % 30 !== 0
+                                });
+                            }}
                         />
                     </div>
                     <div className="item">
