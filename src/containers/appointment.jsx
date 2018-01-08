@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { Select, Input, Button, DatePicker } from 'antd';
+import { DatePicker } from 'antd';
+import Button from 'components/button';
+import Select from 'components/select';
+import Input from 'components/input';
+
 import moment from 'moment';
 
 import '../style/appointment.less';
@@ -15,23 +19,23 @@ class Appointment extends Component {
                 </div>
                 <div className="appoint-main">
                     <div className="item">
-                        <Select defaultValue="1" style={{ width: 85 }}>
+                        <Select defaultValue="1" style={{ width: 85, marginRight: 8 }}>
                             <Option value="1">From</Option>
                         </Select>
                         <Input placeholder="Basic usage" />
                     </div>
                     <div className="item">
-                        <Button style={{ width: 85 }}>To...</Button>
+                        <Button style={{ width: 85, marginRight: 8 }}>To...</Button>
                         <Input placeholder="Basic usage" />
                     </div>
                     <div className="item">
-                        Subject<Input placeholder="Basic usage" />
+                        <div className="label">Subject</div><Input placeholder="Basic usage" />
                     </div>
                     <div className="item">
-                        <label>Location</label><Input placeholder="Basic usage" />
+                        <div className="label">Location</div><Input placeholder="Basic usage" />
                     </div>
                     <div className="item">
-                        <label>Start Time</label>
+                        <div className="label">Start Time</div>
                         <DatePicker
                             showTime
                             format="YYYY-MM-DD HH:mm:ss"
@@ -41,7 +45,7 @@ class Appointment extends Component {
                         />
                     </div>
                     <div className="item">
-                        <label>End Time</label>
+                        <div className="label">End Time</div>
                         <DatePicker
                             showTime
                             format="YYYY-MM-DD HH:mm:ss"
