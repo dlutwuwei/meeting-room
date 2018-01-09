@@ -1,3 +1,42 @@
 .schedule-contianer {
-    padding: 20px 0;
+    .schedule-main {
+        padding: 20px 0;
+        display: flex;
+        padding-top: 15px;
+    }
+    .schedule-left {
+        width: 150px;
+        white-space: nowrap;
+        .attendees {
+            text-align: left;
+            .ant-checkbox-wrapper {
+                display: block;
+                width: 150px;
+            }
+        }
+        .send-btn2 {
+            border: 1px solid #eee;
+            width: 126px;
+            font-size: 32px;
+            text-align: center;
+            padding-top: 20px;
+            font-size: 16px;
+            line-height: 22px;
+
+            &::before {
+                content: '';
+                width: 39px;
+                height: 23px;
+                display: inline-block;
+                margin: auto;
+                background: url(~img/icons/icon-11.png) center center no-repeat;
+                background-size: contain;
+            }
+        }
+    }
+    .schedule-footer {
+        .item {
+            display: flex;
+        }
+    }
 }
