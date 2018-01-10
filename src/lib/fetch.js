@@ -15,6 +15,18 @@ const defPostOpts = {
     }
 }
 
+function copy(object) {
+    const ob = Array.isArray(object) ? [] : {};
+    for( var i in object) {
+        const item = object[i];
+        if(typeof item === 'object') {
+            ob[i.toLowerCase()] = copy(item); 
+        } else {
+            ob[i.toLowerCase()] = item;
+        }
+    }
+    return ob;
+}
 function toQueryString(obj) {
     return obj ? Object.keys(obj).map(function (key) {
         const val = obj[key]
@@ -70,7 +82,8 @@ function request(method, url, data, opts) {
                 return Promise.reject({ s: 800, msg: '非JSON格式' })
             }
         })
-        .then((data) => {
+        .then((res_data) => {
+            const data = copy(res_data)
             // 判断返回的s值
             if(data.code === 0) {
                 return Promise.resolve(data);

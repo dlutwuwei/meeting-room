@@ -21,9 +21,8 @@ class MeetingBoard extends Component {
         data: {
             list: [],
             page: 1,
-            page_size: 0,
-            total_page: 0,
-            update_time: 0
+            pageSize: 0,
+            totalPage: 0,
         }
     }
     componentDidMount() {
@@ -33,9 +32,10 @@ class MeetingBoard extends Component {
         }, 3000);
     }
     load() {
-        fetch.get('/api/board/list', {
+        fetch.get('api/Board/GetList', {
             page: 1,
-            page_size: 15
+            pageSize: 15,
+            token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
                 loading: true
@@ -82,11 +82,11 @@ class MeetingBoard extends Component {
                             ...data.list.map((item, i) => {
                                 return (<tr key={i+Math.random()}>
                                     <td>{item.brand}</td>
-                                    <td>{item.meeting_topic}</td>
+                                    <td>{item.meeting}</td>
                                     <td className={classnames({'active': item.state === 0})}>{statusMap[item.state]}</td>
-                                    <td>{convertToTime(item.time_span)}</td>
+                                    <td>{item.time}</td>
                                     <td>{item.floor}</td>
-                                    <td>{item.room_name}</td>
+                                    <td>{item.room}</td>
                                     <td>{item.organizer}</td>
                                 </tr>);
                             }) 
@@ -94,7 +94,7 @@ class MeetingBoard extends Component {
                     </QueueAnim>
                 </table>
                 <div className="meeting-footer">
-                        <span>Last Update:</span><span>{new Date(data.update_time).toLocaleString()}</span>
+                        <span>Last Update:</span><span>{new Date().toLocaleString()}</span>
                 </div>
             </div>
         )
