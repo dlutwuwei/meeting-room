@@ -14,3 +14,10 @@
 1. autofixer
 2. scss
 3. css module
+
+## 启动说明
+
+1. 安装最新版node lts
+2. npm install 安装所有依赖
+3. npm run start启动项目
+4. http://localhost:8001访问
