@@ -6,7 +6,7 @@ import '../style/home.less';
 const TabPane = Tabs.TabPane;
 
 import NewMeeting from './new-meeting';
-
+import MyMeeting from './my-meeting';
 const Home = () => (
   <div>
     <header className="app-header">
@@ -15,7 +15,7 @@ const Home = () => (
     <div className="app-main card-container">
       <Tabs type="card">
         <TabPane className="pane" tab="New Meeting" key="1"><NewMeeting /></TabPane>
-        <TabPane className="pane" tab="My Meeting" key="2">My Meeting</TabPane>
+        <TabPane className="pane" tab="My Meeting" key="2"><MyMeeting /></TabPane>
         <TabPane className="pane" tab="Tourist" key="3">Tour</TabPane>
       </Tabs>
     </div>
