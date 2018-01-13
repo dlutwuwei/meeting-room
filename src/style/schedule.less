@@ -3,6 +3,9 @@
         padding: 20px 0;
         display: flex;
         padding-top: 15px;
+        padding-left: 20px;
+        border: 1px solid #e5e5e5;
+        box-shadow: 0 2px 4px #eee;
     }
     .schedule-left {
         width: 150px;
@@ -12,6 +15,7 @@
             .ant-checkbox-wrapper {
                 display: block;
                 width: 150px;
+                height: 36px;
             }
         }
         .send-btn2 {
@@ -47,6 +51,14 @@
         overflow: auto;
         .schedule-date {
             line-height: 30px;
+            .btn {
+                width: 14px;
+                margin-right: 4px;
+                &:hover {
+                    color: #999;
+                    cursor: pointer;
+                }
+            }
         }
         table {
             border-left: 1px dashed #eee;
@@ -56,9 +68,13 @@
             thead {
                 outline: 1px solid #eee;
             }
+            tbody {
+                tr {
+                    height: 36px;
+                }
+            }
             tr {
-                border-bottom: 1px dashed #eee;
-                border-top: 1px solid #eee;
+                outline: 1px dashed #eee;
             }
             th {
                 min-width: 147px;
@@ -79,6 +95,8 @@
     .schedule-footer {
         .item {
             display: flex;
+            margin-top: 20px;
+            line-height: 36px;
         }
     }
 }

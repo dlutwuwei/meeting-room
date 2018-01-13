@@ -16,7 +16,7 @@ class NMeeting extends Component {
     render () {
         const { current_show } = this.state;
         let content;
-        if(current_show === 1) {
+        if(current_show === 0) {
             content = <Schedule />;
         } else {
             content = <Appointment />
