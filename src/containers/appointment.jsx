@@ -4,8 +4,9 @@ import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
 import TimePicker from 'rc-time-picker';
-
 import moment from 'moment';
+
+import AddRooms from './addRooms';
 
 import '../style/appointment.less';
 const dateFormat = 'YYYY/MM/DD';
@@ -32,8 +33,17 @@ function generateOptions(length, include) {
 }
 
 class Appointment extends Component {
+    state = {
+        showAddRooms: false
+    }
+    openRooms() {
+        this.setState({
+            showAddRooms: true
+        });
+    }
     render () {
         const { getFieldDecorator } = this.props.form;
+        const { showAddRooms } = this.state;
         return (
             <div className="appointment-container">
                 <div className="appoint-left">
@@ -66,7 +76,8 @@ class Appointment extends Component {
                             {...formItemLayout}
                         >
                             <div className="item">
-                                <Input placeholder="Basic usage" /><div className="rooms" />
+                                <AddRooms visible={showAddRooms}/>
+                                <Input placeholder="Basic usage" /><div className="rooms" onClick={this.openRooms.bind(this)}/>
                             </div>
                         </FormItem>
                         <FormItem
