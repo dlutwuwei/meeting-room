@@ -9,8 +9,8 @@ const path = require('path')
 const isDev = process.env.NODE_ENV != 'production'
 
 var languages = {
-	"en": require('./src/locale/en.js'),
-	"cn": require("./src/locale/cn.js")
+	"en": require('./src/locale/en.json'),
+	"cn": require("./src/locale/cn.json")
 };
 
 const mockserver = "http://47.95.238.222:9001/mock/11/mt/"

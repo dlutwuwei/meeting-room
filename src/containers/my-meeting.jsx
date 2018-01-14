@@ -6,7 +6,8 @@ import '../style/my-meeting.less';
 
 class MyMeeting extends Component {
     state = {
-        data: []
+        data: [],
+        type: 0
     }
     componentDidMount() {
         this.search(0);
@@ -17,27 +18,39 @@ class MyMeeting extends Component {
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
-                data: r.data
+                data: r.data,
+                type
             });
         });
     }
     render () {
-        const { data } = this.state;
+        const { data, type } = this.state;
         return (
             <div className="my-meeting">
                 <div className="my-top">
-                    <Button>Not Start</Button><Button>The End</Button>
+                    <Button
+                        type={type==0 ? "primary": ""}
+                        onClick={() => { this.search(0); }}
+                    >
+                        Not Start
+                    </Button>
+                    <Button
+                        type={type==1 ? "primary": ""}
+                        onClick={() => { this.search(1); }}
+                    >
+                        The End
+                    </Button>
                 </div>
                 <div className="my-table">
                     <table>
                         <thead>
                             <tr>
-                                <th>Subject</th>
-                                <th>Meeting Room</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Create Time</th>
-                                <th>Operation</th>
+                                <th>{__('subject')}</th>
+                                <th>{__('meetingRoom')}</th>
+                                <th>{__('startTime')}</th>
+                                <th>{__('endTime')}</th>
+                                <th>{__('createTime')}</th>
+                                <th>{__('operation')}</th>
                             </tr>
                         </thead>
                         <tbody>
