@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Form, Checkbox, Table } from 'antd';
+import { Modal, DatePicker, Form, Checkbox, Table, TimePicker } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
-import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import { generateOptions } from 'lib/util';
 import fetch from 'lib/fetch';
@@ -91,9 +90,14 @@ class AddRooms extends Component {
             title="Add Rooms"
             style={{ top: 20 }}
             visible={visible}
+            width={600}
+            onOk={() => this.closeModal()}
+            onCancel={() => this.closeModal()}
+            footer={null}
+            wrapClassName="add-room-container"
             >
-                <div>
-                    <label htmlFor="">Start Time</label>
+                <div className="room-item">
+                    <label htmlFor="" className="room-title">Start Time:</label>
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
@@ -117,8 +121,8 @@ class AddRooms extends Component {
                         }}
                     />
                 </div>
-                <div>
-                    <label htmlFor="">End Time</label>
+                <div className="room-item">
+                    <label htmlFor="" className="room-title">End Time:</label>
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
@@ -142,21 +146,21 @@ class AddRooms extends Component {
                         }}
                     />
                 </div>
-                <div>
-                    <label htmlFor="">People</label>
-                    <Select style={{width: 120}}defaultValue={1}>
+                <div className="room-item">
+                    <label htmlFor="" className="room-title">People:</label>
+                    <Select style={{width: 60}} defaultValue={1}>
                         {peopleOptions}
                     </Select>
                 </div>
-                <div>
-                    <label htmlFor="">Equipment</label>
+                <div className="room-item">
+                    <label htmlFor="" className="room-title">Equipment:</label>
                     <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={this.onEuipmentChange} />
                 </div>
-                <div>
+                <div className="room-item">
                     <Table columns={columns} dataSource={list} />
                 </div>
-                <div>
-                    <Button>Select</Button>
+                <div className="room-item room-select">
+                    <Button type="primary" size="large">Select</Button>
                 </div>
             </Modal>
         )
