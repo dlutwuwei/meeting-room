@@ -18,7 +18,7 @@ class MyMeeting extends Component {
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
-                data: r.data,
+                data: r.data.list,
                 type
             });
         });

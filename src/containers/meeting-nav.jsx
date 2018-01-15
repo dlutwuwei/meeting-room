@@ -7,10 +7,12 @@ import { hello } from '../redux/home-redux';
 
 import Select from 'components/select';
 import Button from 'components/button';
+import Recurrence from './recurrence';
 
 class Nav extends Component {
     state = {
-        current: 'appointment'
+        current: 'appointment',
+        showRecurrence: false
     }
     handleChange(val) {
         const { onChange } = this.props;
@@ -19,8 +21,13 @@ class Nav extends Component {
         });
         onChange(val);
     }
+    openRecurrence() {
+       this.setState({
+           showRecurrence: true
+       })
+    }
     render () {
-        const { current } = this.state;
+        const { current, showRecurrence } = this.state;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
@@ -51,7 +58,8 @@ class Nav extends Component {
                                 </Select>
                             </div>
                         </div>
-                        <div className="nav-item recurrence"><div className="recurrence-icon" />Recurrence</div>
+                        <Recurrence visible={showRecurrence}/>
+                        <div className="nav-item recurrence" onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
                         <div className="nav-item time-zone"><div className="time-zone-icon" />TimeZones</div>
                     </div>
                     <div className="option-title">Options</div>
