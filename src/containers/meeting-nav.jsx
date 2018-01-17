@@ -17,14 +17,15 @@ class Nav extends Component {
     handleChange(val) {
         const { onChange } = this.props;
         this.setState({
-            current: val
+            current: val,
+            showRecurrence: false
         });
         onChange(val);
     }
     openRecurrence() {
        this.setState({
            showRecurrence: true
-       })
+       });
     }
     render () {
         const { current, showRecurrence } = this.state;

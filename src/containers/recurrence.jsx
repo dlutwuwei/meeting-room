@@ -147,7 +147,7 @@ class Recurrence extends Component {
                 <div className="section">
                     <div className="section-title">Recurrence Pattern</div>
                     <div className="section-left">
-                        <RadioGroup onChange={onChange} value={this.state.value}>
+                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.value}>
                             <Radio value={1}>Daily</Radio>
                             <Radio value={2}>Weekly</Radio>
                             <Radio value={3}>Yearly</Radio>
@@ -172,7 +172,7 @@ class Recurrence extends Component {
                         />
                     </div>
                     <div className="section-right">
-                        <RadioGroup onChange={onChange} value={this.state.value}>
+                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.value}>
                             <Radio value={1}>Daily</Radio>
                             <Radio value={2}>Weekly <Input/> occurrence</Radio>
                             <Radio value={4}>Monthly
