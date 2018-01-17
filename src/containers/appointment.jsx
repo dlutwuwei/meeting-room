@@ -77,7 +77,7 @@ class Appointment extends Component {
                         >
                             <div className="item">
                                 <AddRooms visible={showAddRooms}/>
-                                <Input placeholder="Basic usage" /><div className="rooms" onClick={this.openRooms.bind(this)}/>
+                                <Input placeholder="Basic usage" style={{ width: 309 }}/><div className="rooms" onClick={this.openRooms.bind(this)}/>
                             </div>
                         </FormItem>
                         <FormItem

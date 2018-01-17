@@ -109,6 +109,7 @@ class AddRooms extends Component {
                         prefixCls="ant-time-picker"
                         placeholder="Select Time"
                         showSecond={false}
+                        format="HH:mm"
                         defaultValue={moment()}
                         hideDisabledOptions={true}
                         disabledHours={(h) => {
@@ -134,6 +135,7 @@ class AddRooms extends Component {
                         prefixCls="ant-time-picker"
                         placeholder="Select Time"
                         showSecond={false}
+                        format="HH:mm"
                         defaultValue={moment()}
                         hideDisabledOptions={true}
                         disabledHours={(h) => {
