@@ -25,22 +25,25 @@ class MeetingBoard extends Component {
             totalPage: 0,
         }
     }
+    page=1
     componentDidMount() {
         this.load();
         this.timer = setInterval(() => {
             this.load();
-        }, 3000);
+        }, 20000);
     }
     load() {
         const pageSize = parseInt((window.innerHeight - 414)/98);
         fetch.get('/api/board/getList', {
-            page: 1,
+            page: this.page,
             pageSize,
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
                 loading: true
             });
+            const totalPage = r.data.totalPage;
+            this.page = (++this.page - 1)%totalPage + 1;
             setTimeout(() => {
                 this.setState({
                     loading: false,
