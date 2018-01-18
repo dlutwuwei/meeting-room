@@ -7,11 +7,15 @@ const defOpts = {
 }
 
 const defGetOpts = {
+    headers: {
+        'Accept': 'application/json'
+    }
 }
 
 const defPostOpts = {
     headers: {
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        'Accept': 'application/json'
     }
 }
 

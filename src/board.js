@@ -32,9 +32,10 @@ class MeetingBoard extends Component {
         }, 3000);
     }
     load() {
-        fetch.get('/api/Board/getList', {
+        const pageSize = parseInt((window.innerHeight - 414)/98);
+        fetch.get('/api/board/getList', {
             page: 1,
-            pageSize: 15,
+            pageSize,
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
