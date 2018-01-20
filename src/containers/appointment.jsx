@@ -133,7 +133,7 @@ class Appointment extends Component {
               label={<Button style={{ width: 85 }}>To...</Button>}
               {...formItemLayout}
             >
-              {getFieldDecorator('to', {
+              {getFieldDecorator('receivers', {
                 initialValue: [],
                 rules: [{
                   type: 'array',
@@ -195,7 +195,7 @@ class Appointment extends Component {
               label="Start Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('start-date', dateConfig)(
+              {getFieldDecorator('startTime', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -204,7 +204,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('start-time', timeConfig)(
+              {getFieldDecorator('startTime', timeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"
@@ -225,7 +225,7 @@ class Appointment extends Component {
               label="End Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('end-date', dateConfig)(
+              {getFieldDecorator('endTime', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -234,7 +234,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('end-time', timeConfig)(
+              {getFieldDecorator('endTime', timeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"
