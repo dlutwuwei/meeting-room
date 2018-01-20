@@ -11,7 +11,7 @@ const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
 
 const durationOptions = new Array(12).fill('').map((item, i) => {
-    return <Option value={i+1}>{(i+1)/2}小时</Option>
+    return <Option key={i} value={i+1}>{(i+1)/2}小时</Option>
 });
 const eqOptions = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
 

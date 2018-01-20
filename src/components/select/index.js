@@ -9,5 +9,6 @@ class MySelect extends Component {
         )
     }
 }
+MySelect.Option = Select.Option;
 
 export default MySelect;

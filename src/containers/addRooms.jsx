@@ -10,7 +10,7 @@ import fetch from 'lib/fetch';
 const CheckboxGroup = Checkbox.Group;
 
 const peopleOptions = new Array(12).fill('').map((item, i) => {
-    return <Option value={i+1}>{i+1}</Option>
+    return <Option key={i} value={i+1}>{i+1}</Option>
 });
 const eqOptions = ['Phone', 'Projector', 'TV', 'Whiteboard'];
 
