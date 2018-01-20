@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Form, Checkbox, Table, TimePicker } from 'antd';
+import { Modal, DatePicker, Form, Checkbox, Table, TimePicker, Icon } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -10,52 +10,90 @@ import fetch from 'lib/fetch';
 const CheckboxGroup = Checkbox.Group;
 
 const peopleOptions = new Array(12).fill('').map((item, i) => {
-    return <Option key={i} value={i+1}>{i+1}</Option>
+    return <Option key={i} value={i + 1}>{i + 1}</Option>
 });
+
 const eqOptions = ['Phone', 'Projector', 'TV', 'Whiteboard'];
+
+const equipment = {
+    'Phone': 1,
+    'Projector': 2,
+    'TV': 3,
+    'Whiteboard': 4
+};
 
 const columns = [{
     title: 'Room',
     dataIndex: 'name',
     key: 'room',
     render: text => <a href="#">{text}</a>,
-  }, {
+}, {
     title: 'Capacity',
     dataIndex: 'capacity',
     key: 'capacity',
-  }, {
+}, {
     title: 'Phone',
     dataIndex: 'hasPhone',
     key: 'phone',
-  }, {
+    render: (val, record) => {
+        return val && <Icon type="check" />
+    }
+}, {
     title: 'TV',
     dataIndex: 'hasTv',
     key: 'tv',
-  }, {
+    render: (val, record) => {
+        return val && <Icon type="check" />
+    }
+}, {
     title: 'Whiteboard',
     dataIndex: 'hasWhiteboard',
     key: 'whiteboard',
-  }, {
+    render: (val, record) => {
+        return val && <Icon type="check" />
+    }
+}, {
+    title: 'Projector',
+    dataIndex: 'hasProjector',
+    key: 'projector',
+    render: (val, record) => {
+        return val && <Icon type="check" />
+    }
+}, {
     title: 'Status',
     dataIndex: 'status',
     key: 'status',
-  }, {
+    render: (val, record) => {
+        return val && <Icon type="check" />
+    }
+}, {
     title: 'Action',
     key: 'action',
-    render: (text, record) => (
-      <span>
-          <Checkbox/>
-      </span>
-    ),
-  }];
-  
+    render: (_, record) => {
+        return (<span>
+            <Checkbox
+                value={!!record.selected}
+                onChange={(val) => {
+                    record['selected'] = val
+                }}
+            />
+        </span>);
+    }
+}];
+
+
+
 class AddRooms extends Component {
     constructor(props) {
         super(props);
     }
     state = {
         visible: false,
-        list: []
+        list: [],
+        eqGroup: []
+    }
+    postData = {
+        area: 'SH',
     }
     search(startTime, endTime, equipment, capacity) {
         fetch.get('/api/Rooms/getList', {
@@ -73,36 +111,65 @@ class AddRooms extends Component {
     componentDidMount() {
         this.search();
     }
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
         this.setState({
             visible: nextProps.visible
         });
     }
-    closeModal() {
+    closeModal = () => {
         this.setState({
             visible: false
+        });
+        this.props.onClose();
+    }
+    handleSelect = () => {
+        console.log(this.state.list.filter(item => !!item.selected));
+    }
+    handleChange(type, value) {
+        if (type === 'startTime' || type === 'endTime') {
+            value = value.format('YYYY-MM-DD HH:mm')
+        }
+        this.postData[type] = value;
+        fetch.get('/api/meetingRoom/getList', {
+            ...this.postData,
+            token: '40a56c3e9cc9465f60c810f2d26d38c'
+        }).then(r => {
+            this.setState({
+                list: r.data
+            });
         })
     }
-    render () {
-        const { visible, list } = this.state;
+    onEuipmentChange(value) {
+        this.postData['equipment'] = value.map(val => equipment[val]);
+        fetch.get('/api/meetingRoom/getList', {
+            ...this.postData,
+            token: '40a56c3e9cc9465f60c810f2d26d38c'
+        }).then(r => {
+            this.setState({
+                list: r.data
+            });
+        })
+    }
+    render() {
+        const { visible, list, eqGroup } = this.state;
         return (
             <Modal
-            title="Add Rooms"
-            style={{ top: 20 }}
-            visible={visible}
-            width={600}
-            onOk={() => this.closeModal()}
-            onCancel={() => this.closeModal()}
-            footer={null}
-            wrapClassName="add-room-container"
+                title="Add Rooms"
+                style={{ top: 20 }}
+                visible={visible}
+                width={600}
+                onOk={() => this.closeModal()}
+                onCancel={() => this.closeModal()}
+                footer={null}
+                wrapClassName="add-room-container"
             >
                 <div className="room-item">
                     <label htmlFor="" className="room-title">Start Time:</label>
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
-                        onChange={() => {}}
-                        onOk={() => {}}
+                        defaultValue={moment()}
+                        onChange={this.handleChange.bind(this, 'startTime')}
                         className="my-date-picker"
                     />
                     <TimePicker
@@ -112,13 +179,9 @@ class AddRooms extends Component {
                         format="HH:mm"
                         defaultValue={moment()}
                         hideDisabledOptions={true}
+                        onChange={this.handleChange.bind(this, 'startTime')}
                         disabledHours={(h) => {
                             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
-                        }}
-                        disabledMinutes={(m) => {
-                            return generateOptions(60, (m) => {
-                                return m % 30 !== 0
-                            });
                         }}
                     />
                 </div>
@@ -127,8 +190,8 @@ class AddRooms extends Component {
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
-                        onChange={() => {}}
-                        onOk={() => {}}
+                        defaultValue={moment()}
+                        onChange={this.handleChange.bind(this, 'endTime')}
                         className="my-date-picker"
                     />
                     <TimePicker
@@ -136,33 +199,33 @@ class AddRooms extends Component {
                         placeholder="Select Time"
                         showSecond={false}
                         format="HH:mm"
+                        onChange={this.handleChange.bind(this, 'endTime')}
                         defaultValue={moment()}
                         hideDisabledOptions={true}
                         disabledHours={(h) => {
                             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                         }}
-                        disabledMinutes={(m) => {
-                            return generateOptions(60, (m) => {
-                                return m % 30 !== 0
-                            });
-                        }}
                     />
                 </div>
                 <div className="room-item">
                     <label htmlFor="" className="room-title">People:</label>
-                    <Select style={{width: 60}} defaultValue={1}>
+                    <Select
+                        style={{ width: 60 }}
+                        defaultValue={1}
+                        onChange={this.handleChange.bind(this, 'capacity')}
+                    >
                         {peopleOptions}
                     </Select>
                 </div>
                 <div className="room-item">
                     <label htmlFor="" className="room-title">Equipment:</label>
-                    <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={this.onEuipmentChange} />
+                    <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
                 <div className="room-item">
                     <Table columns={columns} dataSource={list} />
                 </div>
                 <div className="room-item room-select">
-                    <Button type="primary" size="large">Select</Button>
+                    <Button type="primary" size="large" onClick={this.handleSelect}>Select</Button>
                 </div>
             </Modal>
         )

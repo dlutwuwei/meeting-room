@@ -25,19 +25,19 @@ const formItemLayout = {
 };
 
 const dateConfig = {
+  initialValue: moment(),
   rules: [{
     type: 'object',
     required: true,
-    initialValue: '',
     message: 'Please select date!'
   }]
 };
 
 const timeConfig = {
+  initialValue: moment(),
   rules: [{
     type: 'object',
     required: true,
-    initialValue: '',
     message: 'Please select time!'
   }]
 };
@@ -65,11 +65,12 @@ class Appointment extends Component {
     });
   }
   handleSubmit(e) {
+    const { dataSource } = this.state;
     this.props.form.validateFields((err, values) => {
       const data = values;
       console.log('Received values of form: ', values);
       if (!err) {
-        data.to = data.to.map(item => this.state.dataSource[item.key].userName);
+        data.to = data.to.map(item => item.label);
         fetch.post('/api/meeting/add', values).then(r => {
         });
       }
@@ -92,6 +93,11 @@ class Appointment extends Component {
         })),
         fetching: false
       });
+    });
+  }
+  onSelectRoom = (value) => {
+    this.props.form.setFieldsValue({
+      'location': value
     });
   }
   render() {
@@ -167,7 +173,11 @@ class Appointment extends Component {
               {...formItemLayout}
             >
               <div className="item">
-                <AddRooms visible={showAddRooms} />
+                <AddRooms
+                  visible={showAddRooms}
+                  onClose={() => this.setState({ showAddRooms: false})}
+                  onSelect={this.onSelectRoom}
+                />
                 {getFieldDecorator('location', {
                   initialValue: '',
                   rules: [{
@@ -194,7 +204,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('start-time', dateConfig)(
+              {getFieldDecorator('start-time', timeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"
@@ -224,7 +234,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('end-time', dateConfig)(
+              {getFieldDecorator('end-time', timeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"
@@ -245,7 +255,7 @@ class Appointment extends Component {
               {getFieldDecorator('content', {
                 rules: [{
                   type: 'string',
-                  required: true,
+                  required: false,
                   message: 'Please input attendees',
                 }]
               })(
