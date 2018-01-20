@@ -7,6 +7,17 @@ import moment from 'moment';
 import { generateOptions } from 'lib/util';
 import fetch from 'lib/fetch';
 
+window.__RoomSelect = function(val, record) {
+    return (<span>
+        <Checkbox
+            value={!!record.selected}
+            onChange={(val) => {
+                record['selected'] = val
+            }}
+        />
+    </span>);
+}
+
 const CheckboxGroup = Checkbox.Group;
 
 const peopleOptions = new Array(12).fill('').map((item, i) => {
@@ -69,23 +80,14 @@ const columns = [{
 }, {
     title: 'Action',
     key: 'action',
-    render: (_, record) => {
-        return (<span>
-            <Checkbox
-                value={!!record.selected}
-                onChange={(val) => {
-                    record['selected'] = val
-                }}
-            />
-        </span>);
-    }
+    render: window.__RoomSelect
 }];
-
 
 
 class AddRooms extends Component {
     constructor(props) {
         super(props);
+        window.__RoomSelect = window.__RoomSelect.bind(this);
     }
     state = {
         visible: false,
@@ -95,16 +97,12 @@ class AddRooms extends Component {
     postData = {
         area: 'SH',
     }
-    search(startTime, endTime, equipment, capacity) {
-        fetch.get('/api/Rooms/getList', {
-            startTime,
-            endTime,
-            equipment,
-            capacity,
+    search() {
+        fetch.get('/api/meetingRoom/getList', {
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
-                list: r.data.list
+                list: r.data
             });
         });
     }
