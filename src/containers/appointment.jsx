@@ -34,7 +34,7 @@ const dateConfig = {
 };
 
 const timeConfig = {
-  initialValue: moment(),
+  initialValue: moment().minute(0),
   rules: [{
     type: 'object',
     required: true,
@@ -220,7 +220,7 @@ class Appointment extends Component {
                   showSecond={false}
                   hideDisabledOptions={true}
                   disabledHours={(h) => {
-                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
+                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                   }}
                   disabledMinutes={(m) => {
                     return generateOptions(60, (m) => {
@@ -250,7 +250,7 @@ class Appointment extends Component {
                   showSecond={false}
                   hideDisabledOptions={true}
                   disabledHours={(h) => {
-                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
+                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                   }}
                   disabledMinutes={(m) => {
                     return generateOptions(60, (m) => {
