@@ -95,9 +95,9 @@ class Appointment extends Component {
       });
     });
   }
-  onSelectRoom = (value) => {
+  onSelectRoom = (room) => {
     this.props.form.setFieldsValue({
-      'location': value
+      'location': room
     });
   }
   render() {

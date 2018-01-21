@@ -7,17 +7,6 @@ import moment from 'moment';
 import { generateOptions } from 'lib/util';
 import fetch from 'lib/fetch';
 
-window.__RoomSelect = function(val, record) {
-    return (<span>
-        <Checkbox
-            value={!!record.selected}
-            onChange={(val) => {
-                record['selected'] = val
-            }}
-        />
-    </span>);
-}
-
 const CheckboxGroup = Checkbox.Group;
 
 const peopleOptions = new Array(12).fill('').map((item, i) => {
@@ -33,61 +22,9 @@ const equipment = {
     'Whiteboard': 4
 };
 
-const columns = [{
-    title: 'Room',
-    dataIndex: 'name',
-    key: 'room',
-    render: text => <a href="#">{text}</a>,
-}, {
-    title: 'Capacity',
-    dataIndex: 'capacity',
-    key: 'capacity',
-}, {
-    title: 'Phone',
-    dataIndex: 'hasPhone',
-    key: 'phone',
-    render: (val, record) => {
-        return val && <Icon type="check" />
-    }
-}, {
-    title: 'TV',
-    dataIndex: 'hasTv',
-    key: 'tv',
-    render: (val, record) => {
-        return val && <Icon type="check" />
-    }
-}, {
-    title: 'Whiteboard',
-    dataIndex: 'hasWhiteboard',
-    key: 'whiteboard',
-    render: (val, record) => {
-        return val && <Icon type="check" />
-    }
-}, {
-    title: 'Projector',
-    dataIndex: 'hasProjector',
-    key: 'projector',
-    render: (val, record) => {
-        return val && <Icon type="check" />
-    }
-}, {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
-    render: (val, record) => {
-        return val && <Icon type="check" />
-    }
-}, {
-    title: 'Action',
-    key: 'action',
-    render: window.__RoomSelect
-}];
-
-
 class AddRooms extends Component {
     constructor(props) {
         super(props);
-        window.__RoomSelect = window.__RoomSelect.bind(this);
     }
     state = {
         visible: false,
@@ -106,6 +43,76 @@ class AddRooms extends Component {
             });
         });
     }
+    getClomuns(){
+        return [{
+            title: 'Room',
+            dataIndex: 'name',
+            key: 'room',
+            render: text => <a href="#">{text}</a>,
+        }, {
+            title: 'Capacity',
+            dataIndex: 'capacity',
+            key: 'capacity',
+        }, {
+            title: 'Phone',
+            dataIndex: 'hasPhone',
+            key: 'phone',
+            render: (val, record) => {
+                return val && <Icon type="check" />
+            }
+        }, {
+            title: 'TV',
+            dataIndex: 'hasTv',
+            key: 'tv',
+            render: (val, record) => {
+                return val && <Icon type="check" />
+            }
+        }, {
+            title: 'Whiteboard',
+            dataIndex: 'hasWhiteboard',
+            key: 'whiteboard',
+            render: (val, record) => {
+                return val && <Icon type="check" />
+            }
+        }, {
+            title: 'Projector',
+            dataIndex: 'hasProjector',
+            key: 'projector',
+            render: (val, record) => {
+                return val && <Icon type="check" />
+            }
+        }, {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (val, record) => {
+                return val && <Icon type="check" />
+            }
+        }, {
+            title: 'Action',
+            key: 'action',
+            render: (val, record) => {
+                return (<span>
+                    <Checkbox
+                        checked={!!record.selected}
+                        onChange={(val) => {
+                            this.state.list.forEach(item => {
+                                if(item.id == record.id) {
+                                    item.selected = true;
+                                } else {
+                                    item.selected = false;
+                                }
+                            });
+                            this.setState({
+                                list: this.state.list.slice()
+                            });
+                        }}
+                    />
+                </span>);
+            }
+        }];
+        
+    }
     componentDidMount() {
         this.search();
     }
@@ -121,7 +128,9 @@ class AddRooms extends Component {
         this.props.onClose();
     }
     handleSelect = () => {
-        console.log(this.state.list.filter(item => !!item.selected));
+        const rooms = this.state.list.filter(item => !!item.selected);
+        this.props.onSelect(rooms[0]);
+        this.closeModal();
     }
     handleChange(type, value) {
         if (type === 'startTime' || type === 'endTime') {
@@ -220,10 +229,15 @@ class AddRooms extends Component {
                     <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
                 <div className="room-item">
-                    <Table columns={columns} dataSource={list} />
+                    <Table columns={this.getClomuns()} dataSource={list} />
                 </div>
                 <div className="room-item room-select">
-                    <Button type="primary" size="large" onClick={this.handleSelect}>Select</Button>
+                    <Button
+                        type="primary"
+                        size="large"
+                        disabled={this.state.list.filter(item => !!item.selected).length == 0}
+                        onClick={this.handleSelect}>Select
+                    </Button>
                 </div>
             </Modal>
         )
