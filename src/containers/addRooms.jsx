@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Form, Checkbox, Table, TimePicker, Icon } from 'antd';
-import Button from 'components/button';
+import { Modal, DatePicker, Form, Checkbox, Table, TimePicker, Icon, Button } from 'antd';
 import Select from 'components/select';
 import Input from 'components/input';
 import moment from 'moment';
@@ -230,12 +229,13 @@ class AddRooms extends Component {
                     <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
                 <div className="room-item">
-                    <Table bordered columns={this.getClomuns()} dataSource={list} style={{width: 760}}/>
+                    <Table bordered columns={this.getClomuns()} dataSource={list} style={{width: 760, marginTop: 20}}/>
                 </div>
                 <div className="room-item room-select">
                     <Button
                         type="primary"
                         size="large"
+                        style={{width: 128}}
                         disabled={this.state.list.filter(item => !!item.selected).length == 0}
                         onClick={this.handleSelect}>Select
                     </Button>
