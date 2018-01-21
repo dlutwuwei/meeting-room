@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Form, AutoComplete, Spin } from 'antd';
+import { DatePicker, Form, AutoComplete, Spin, message } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -14,6 +14,11 @@ const dateFormat = 'YYYY/MM/DD';
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
+
+message.config({
+  top: 300,
+  duration: 2,
+});
 
 const formItemLayout = {
   labelCol: {
@@ -79,8 +84,9 @@ class Appointment extends Component {
         data.showas = localStorage.getItem('__showas') || '';
         data.reminder = localStorage.getItem('__reminder') || 15;
         fetch.post('/api/meeting/add?token=40a56c3e9cc9465f60c810f2d26d38c', values).then(r => {
+          message.success('预定成功');
         }).catch(err => {
-          message.error(err.message);
+          message.error('预定失败');
         });
       }
 
@@ -239,7 +245,6 @@ class Appointment extends Component {
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
                   onChange={() => { }}
-                  onOk={() => { }}
                   className="my-date-picker"
                 />
               )}

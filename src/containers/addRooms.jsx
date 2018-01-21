@@ -95,10 +95,10 @@ class AddRooms extends Component {
                 return (<span>
                     <Checkbox
                         checked={!!record.selected}
-                        onChange={(val) => {
+                        onChange={(e) => {
                             this.state.list.forEach(item => {
                                 if(item.id == record.id) {
-                                    item.selected = true;
+                                    item.selected = e.target.checked;
                                 }
                                 //  else {
                                 //     item.selected = false;
@@ -145,7 +145,7 @@ class AddRooms extends Component {
             this.setState({
                 list: r.data
             });
-        })
+        });
     }
     onEuipmentChange(value) {
         this.postData['equipment'] = value.map(val => equipment[val]);
@@ -165,7 +165,7 @@ class AddRooms extends Component {
                 title="Add Rooms"
                 style={{ top: 20 }}
                 visible={visible}
-                width={600}
+                width={810}
                 onOk={() => this.closeModal()}
                 onCancel={() => this.closeModal()}
                 footer={null}
@@ -230,7 +230,7 @@ class AddRooms extends Component {
                     <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
                 <div className="room-item">
-                    <Table columns={this.getClomuns()} dataSource={list} />
+                    <Table bordered columns={this.getClomuns()} dataSource={list} style={{width: 760}}/>
                 </div>
                 <div className="room-item room-select">
                     <Button
