@@ -99,9 +99,10 @@ class AddRooms extends Component {
                             this.state.list.forEach(item => {
                                 if(item.id == record.id) {
                                     item.selected = true;
-                                } else {
-                                    item.selected = false;
                                 }
+                                //  else {
+                                //     item.selected = false;
+                                // }
                             });
                             this.setState({
                                 list: this.state.list.slice()
@@ -129,7 +130,7 @@ class AddRooms extends Component {
     }
     handleSelect = () => {
         const rooms = this.state.list.filter(item => !!item.selected);
-        this.props.onSelect(rooms[0]);
+        this.props.onSelect(rooms);
         this.closeModal();
     }
     handleChange(type, value) {

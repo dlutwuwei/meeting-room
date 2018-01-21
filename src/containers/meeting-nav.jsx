@@ -44,7 +44,9 @@ class Nav extends Component {
                         <div className="zone-vertical">
                             <div className="nav-item1">
                                 <span className="title showas">Show As:</span>
-                                <Select defaultValue="1" style={{ width: 120 }} onChange={()=> {}}>
+                                <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
+                                    localStorage.setItem('__showas', val);
+                                }}>
                                     <Option key="1" value="1">Busy</Option>
                                     <Option key="2"  value="2">Free</Option>
                                     <Option key="3" value="3">Out</Option>
@@ -52,7 +54,9 @@ class Nav extends Component {
                             </div>
                             <div className="nav-item1">
                                 <span className="title reminder">Reminder:</span>
-                                <Select defaultValue="15" style={{ width: 120 }} onChange={()=> {}}>
+                                <Select defaultValue="15" style={{ width: 120 }} onChange={(val)=> {
+                                    localStorage.setItem('__reminder', val);
+                                }}>
                                     <Option key={1} value="15">15 minutes</Option>
                                     <Option key={2} value="30">30 minutes</Option>
                                     <Option key={3} value="45">45 minutes</Option>

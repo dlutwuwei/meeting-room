@@ -38,6 +38,10 @@ module.exports = Object.keys(languages).map(lan => {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
+          '/api/meeting/': {
+            target: 'http://mt.api.ig66.com/',
+            changeOrigin: true
+          },
           '/api/board':{
             target: 'http://mt.api.ig66.com/',
             changeOrigin: true

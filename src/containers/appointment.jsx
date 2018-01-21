@@ -6,7 +6,7 @@ import Input from 'components/input';
 import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import fetch from 'lib/fetch';
-
+import LocationRoom from 'components/location';
 import AddRooms from './addRooms';
 
 import '../style/appointment.less';
@@ -68,10 +68,19 @@ class Appointment extends Component {
     const { dataSource } = this.state;
     this.props.form.validateFields((err, values) => {
       const data = values;
-      console.log('Received values of form: ', values);
       if (!err) {
-        data.to = data.to.map(item => item.label);
-        fetch.post('/api/meeting/add', values).then(r => {
+        data.receiver = data.receivers.join(';');
+        delete data.receivers;
+        data.startTime = data.startDate.format('YYYY-MM-DD') + ' ' + data.startTime.format('HH:mm');
+        delete data.startDate;
+        data.endTime = data.endDate.format('YYYY-MM-DD') + ' ' + data.endTime.format('HH:mm');
+        delete data.endDate;
+        data.location = data.location.map(item => item.mail).join(';');
+        data.showas = localStorage.getItem('__showas') || '';
+        data.reminder = localStorage.getItem('__reminder') || 15;
+        fetch.post('/api/meeting/add?token=40a56c3e9cc9465f60c810f2d26d38c', values).then(r => {
+        }).catch(err => {
+          message.error(err.message);
         });
       }
 
@@ -89,15 +98,16 @@ class Appointment extends Component {
       this.setState({
         dataSource: r.data.list.map(item => ({
           name: item.userName,
-          id: item.userId
+          id: item.userId,
+          mail: item.mail
         })),
         fetching: false
       });
     });
   }
-  onSelectRoom = (room) => {
+  onSelectRoom = (rooms) => {
     this.props.form.setFieldsValue({
-      'location': room
+      'location': rooms
     });
   }
   render() {
@@ -146,10 +156,9 @@ class Appointment extends Component {
                   placeholder="Please select favourite colors"
                   notFoundContent={fetching ? <Spin size="small" /> : null}
                   filterOption={false}
-                  labelInValue
                   onSearch={this.handleSearch}
                 >
-                  {dataSource.map((item, i) => <Option key={i} value={item.id} title={item.mail}>{item.name}</Option>)}
+                  {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
                 </Select>
               )}
             </FormItem>
@@ -179,14 +188,14 @@ class Appointment extends Component {
                   onSelect={this.onSelectRoom}
                 />
                 {getFieldDecorator('location', {
-                  initialValue: '',
+                  initialValue: [],
                   rules: [{
-                    type: 'string',
+                    type: 'array',
                     required: true,
                     message: 'Please input attendees',
                   }]
                 })(
-                  <Input placeholder="" style={{ width: 309 }} />
+                  <LocationRoom />
                   )}
                 <div className="rooms" onClick={this.openRooms.bind(this)} />
               </div>
@@ -195,7 +204,7 @@ class Appointment extends Component {
               label="Start Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('startTime', dateConfig)(
+              {getFieldDecorator('startDate', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -225,7 +234,7 @@ class Appointment extends Component {
               label="End Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('endTime', dateConfig)(
+              {getFieldDecorator('endDate', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -253,6 +262,7 @@ class Appointment extends Component {
             </FormItem>
             <div className="item">
               {getFieldDecorator('content', {
+                initialValue: '',
                 rules: [{
                   type: 'string',
                   required: false,
