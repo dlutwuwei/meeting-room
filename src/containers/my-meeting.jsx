@@ -10,7 +10,7 @@ class MyMeeting extends Component {
         type: 0
     }
     componentDidMount() {
-        this.search(0);
+        this.search(1);
     }
     search(type) {
         fetch.get('/api/meeting/getList', {
@@ -29,14 +29,14 @@ class MyMeeting extends Component {
             <div className="my-meeting">
                 <div className="my-top">
                     <Button
-                        type={type==0 ? "primary": ""}
-                        onClick={() => { this.search(0); }}
+                        type={type== 1 ? "primary": ""}
+                        onClick={() => { this.search(1); }}
                     >
                         Not Start
                     </Button>
                     <Button
-                        type={type==1 ? "primary": ""}
-                        onClick={() => { this.search(1); }}
+                        type={type== 4 ? "primary": ""}
+                        onClick={() => { this.search(4); }}
                     >
                         The End
                     </Button>
@@ -58,10 +58,10 @@ class MyMeeting extends Component {
                                 data.map(item => {
                                     return (
                                         <tr>
-                                            <td>{item.meeting}</td>
-                                            <td>{item.room}</td>
-                                            <td>{item.time}</td>
-                                            <td>{item.time}</td>
+                                            <td>{item.subject}</td>
+                                            <td>{item.roomNames}</td>
+                                            <td>{item.startTime}</td>
+                                            <td>{item.endTime}</td>
                                             <td>{item.createTime}</td>
                                             <td></td>
                                         </tr>

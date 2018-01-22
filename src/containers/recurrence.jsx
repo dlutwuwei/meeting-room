@@ -107,6 +107,7 @@ class Recurrence extends Component {
                         <TimePicker
                             prefixCls="ant-time-picker"
                             placeholder="Select Time"
+                            format="HH:mm"
                             showSecond={false}
                             defaultValue={moment()}
                             hideDisabledOptions={true}
@@ -127,6 +128,7 @@ class Recurrence extends Component {
                             placeholder="Select Time"
                             showSecond={false}
                             defaultValue={moment()}
+                            format="HH:mm"
                             hideDisabledOptions={true}
                             disabledHours={(h) => {
                                 return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
