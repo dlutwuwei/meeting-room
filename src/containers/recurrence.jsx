@@ -59,7 +59,8 @@ class Recurrence extends Component {
     }
     state = {
         visible: false,
-        list: []
+        list: [],
+        openKeys: []
     }
     search(startTime, endTime, equipment, capacity) {
         fetch.get('/api/meetingRoom/getList', {
@@ -67,7 +68,7 @@ class Recurrence extends Component {
             endTime,
             equipment,
             capacity,
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
+            token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
                 list: r.data.list
