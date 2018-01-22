@@ -2,6 +2,8 @@ import React from 'react';
 import logo from 'img/logo.png';
 import { Tabs } from 'antd';
 import * as util from 'lib/util';
+import fetch from 'lib/fetch';
+
 import '../style/home.less';
 
 const TabPane = Tabs.TabPane;
@@ -23,5 +25,12 @@ const Home = () => (
   </div>
 )
 const token = util.getQuery('token');
+
+fetch.get('/api/user/getUserInfo', {
+  token: '40a56c3e9cc9465f60c810f2d26d38c'
+}).then(r => {
+  localStorage.setItem('__meeting_user_email', r.data.mail)
+});
+
 localStorage.setItem('__meeting_token', '40a56c3e9cc9465f60c810f2d26d38c')
 export default Home;

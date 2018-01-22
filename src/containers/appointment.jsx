@@ -135,7 +135,7 @@ class Appointment extends Component {
               {...formItemLayout}
             >
               {getFieldDecorator('from', {
-                initialValue: 'wuwei@meeting.com',
+                initialValue: localStorage.getItem('__meeting_user_email'),
                 rules: [{
                   type: 'string',
                   required: true,
