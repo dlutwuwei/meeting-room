@@ -32,6 +32,8 @@ class AddRooms extends Component {
     }
     postData = {
         area: 'SH',
+        startTime: moment().format('YYYY-MM-DD HH:mm'),
+        endTime: moment().format('YYYY-MM-DD HH:mm')
     }
     search() {
         fetch.get('/api/MeetingRoom/GetList', {
@@ -134,7 +136,6 @@ class AddRooms extends Component {
     }
     handleChange(type, value) {
         if (type === 'startDate' || type === 'endDate') {
-            value = value.format('YYYY-MM-DD')
             type = type.replace('Date', 'Time');
         }
         const nowDate = moment().format('YYYY-MM-DD');
