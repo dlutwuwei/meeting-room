@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from 'img/logo.png';
 import { Tabs } from 'antd';
+import util from 'lib/util';
 import '../style/home.less';
 
 const TabPane = Tabs.TabPane;
@@ -21,6 +22,6 @@ const Home = () => (
     <div className="app-footer">版权@2017</div>
   </div>
 )
-
+const token = util.getQuery('token');
 localStorage.setItem('__meeting_token', '40a56c3e9cc9465f60c810f2d26d38c')
 export default Home;

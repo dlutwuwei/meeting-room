@@ -184,7 +184,7 @@ class Appointment extends Component {
                 )}
             </FormItem>
             <FormItem
-              label="Location"
+              label="roomMails"
               {...formItemLayout}
             >
               <div className="item">
