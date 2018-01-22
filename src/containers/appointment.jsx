@@ -80,7 +80,8 @@ class Appointment extends Component {
         delete data.startDate;
         data.endTime = data.endDate.format('YYYY-MM-DD') + ' ' + data.endTime.format('HH:mm');
         delete data.endDate;
-        data.location = data.location.map(item => item.mail).join(';');
+        data.roomMails = data.location.map(item => item.mail).join(';');
+        delete data.location;
         data.showas = localStorage.getItem('__showas') || '';
         data.reminder = localStorage.getItem('__reminder') || 15;
         fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(r => {
@@ -193,7 +194,7 @@ class Appointment extends Component {
                   onClose={() => this.setState({ showAddRooms: false})}
                   onSelect={this.onSelectRoom}
                 />
-                {getFieldDecorator('roomMails', {
+                {getFieldDecorator('location', {
                   initialValue: [],
                   rules: [{
                     type: 'array',
