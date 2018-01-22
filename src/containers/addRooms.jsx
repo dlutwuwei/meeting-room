@@ -148,7 +148,7 @@ class AddRooms extends Component {
     }
     onEuipmentChange(value) {
         this.postData['equipment'] = value.map(val => equipment[val]);
-        fetch.get('/api/meetingRoom/getList', {
+        fetch.get('/api/MeetingRoom/GetList', {
             ...this.postData,
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
