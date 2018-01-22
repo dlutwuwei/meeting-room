@@ -137,14 +137,13 @@ class AddRooms extends Component {
             value = value.format('YYYY-MM-DD')
             type = type.replace('Date', 'Time');
         }
-        if( type === 'statTime') {
-            const nowDate = moment().format('YYYY-MM-DD');
-            value = this.postData['startDate'] || nowDate + ' ' + val.format('HH:mm');
+        const nowDate = moment().format('YYYY-MM-DD');
+        if( type === 'startTime') {
+            value = this.postData['startDate'] || nowDate + ' ' + value.format('HH:mm');
             delete this.postData['startDate'];
         }
         if (type === 'endTime') {
-            const nowDate = moment().format('YYYY-MM-DD');
-            value = this.postData['endDate'] || nowDate + ' ' + val.format('HH:mm');
+            value = this.postData['endDate'] || nowDate + ' ' + value.format('HH:mm');
             delete this.postData['endDate'];
         }
         this.postData[type] = value;
