@@ -184,7 +184,7 @@ class Appointment extends Component {
                 )}
             </FormItem>
             <FormItem
-              label="roomMails"
+              label="Location"
               {...formItemLayout}
             >
               <div className="item">
@@ -193,7 +193,7 @@ class Appointment extends Component {
                   onClose={() => this.setState({ showAddRooms: false})}
                   onSelect={this.onSelectRoom}
                 />
-                {getFieldDecorator('location', {
+                {getFieldDecorator('roomMails', {
                   initialValue: [],
                   rules: [{
                     type: 'array',
