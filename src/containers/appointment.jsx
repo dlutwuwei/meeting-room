@@ -83,7 +83,7 @@ class Appointment extends Component {
         data.location = data.location.map(item => item.mail).join(';');
         data.showas = localStorage.getItem('__showas') || '';
         data.reminder = localStorage.getItem('__reminder') || 15;
-        fetch.post('/api/meeting/add?token=40a56c3e9cc9465f60c810f2d26d38c', values).then(r => {
+        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(r => {
           message.success('预定成功');
         }).catch(err => {
           message.error('预定失败');
@@ -99,7 +99,7 @@ class Appointment extends Component {
     });
     fetch.get('/api/user/getList', {
       keyword: value,
-      token: '40a56c3e9cc9465f60c810f2d26d38c'
+      token: localStorage.getItem('__meeting_token') || ''
     }).then((r) => {
       this.setState({
         dataSource: r.data.list.map(item => ({
@@ -159,7 +159,7 @@ class Appointment extends Component {
               })(
                 <Select
                   mode="multiple"
-                  placeholder="Please select favourite colors"
+                  placeholder="Please select attendees!"
                   notFoundContent={fetching ? <Spin size="small" /> : null}
                   filterOption={false}
                   onSearch={this.handleSearch}

@@ -34,11 +34,11 @@ class AddRooms extends Component {
         area: 'SH',
     }
     search() {
-        fetch.get('/api/meetingRoom/getList', {
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
+        fetch.get('/api/MeetingRoom/GetList', {
+            token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
-                list: r.data
+                list: r.data.list
             });
         });
     }
@@ -137,9 +137,9 @@ class AddRooms extends Component {
             value = value.format('YYYY-MM-DD HH:mm')
         }
         this.postData[type] = value;
-        fetch.get('/api/meetingRoom/getList', {
+        fetch.get('/api/MeetingRoom/GetList', {
             ...this.postData,
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
+            token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
                 list: r.data
@@ -150,7 +150,7 @@ class AddRooms extends Component {
         this.postData['equipment'] = value.map(val => equipment[val]);
         fetch.get('/api/meetingRoom/getList', {
             ...this.postData,
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
+            token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
                 list: r.data

@@ -22,4 +22,5 @@ const Home = () => (
   </div>
 )
 
+localStorage.setItem('__meeting_token', '40a56c3e9cc9465f60c810f2d26d38c')
 export default Home;
