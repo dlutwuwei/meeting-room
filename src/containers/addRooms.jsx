@@ -142,7 +142,7 @@ class AddRooms extends Component {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
-                list: r.data
+                list: r.data.list
             });
         });
     }
@@ -153,7 +153,7 @@ class AddRooms extends Component {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
-                list: r.data
+                list: r.data.list
             });
         })
     }
