@@ -133,8 +133,19 @@ class AddRooms extends Component {
         this.closeModal();
     }
     handleChange(type, value) {
-        if (type === 'startTime' || type === 'endTime') {
-            value = value.format('YYYY-MM-DD HH:mm')
+        if (type === 'startDate' || type === 'endDate') {
+            value = value.format('YYYY-MM-DD')
+            type = type.replace('Date', 'Time');
+        }
+        if( type === 'statTime') {
+            const nowDate = moment().format('YYYY-MM-DD');
+            value = this.postData['startDate'] || nowDate + ' ' + val.format('HH:mm');
+            delete this.postData['startDate'];
+        }
+        if (type === 'endTime') {
+            const nowDate = moment().format('YYYY-MM-DD');
+            value = this.postData['endDate'] || nowDate + ' ' + val.format('HH:mm');
+            delete this.postData['endDate'];
         }
         this.postData[type] = value;
         fetch.get('/api/MeetingRoom/GetList', {
@@ -176,7 +187,7 @@ class AddRooms extends Component {
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
                         defaultValue={moment()}
-                        onChange={this.handleChange.bind(this, 'startTime')}
+                        onChange={this.handleChange.bind(this, 'startDate')}
                         className="my-date-picker"
                     />
                     <TimePicker
@@ -198,7 +209,7 @@ class AddRooms extends Component {
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
                         defaultValue={moment()}
-                        onChange={this.handleChange.bind(this, 'endTime')}
+                        onChange={this.handleChange.bind(this, 'endDate')}
                         className="my-date-picker"
                     />
                     <TimePicker

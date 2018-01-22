@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from 'img/logo.png';
 import { Tabs } from 'antd';
-import util from 'lib/util';
+import * as util from 'lib/util';
 import '../style/home.less';
 
 const TabPane = Tabs.TabPane;
