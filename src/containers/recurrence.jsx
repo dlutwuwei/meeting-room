@@ -62,7 +62,7 @@ class Recurrence extends Component {
         list: []
     }
     search(startTime, endTime, equipment, capacity) {
-        fetch.get('/api/Rooms/getList', {
+        fetch.get('/api/meetingRoom/getList', {
             startTime,
             endTime,
             equipment,

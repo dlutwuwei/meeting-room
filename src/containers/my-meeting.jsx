@@ -13,7 +13,7 @@ class MyMeeting extends Component {
         this.search(0);
     }
     search(type) {
-        fetch.get('/api/Meeting/getList', {
+        fetch.get('/api/meeting/getList', {
             type,
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
