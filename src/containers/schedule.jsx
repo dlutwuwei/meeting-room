@@ -109,7 +109,7 @@ class Schedule extends Component {
                             <thead>
                                 <tr>
                                     {new Array(30).fill('').map((item, i) => {
-                                        const time = i+14;
+                                        const time = i+18;
                                         const h = parseInt(time/2);
                                         const m = time%h*30 === 0? '00': '30';
                                         return <th>{h}:{m}</th>
@@ -123,7 +123,7 @@ class Schedule extends Component {
                                     }
                                     return ( <tr>
                                         {new Array(30).fill('').map((cell, i) => {
-                                            return <td>{item.userName}</td>
+                                            return <td></td>
                                         })}
                                     </tr>);
                                 })}

@@ -12,7 +12,7 @@ const Option = Select.Option;
 
 class Nav extends Component {
     state = {
-        current: 'appointment',
+        current: 'schedule',
         showRecurrence: false
     }
     handleChange(val) {

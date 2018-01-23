@@ -10,13 +10,13 @@ class NMeeting extends Component {
     }
     handleChange(val) {
         this.setState({
-            current_show: val === 'appointment'? 1 : 0
+            current_show: val === 'schedule'? 1 : 0
         });
     }
     render () {
         const { current_show } = this.state;
         let content;
-        if(current_show === 0) {
+        if(current_show === 1) {
             content = <Schedule />;
         } else {
             content = <Appointment />
