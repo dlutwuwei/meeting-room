@@ -74,6 +74,7 @@ class Appointment extends Component {
     this.props.form.validateFields((err, values) => {
       const data = values;
       if (!err) {
+        // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
         data.startTime = data.startDate.format('YYYY-MM-DD') + ' ' + data.startTime.format('HH:mm');
@@ -86,6 +87,9 @@ class Appointment extends Component {
         data.reminder = localStorage.getItem('__reminder') || 15;
         fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(r => {
           message.success('预定成功');
+          setTimeout(() => {
+            location.href = '/home?tab=my-meeting';
+          })
         }).catch(err => {
           message.error('预定失败');
         });
