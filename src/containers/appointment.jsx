@@ -85,8 +85,8 @@ class Appointment extends Component {
         delete data.location;
         data.showas = localStorage.getItem('__meeting_showas') || '';
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
-        data.private = localStorage.getItem('__meeting_private') || false;
-        data.important = localStorage.getItem('__meeting_private') || '';
+        data.isPrivate = localStorage.getItem('__meeting_private') || false;
+        data.importance = localStorage.getItem('__meeting_private') || '';
         fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(r => {
           message.success('预定成功');
           setTimeout(() => {

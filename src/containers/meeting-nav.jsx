@@ -14,7 +14,7 @@ class Nav extends Component {
     state = {
         current: 'schedule',
         showRecurrence: false,
-        important: '',
+        important: 2,
         _priviate: false
     }
     handleChange(val) {
@@ -33,7 +33,7 @@ class Nav extends Component {
     handleImportant = (type) => {
         if(type == this.state.important) {
             this.setState({
-                important: ''
+                important: 2
             });
         } else {
             this.setState({
@@ -96,8 +96,8 @@ class Nav extends Component {
                 <div className="nav-zone1">
                     <div className="zone-vertical">
                         <div className={classNames(["nav-item2 private", { "active": _private}])} onClick={this.handlePrivate}>Private</div>
-                        <div className={classNames(["nav-item2 high", { "active": important == 'high' }])} onClick={this.handleImportant.bind(this, 'high')}>High Important</div>
-                        <div className={classNames(["nav-item2 low", { "active": important == 'low' }])} onClick={this.handleImportant.bind(this, 'low')}>Low Important</div>
+                        <div className={classNames(["nav-item2 high", { "active": important == 'high' }])} onClick={this.handleImportant.bind(this, 3)}>High Important</div>
+                        <div className={classNames(["nav-item2 low", { "active": important == 'low' }])} onClick={this.handleImportant.bind(this, 1)}>Low Important</div>
                     </div>
                     <div className="option-title">Tag</div>
                 </div>
