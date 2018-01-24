@@ -86,7 +86,8 @@ class Recurrence extends Component {
     closeModal() {
         this.setState({
             visible: false
-        })
+        });
+        this.props.onClose();
     }
     render () {
         const { visible, list } = this.state;

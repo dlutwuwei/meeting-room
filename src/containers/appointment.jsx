@@ -77,9 +77,9 @@ class Appointment extends Component {
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
-        data.startTime = data.startDate.format('YYYY-MM-DD') + ' ' + data.startTime.format('HH:mm');
+        data.startTime = data.startDate.utc().format('YYYY-MM-DD') + ' ' + data.startTime.utc().format('HH:mm');
         delete data.startDate;
-        data.endTime = data.endDate.format('YYYY-MM-DD') + ' ' + data.endTime.format('HH:mm');
+        data.endTime = data.endDate.utc().format('YYYY-MM-DD') + ' ' + data.endTime.utc().format('HH:mm');
         delete data.endDate;
         data.roomMails = data.location.map(item => item.mail).join(';');
         delete data.location;

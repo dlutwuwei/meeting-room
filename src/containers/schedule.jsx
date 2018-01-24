@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Select from 'components/select';
 import Button from 'components/button';
 import fetch from 'lib/fetch';
+import AddRooms from './addRooms';
 
 import moment from 'moment';
 
@@ -38,7 +39,8 @@ class Schedule extends Component {
         checkAll: false,
         checkedList: [],
         options: [],
-        date: new Date().toLocaleDateString()
+        date: new Date().toLocaleDateString(),
+        showAddRooms: false
     }
     componentDidMount() {
         this.search(new Date().toLocaleDateString(), [])
@@ -85,14 +87,14 @@ class Schedule extends Component {
         });
     }
     render () {
-        const { data, checkAll, checkedList, options, date } = this.state;
+        const { data, checkAll, checkedList, options, date, showAddRooms } = this.state;
         return (
             <div className="schedule-contianer">
                 <div className="schedule-main">
                     <div className="schedule-left">
                         <div className="send-btn2">Send</div>
                         <div className="attendees">
-                            <div style={{ borderBottom: '1px solid #E9E9E9', height: 33 }}>
+                            <div className="select-all">
                                 <Checkbox
                                     onChange={this.onCheckAllChange.bind(this)}
                                     checked={this.state.checkAll}
@@ -108,7 +110,7 @@ class Schedule extends Component {
                         <table>
                             <thead>
                                 <tr>
-                                    {new Array(30).fill('').map((item, i) => {
+                                    {new Array(20).fill('').map((item, i) => {
                                         const time = i+18;
                                         const h = parseInt(time/2);
                                         const m = time%h*30 === 0? '00': '30';
@@ -122,7 +124,7 @@ class Schedule extends Component {
                                         return <tr>  </tr>
                                     }
                                     return ( <tr>
-                                        {new Array(30).fill('').map((cell, i) => {
+                                        {new Array(20).fill('').map((cell, i) => {
                                             return <td></td>
                                         })}
                                     </tr>);
@@ -160,6 +162,12 @@ class Schedule extends Component {
                         />
                     </div>
                     <div className="item">
+                        <AddRooms
+                            visible={showAddRooms}
+                            onClose={() => this.setState({ showAddRooms: false})}
+                            onSelect={this.onSelectRoom}
+                        />
+                        <Button style={{ width: 105, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
                         <div className="label" style={{'margin-right': 10}}>End Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"

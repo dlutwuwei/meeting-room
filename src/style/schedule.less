@@ -1,4 +1,5 @@
 .schedule-contianer {
+    padding-bottom: 20px;
     .schedule-main {
         padding: 20px 0;
         display: flex;
@@ -12,6 +13,10 @@
         white-space: nowrap;
         .attendees {
             text-align: left;
+            .select-all {
+                height: 33px;
+                line-height: 33px;
+            }
             .ant-checkbox-wrapper {
                 display: block;
                 width: 150px;
@@ -27,6 +32,7 @@
             line-height: 22px;
             height: 32px;
             vertical-align: middle;
+            margin-bottom: 5px;
             &::before {
                 content: '';
                 width: 26px;
@@ -50,7 +56,8 @@
         width: 0;
         overflow: auto;
         .schedule-date {
-            line-height: 30px;
+            line-height: 38px;
+            height: 38px;
             .btn {
                 width: 14px;
                 margin-right: 4px;
@@ -98,6 +105,9 @@
             display: flex;
             margin-top: 20px;
             line-height: 18px;
+            .label {
+                line-height: 33px;
+            }
         }
     }
 }

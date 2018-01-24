@@ -138,13 +138,15 @@ class AddRooms extends Component {
         if (type === 'startDate' || type === 'endDate') {
             type = type.replace('Date', 'Time');
         }
-        const nowDate = moment().format('YYYY-MM-DD');
+        // startDate和startTime合并
+        // 后端存储utc时间
+        const nowDate = moment.utc().format('YYYY-MM-DD');
         if( type === 'startTime') {
-            value = this.postData['startDate'] || nowDate + ' ' + value.format('HH:mm');
+            value = this.postData['startDate'].utc() || nowDate + ' ' + value.utc().format('HH:mm');
             delete this.postData['startDate'];
         }
         if (type === 'endTime') {
-            value = this.postData['endDate'] || nowDate + ' ' + value.format('HH:mm');
+            value = this.postData['endDate'].utc() || nowDate + ' ' + value.utc().format('HH:mm');
             delete this.postData['endDate'];
         }
         this.postData[type] = value;
