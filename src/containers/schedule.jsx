@@ -85,9 +85,9 @@ class Schedule extends Component {
     }
     onCheckAllChange(e) {
         const allOptions = this.state.options.map(item => item.value);
-        this.state.data.forEach(item => {
-            item.selected = e.target.checked;
-        });
+        // this.state.data.forEach(item => {
+        //     item.selected = e.target.checked;
+        // });
         this.setState({
             checkedList: e.target.checked ? allOptions : [],
             checkAll: e.target.checked,
