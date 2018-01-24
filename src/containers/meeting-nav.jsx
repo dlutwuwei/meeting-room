@@ -13,7 +13,9 @@ const Option = Select.Option;
 class Nav extends Component {
     state = {
         current: 'schedule',
-        showRecurrence: false
+        showRecurrence: false,
+        important: '',
+        _priviate: false
     }
     handleChange(val) {
         const { onChange } = this.props;
@@ -28,8 +30,26 @@ class Nav extends Component {
            showRecurrence: true
        });
     }
+    handleImportant = (type) => {
+        if(type == this.state.important) {
+            this.setState({
+                important: ''
+            });
+        } else {
+            this.setState({
+                important: type
+            });
+        }
+        localStorage.setItem('__meeting_important', type);
+    }
+    handlePrivate = () => {
+        this.setState({
+            _private: !this.state._private
+        });
+        localStorage.setItem('__meeting_private', !this.state._private);
+    }
     render () {
-        const { current, showRecurrence } = this.state;
+        const { current, showRecurrence, _private, important } = this.state;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
@@ -45,7 +65,7 @@ class Nav extends Component {
                             <div className="nav-item1">
                                 <span className="title showas">Show As:</span>
                                 <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
-                                    localStorage.setItem('__showas', val);
+                                    localStorage.setItem('__meeting_showas', val);
                                 }}>
                                     <Option key="1" value="1">Busy</Option>
                                     <Option key="2"  value="2">Free</Option>
@@ -55,7 +75,7 @@ class Nav extends Component {
                             <div className="nav-item1">
                                 <span className="title reminder">Reminder:</span>
                                 <Select defaultValue="15" style={{ width: 120 }} onChange={(val)=> {
-                                    localStorage.setItem('__reminder', val);
+                                    localStorage.setItem('__meeting_reminder', val);
                                 }}>
                                     <Option key={1} value="15">15 minutes</Option>
                                     <Option key={2} value="30">30 minutes</Option>
@@ -75,9 +95,9 @@ class Nav extends Component {
                 </div>
                 <div className="nav-zone1">
                     <div className="zone-vertical">
-                        <div className="nav-item2 private">Private</div>
-                        <div className="nav-item2 high">High Important</div>
-                        <div className="nav-item2 low">Low Important</div>
+                        <div className={classNames(["nav-item2 private", { "active": _private}])} onClick={this.handlePrivate}>Private</div>
+                        <div className={classNames(["nav-item2 high", { "active": important == 'high' }])} onClick={this.handleImportant.bind(this, 'high')}>High Important</div>
+                        <div className={classNames(["nav-item2 low", { "active": important == 'low' }])} onClick={this.handleImportant.bind(this, 'low')}>Low Important</div>
                     </div>
                     <div className="option-title">Tag</div>
                 </div>
