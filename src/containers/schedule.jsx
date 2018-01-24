@@ -39,19 +39,31 @@ class Schedule extends Component {
         checkAll: false,
         checkedList: [],
         options: [],
-        date: new Date().toLocaleDateString(),
+        date: moment(),
+        attendees: [],
         showAddRooms: false
     }
     componentDidMount() {
-        this.search(new Date().toLocaleDateString(), [])
+        this.search(moment())
     }
-    search(date, users) {
+    searchPev = () => {
+        const { attendees, date } = this.state;
+        this.search(date.subtract(1, 'd'), attendees);
+    }
+    searchNext = () => {
+        const { attendees, date } = this.state;
+        this.search(date.add(1, 'd'), attendees);
+    }
+    search(date, users = []) {
+        this.setState({
+            date
+        });
         fetch.get('/api/Schedule/getList', {
             users: JSON.stringify(users),
-            date: date,
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
+            date: date.clone().utc().format('YYYY-MM-DD'),
+            token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
-            const options = r.data.map(item => {
+            const AttendeesOptions = r.data.map(item => {
                 return {
                     value: item.id,
                     label: item.userName
@@ -61,7 +73,7 @@ class Schedule extends Component {
             const checkedList = r.data.map(item => item.id);
             this.setState({
                 data: r.data,
-                options,
+                options: AttendeesOptions,
                 checkedList,
                 checkAll: true
             })
@@ -106,7 +118,11 @@ class Schedule extends Component {
                         </div>
                     </div>
                     <div className="schedule-content">
-                        <div className="schedule-date"><Icon type="left" className="btn" /><Icon type="right" className="btn" />{date}</div>
+                        <div className="schedule-date">
+                            <Icon type="left" className="btn" onClick={this.searchPev} />
+                            <Icon type="right" className="btn" onClick={this.searchNext} />
+                            {date.format('YYYY-MM-DD')}
+                        </div>
                         <table>
                             <thead>
                                 <tr>
