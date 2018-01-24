@@ -53,18 +53,16 @@
     }
 }
 
-.add-room-container {
+.ant-table-thead > tr > th {
+    background-color: #198feb;
+    color: #fff;
+    padding: 10px;
+}
+.add-room-container, .add-attendees-container {
     table {
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
         white-space: nowrap;
-    }
-    .ant-table-thead {
-        th {
-            background-color: #198feb;
-            color: #fff;
-            height: 40px;
-        }
     }
     .room-item {
         display: flex;
@@ -85,6 +83,12 @@
     }
 }
 
+.add-attendees-container {
+    .attendees-select {
+        margin-top: 20px;
+        text-align: center;
+    }
+}
 .add-recurrence-container {
     .rcu-title {
         width: 100px;

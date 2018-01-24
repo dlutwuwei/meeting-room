@@ -3,7 +3,7 @@ import Select from 'components/select';
 import Button from 'components/button';
 import fetch from 'lib/fetch';
 import AddRooms from './addRooms';
-
+import AddAttendees from './addAttendees';
 import moment from 'moment';
 
 import Nav from './meeting-nav';
@@ -11,6 +11,7 @@ import { Checkbox, DatePicker, Icon} from 'antd';
 import TimePicker from 'rc-time-picker';
 
 import '../style/schedule.less';
+import addAttendees from './addAttendees';
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -37,7 +38,8 @@ class Schedule extends Component {
         options: [],
         date: moment(),
         attendees: [],
-        showAddRooms: false
+        showAddRooms: false,
+        showAddAttendees: false
     }
     componentDidMount() {
         this.search(moment())
@@ -98,14 +100,17 @@ class Schedule extends Component {
             value: item.mail
         }));
         this.setState({
-            options,
-            checkedList: options.map(item => item.value),
+            options: this.state.options.concat(options),
+            checkedList: this.state.checkedList.concat(options.map(item => item.value)),
             checkAll: true,
-            data: this.state.data.concat(new Array(options.length).fill('1'))
+            data: this.state.data
         });
     }
+    onSelectAttendee(attendees) {
+        this.onSelectRoom(attendees)
+    };
     render () {
-        const { data, checkAll, checkedList, options, date, showAddRooms } = this.state;
+        const { data, checkAll, checkedList, options, date, showAddRooms, showAddAttendees } = this.state;
         return (
             <div className="schedule-contianer">
                 <div className="schedule-main">
@@ -158,7 +163,16 @@ class Schedule extends Component {
                 </div>
                 <div className="schedule-footer">
                     <div className="item">
-                        <Button style={{ width: 105, marginRight: 8 }}>Attendees</Button>
+                        <AddAttendees
+                            visible={showAddAttendees}
+                            onClose={() => this.setState({ showAddAttendees: false})}
+                            onSelect={this.onSelectAttendee.bind(this)}
+                        />
+                        <Button style={{ width: 125, marginRight: 8 }} onClick={() => {
+                            this.setState({
+                                showAddAttendees: true
+                            });
+                        }}>Add Attendees</Button>
                         <div className="label" style={{'margin-right': 10}}>Start Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
@@ -190,7 +204,7 @@ class Schedule extends Component {
                             onClose={() => this.setState({ showAddRooms: false})}
                             onSelect={this.onSelectRoom.bind(this)}
                         />
-                        <Button style={{ width: 105, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
+                        <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
                         <div className="label" style={{'margin-right': 10}}>End Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
