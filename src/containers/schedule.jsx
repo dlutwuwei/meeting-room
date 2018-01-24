@@ -31,7 +31,7 @@ class Schedule extends Component {
         super();
     }
     state = {
-        data: [],
+        data: [1, 2, 3],
         checkAll: false,
         checkedList: [],
         options: [],
@@ -76,9 +76,6 @@ class Schedule extends Component {
         // });
     }
     onChange(checkedList) {
-        this.state.data.forEach(item => {
-            item.selected = checkedList.includes(item.id);
-        });
         this.setState({
             checkedList,
             checkAll: checkedList.length === this.state.options.length,
@@ -103,7 +100,8 @@ class Schedule extends Component {
         this.setState({
             options,
             checkedList: options.map(item => item.value),
-            checkAll: true
+            checkAll: true,
+            data: this.state.data.concat(new Array(options.length).fill('1'))
         });
     }
     render () {
@@ -148,9 +146,6 @@ class Schedule extends Component {
                             </thead>
                             <tbody>
                                 {data.map(item => {
-                                    if(!item.selected) {
-                                        return <tr>  </tr>
-                                    }
                                     return ( <tr>
                                         {new Array(20).fill('').map((cell, i) => {
                                             return <td></td>
