@@ -14,11 +14,7 @@ import '../style/schedule.less';
 
 const CheckboxGroup = Checkbox.Group;
 
-const options = [
-    { label: 'Apple', value: 'Apple' },
-    { label: 'Pear', value: 'Pear' },
-    { label: 'Orange', value: 'Orange' }
-];
+const options = [];
 
 function generateOptions(length, include) {
     const arr = [];
@@ -58,26 +54,26 @@ class Schedule extends Component {
         this.setState({
             date
         });
-        fetch.get('/api/Schedule/getList', {
-            users: JSON.stringify(users),
-            date: date.clone().utc().format('YYYY-MM-DD'),
-            token: localStorage.getItem('__meeting_token') || ''
-        }).then(r => {
-            const AttendeesOptions = r.data.map(item => {
-                return {
-                    value: item.id,
-                    label: item.userName
-                }
-            });
-            r.data.forEach(item => item.selected = true)
-            const checkedList = r.data.map(item => item.id);
-            this.setState({
-                data: r.data,
-                options: AttendeesOptions,
-                checkedList,
-                checkAll: true
-            })
-        });
+        // fetch.get('/api/Schedule/getList', {
+        //     users: JSON.stringify(users),
+        //     date: date.clone().utc().format('YYYY-MM-DD'),
+        //     token: localStorage.getItem('__meeting_token') || ''
+        // }).then(r => {
+        //     const AttendeesOptions = r.data.map(item => {
+        //         return {
+        //             value: item.id,
+        //             label: item.userName
+        //         }
+        //     });
+        //     r.data.forEach(item => item.selected = true)
+        //     const checkedList = r.data.map(item => item.id);
+        //     this.setState({
+        //         data: r.data,
+        //         options: AttendeesOptions,
+        //         checkedList,
+        //         checkAll: true
+        //     })
+        // });
     }
     onChange(checkedList) {
         this.state.data.forEach(item => {
@@ -98,6 +94,18 @@ class Schedule extends Component {
             checkAll: e.target.checked,
         });
     }
+    onSelectRoom(rooms) {
+        console.log(rooms);
+        const options = rooms.map(item => ({
+            label: item.name,
+            value: item.mail
+        }));
+        this.setState({
+            options,
+            checkedList: options.map(item => item.value),
+            checkAll: true
+        });
+    }
     render () {
         const { data, checkAll, checkedList, options, date, showAddRooms } = this.state;
         return (
@@ -114,7 +122,11 @@ class Schedule extends Component {
                                     All Attendees
                                 </Checkbox>
                             </div>
-                            <CheckboxGroup options={options} value={checkedList} onChange={this.onChange.bind(this)} />
+                            <CheckboxGroup
+                                options={options}
+                                value={checkedList}
+                                onChange={this.onChange.bind(this)}
+                            />
                         </div>
                     </div>
                     <div className="schedule-content">
@@ -181,7 +193,7 @@ class Schedule extends Component {
                         <AddRooms
                             visible={showAddRooms}
                             onClose={() => this.setState({ showAddRooms: false})}
-                            onSelect={this.onSelectRoom}
+                            onSelect={this.onSelectRoom.bind(this)}
                         />
                         <Button style={{ width: 105, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
                         <div className="label" style={{'margin-right': 10}}>End Time</div>
