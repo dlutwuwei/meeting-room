@@ -186,7 +186,7 @@ class Schedule extends Component {
                                 showAddAttendees: true
                             });
                         }}>Add Attendees</Button>
-                        <div className="label" style={{'margin-right': 10}}>Start Time</div>
+                        <div className="label" style={{'width': 70, 'marginRight': 10}}>Start Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
@@ -218,7 +218,7 @@ class Schedule extends Component {
                             onSelect={this.onSelectRoom.bind(this)}
                         />
                         <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
-                        <div className="label" style={{'margin-right': 10}}>End Time</div>
+                        <div className="label" style={{'width': 70, 'marginRight': 10}}>End Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"

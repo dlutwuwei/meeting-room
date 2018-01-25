@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Button from 'components/button';
 import fetch from 'lib/fetch';
-
+import moment from 'moment';
 import '../style/my-meeting.less';
 
 class MyMeeting extends Component {
@@ -60,9 +60,9 @@ class MyMeeting extends Component {
                                         <tr>
                                             <td>{item.subject}</td>
                                             <td>{item.roomNames}</td>
-                                            <td>{item.startTime}</td>
-                                            <td>{item.endTime}</td>
-                                            <td>{item.createTime}</td>
+                                            <td>{moment.utc(item.startTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
+                                            <td>{moment.utc(item.endTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
+                                            <td>{moment.utc(item.createTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
                                             <td></td>
                                         </tr>
                                     );
