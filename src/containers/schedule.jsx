@@ -108,6 +108,16 @@ class Schedule extends Component {
     onSelectAttendee(attendees) {
         this.onSelectRoom(attendees)
     };
+    handleMouseDown = (x, y) => {
+        console.log('down', x, y)
+    }
+    handleMouseOver = (x, y) => {
+        console.log(x, y)
+    }
+    handleMouseUp = (x, y) => {
+        console.log('up', x, y)
+
+    }
     render () {
         const { data, checkAll, checkedList, options, date, showAddRooms, showAddAttendees } = this.state;
         return (
@@ -149,10 +159,14 @@ class Schedule extends Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map(item => {
+                                {data.map((item, x) => {
                                     return ( <tr>
-                                        {new Array(20).fill('').map((cell, i) => {
-                                            return <td></td>
+                                        {new Array(20).fill('').map((cell, y) => {
+                                            return <td
+                                                    onMouseDown={this.handleMouseDown.bind(this, x, y)}
+                                                    onMouseUp={this.handleMouseUp.bind(this, x, y)}
+                                                    onMouseOver={this.handleMouseOver.bind(this, x, y)}
+                                                />
                                         })}
                                     </tr>);
                                 })}
