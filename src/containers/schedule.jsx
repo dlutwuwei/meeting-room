@@ -85,9 +85,6 @@ class Schedule extends Component {
     }
     onCheckAllChange(e) {
         const allOptions = this.state.options.map(item => item.value);
-        // this.state.data.forEach(item => {
-        //     item.selected = e.target.checked;
-        // });
         this.setState({
             checkedList: e.target.checked ? allOptions : [],
             checkAll: e.target.checked,
@@ -98,12 +95,14 @@ class Schedule extends Component {
         const options = rooms.map(item => ({
             label: item.name,
             value: item.mail
-        }));
+        })).filter(item => {
+            return !this.state.checkedList.find(ele => ele === item.value);
+        });
         this.setState({
             options: this.state.options.concat(options),
             checkedList: this.state.checkedList.concat(options.map(item => item.value)),
             checkAll: true,
-            data: this.state.data
+            data: this.state.data.concat(options.map(item => ({})))
         });
     }
     onSelectAttendee(attendees) {
@@ -177,8 +176,8 @@ class Schedule extends Component {
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
-                            onChange={() => {}}
-                            onOk={() => {}}
+                            onChange={(date) => { this.setState({ date })}}
+                            value={date}
                             className="my-date-picker"
                             style={{'margin-right': 10}}
                         />
@@ -209,8 +208,8 @@ class Schedule extends Component {
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
-                            onChange={() => {}}
-                            onOk={() => {}}
+                            onChange={(date) => { this.setState({ date })}}
+                            value={date}
                             className="my-date-picker"
                             style={{'margin-right': 10}}
                         />
