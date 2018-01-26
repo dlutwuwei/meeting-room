@@ -14,7 +14,7 @@ class MyMeeting extends Component {
     }
     search(type) {
         fetch.get('/api/meeting/getList', {
-            type,
+            state: type,
             token: localStorage.getItem('__meeting_token')
         }).then(r => {
             this.setState({
