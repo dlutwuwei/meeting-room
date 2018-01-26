@@ -163,9 +163,9 @@ class Schedule extends Component {
             this.setState({
                 right: x,
                 bottom: y,
-                endTime: moment(`${9+parseInt((x)/2)}:${((x+1)%2)*30}`, 'HH:mm')
+                endTime: moment(`${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`, 'HH:mm')
             });
-            console.log('UP', x, y, `${9+parseInt((x)/2)}:${((x+1)%2)*30}`)
+            console.log('UP', x, y, `${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`)
 
         }
     }
