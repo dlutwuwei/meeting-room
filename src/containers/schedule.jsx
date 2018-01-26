@@ -51,6 +51,7 @@ class Schedule extends Component {
         right: 0,
         bottom: 0
     }
+    hover = false
     componentDidMount() {
         this.search(moment())
     }
@@ -150,6 +151,7 @@ class Schedule extends Component {
     }
     handleMouseDown = (x, y) => {
         console.log('down', x, y, `${9+parseInt(x/2)}:${(x%2)*30}`)
+        this.hover = true;
         this.setState({
             left: x,
             top: y,
@@ -157,11 +159,13 @@ class Schedule extends Component {
         });
     }
     handleMouseOver = (x, y) => {
-        this.setState({
-            right: x,
-            bottom: y,
-            endTime: moment(`${9+parseInt(x/2)}:${((x+1)%2)*30}`, 'HH:mm')
-        });
+        if(this.hover) {
+            this.setState({
+                right: x,
+                bottom: y,
+                endTime: moment(`${9+parseInt(x/2)}:${((x+1)%2)*30}`, 'HH:mm')
+            });
+        }
     }
     handleMouseUp = (x, y) => {
         console.log('UP', x, y, `${9+parseInt(x/2)}:${((x+1)%2)*30}`)
@@ -170,6 +174,7 @@ class Schedule extends Component {
             bottom: y,
             endTime: moment(`${9+parseInt(x/2)}:${((x+1)%2)*30}`, 'HH:mm')
         });
+        this.hover = false;
     }
     render () {
         const { data, checkAll, checkedList, options, date, showAddRooms,
@@ -220,7 +225,7 @@ class Schedule extends Component {
                                         {new Array(20).fill('').map((cell, x) => {
                                             // console.log(x >= left && y >= top && y <= bottom && x <= right)
                                             return <td
-                                                    className={classnames([{ 'active': x >= left && y >= top && y <= bottom && x <= right}])}
+                                                    className={classnames([{ 'active': top >= 0 && left >= 0 && x >= left && y >= top && y <= bottom && x <= right}])}
                                                     onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                     onMouseUp={this.handleMouseUp.bind(this, x, y)}
                                                     onMouseOver={this.handleMouseOver.bind(this, x, y)}
