@@ -159,7 +159,8 @@ class Schedule extends Component {
     handleMouseOver = (x, y) => {
         this.setState({
             right: x,
-            bottom: y
+            bottom: y,
+            endTime: moment(`${9+parseInt(x/2)}:${((x+1)%2)*30}`, 'HH:mm')
         });
     }
     handleMouseUp = (x, y) => {
