@@ -1,8 +1,21 @@
 import { combineReducers } from 'redux';
 
+const initState = {
+  showTimezone: false
+}
+
+const TOGGLE_TIMEZONE = 'TOGGLE_TIMEZONE';
 // ---------------- export default is reducer -------------
 // reducers
-function reducer1(state, action) {
+function navReducer(state = initState, action) {
+  switch(action.type) {
+    case TOGGLE_TIMEZONE:
+      return {
+        showTimezone: action.toggle
+      };
+    default:
+      return state;
+  }
   return {};
 }
 
@@ -12,7 +25,7 @@ function reducer2(state, action) {
 
 export default combineReducers(
   {
-    reducer1,
+    navReducer,
     reducer2
   }
 );
@@ -20,13 +33,13 @@ export default combineReducers(
 // ------------------ export others is action creators ---------------------
 
 // action creators
-function hello(text) {
+const toggleTimezone = (toggle) => {
   return {
-    type: 'action1',
-    data: 'hello'
+    type: TOGGLE_TIMEZONE,
+    toggle
   }
 }
 
 export {
-  hello
+  toggleTimezone
 };

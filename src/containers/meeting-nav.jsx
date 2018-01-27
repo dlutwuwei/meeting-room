@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import '../style/meeting-nav.less';
-import { hello } from '../redux/home-redux';
+import { toggleTimezone } from '../redux/home-redux';
 
 import Select from 'components/select';
 import Button from 'components/button';
@@ -14,6 +14,7 @@ class Nav extends Component {
     state = {
         current: 'appointment',
         showRecurrence: false,
+        showTimezone: false,
         important: 2,
         _priviate: false
     }
@@ -49,7 +50,7 @@ class Nav extends Component {
         localStorage.setItem('__meeting_private', !this.state._private);
     }
     render () {
-        const { current, showRecurrence, _private, important } = this.state;
+        const { current, showRecurrence, _private, important, timezone } = this.state;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
@@ -89,7 +90,12 @@ class Nav extends Component {
                             onClose={() => this.setState({ showRecurrence: false})}
                         />
                         <div className="nav-item recurrence" onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
-                        <div className="nav-item time-zone"><div className="time-zone-icon" />TimeZones</div>
+                        <div className="nav-item time-zone"><div className="time-zone-icon" onClick={() => {
+                            this.props.actions.toggleTimezone(!this.state.showTimezone);
+                            this.setState({
+                                showTimezone: !this.state.showTimezone
+                            });
+                        }}/>TimeZones</div>
                     </div>
                     <div className="option-title">Options</div>
                 </div>
@@ -116,7 +122,7 @@ const mapStateToProps = state => ({
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-      hello
+        toggleTimezone
     }, dispatch)
   };
 }

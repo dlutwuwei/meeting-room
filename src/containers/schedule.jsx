@@ -1,21 +1,24 @@
 import React, { Component } from 'react'
-import Select from 'components/select';
 import Button from 'components/button';
 import fetch from 'lib/fetch';
 import AddRooms from './addRooms';
 import AddAttendees from './addAttendees';
 import moment from 'moment';
 import classnames from 'classNames';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Nav from './meeting-nav';
-import { Checkbox, DatePicker, Icon, message, Modal } from 'antd';
+import { Checkbox, DatePicker, Icon, message, Modal, Select } from 'antd';
 import TimePicker from 'rc-time-picker';
 
 import '../style/schedule.less';
 import addAttendees from './addAttendees';
+import Timezone from '../constant/timezone';
 
 const CheckboxGroup = Checkbox.Group;
 const confirm = Modal.confirm;
+const Option = Select.Option;
 
 const options = [];
 
@@ -27,6 +30,13 @@ function generateOptions(length, include) {
         }
     }
     return arr;
+}
+
+const children = [];
+const zones = Object.keys(Timezone);
+for (let i = 0; i < zones.length; i++) {
+    const zone = Timezone[zones[i]]
+    children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
 
 class Schedule extends Component {
@@ -50,7 +60,8 @@ class Schedule extends Component {
         top: -1,
         left: -1,
         right: 0,
-        bottom: 0
+        bottom: 0,
+        timezone: { key: 'CCT'}
     }
     hover = false
     componentDidMount() {
@@ -191,21 +202,22 @@ class Schedule extends Component {
                 endTime: moment(`${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`, 'HH:mm')
             });
             console.log('UP', x, y, `${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`)
-
         }
     }
     handleMouseUp = (x, y) => {
-        // this.setState({
-        //     right: x,
-        //     bottom: y,
-        //     endTime: moment(`${9+parseInt(x/2)}:${((x+2)%2)*30}`, 'HH:mm')
-        // });
         this.hover = false;
+    }
+    handleTimezoneChange = (val) => {
+        this.setState({
+            timezone: val
+        });
     }
     render () {
         const { data, checkAll, checkedList, options, date, showAddRooms,
             showAddAttendees, left, right, top, bottom,
-            startTime, endTime } = this.state;
+            startTime, endTime, timezone } = this.state;
+        const { showTimezone } = this.props;
+        console.log(showTimezone)
         // console.log( left, right, top, bottom)
         return (
             <div className="schedule-contianer">
@@ -300,6 +312,16 @@ class Schedule extends Component {
                                 });
                             }}
                         />
+                        { showTimezone && <Select
+                            size="default"
+                            defaultValue={Timezone['CCT']}
+                            value={timezone}
+                            labelInValue
+                            onChange={this.handleTimezoneChange}
+                            style={{ width: 200, marginLeft: 20 }}
+                            >
+                            {children}
+                        </Select>}
                     </div>
                     <div className="item">
                         <AddRooms
@@ -333,6 +355,16 @@ class Schedule extends Component {
                             }}
                             onChange={date => { this.setState({ endTime: date })}}
                         />
+                        { showTimezone && <Select
+                            size="default"
+                            defaultValue={Timezone['CCT']}
+                            value={timezone}
+                            labelInValue
+                            onChange={this.handleTimezoneChange}
+                            style={{ width: 200, marginLeft: 20 }}
+                            >
+                            {children}
+                        </Select>}
                     </div>
                 </div>
             </div>
@@ -340,4 +372,15 @@ class Schedule extends Component {
     }
 }
 
-export default Schedule
+
+const mapStateToProps = state => {
+    return {
+        ...state.navReducer
+    };
+};
+
+function mapDispatchToProps(dispatch) {
+  return null;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
