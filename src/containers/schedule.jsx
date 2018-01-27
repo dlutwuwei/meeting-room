@@ -217,8 +217,6 @@ class Schedule extends Component {
             showAddAttendees, left, right, top, bottom,
             startTime, endTime, timezone } = this.state;
         const { showTimezone } = this.props;
-        console.log(showTimezone)
-        // console.log( left, right, top, bottom)
         return (
             <div className="schedule-contianer">
                 <div className="schedule-main">
