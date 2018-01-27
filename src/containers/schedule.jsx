@@ -226,7 +226,7 @@ class Schedule extends Component {
                                         {new Array(20).fill('').map((cell, x) => {
                                             // console.log(x >= left && y >= top && y <= bottom && x <= right)
                                             return <td
-                                                    className={classnames([{ 'active': top >= 0 && left >= 0 && x >= left && y >= top && y <= bottom && x <= right}])}
+                                                    className={classnames([{ 'active': top >= 0 && left >= 0 && x >= left && x <= right}])}
                                                     onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                     onMouseUp={this.handleMouseUp.bind(this, x, y)}
                                                     onMouseOver={this.handleMouseOver.bind(this, x, y)}
