@@ -155,6 +155,8 @@ class Schedule extends Component {
         this.setState({
             left: x,
             top: y,
+            right: -1,
+            bottom: -1,
             startTime: moment(`${9+parseInt(x/2)}:${(x%2)*30}`, 'HH:mm')
         });
     }
