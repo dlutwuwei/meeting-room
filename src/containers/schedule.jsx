@@ -8,13 +8,14 @@ import moment from 'moment';
 import classnames from 'classNames';
 
 import Nav from './meeting-nav';
-import { Checkbox, DatePicker, Icon, message } from 'antd';
+import { Checkbox, DatePicker, Icon, message, Modal } from 'antd';
 import TimePicker from 'rc-time-picker';
 
 import '../style/schedule.less';
 import addAttendees from './addAttendees';
 
 const CheckboxGroup = Checkbox.Group;
+const confirm = Modal.confirm;
 
 const options = [];
 
@@ -130,6 +131,8 @@ class Schedule extends Component {
     handleSend = () => {
         const { attendees, rooms, date, startTime, endTime } = this.state;
         const data = {};
+        data.content = localStorage.getItem('__meeting_content') || '';
+        data.subject = localStorage.getItem('__meeting_subject') || '';
         data.from = localStorage.getItem('__meeting_user_email') || '';
         data.receiver = attendees.map(item => item.mail).join(';');
         data.roomMails = rooms.map(item => item.mail).join(';');
@@ -140,14 +143,34 @@ class Schedule extends Component {
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_private') || '';
         localStorage.setItem('__appointment_data', JSON.stringify(data));
-        // fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(r => {
-        //   message.success('预定成功');
-        //   setTimeout(() => {
-        //     location.href = '/home?tab=my-meeting';
-        //   })
-        // }).catch(err => {
-        //   message.error('预定失败');
-        // });
+        if(!data.receiver || !data.roomMails) {
+            Modal.error({
+                title: '没有填写收件人或会议室',
+            });
+        } else if(!data.content || !data.subject) {
+            confirm({
+                title: '没有填写标题和内容，确认发送？',
+                onOk: () => {
+                    this.sendAppointment(data)
+                },
+                onCancel() {
+                    console.log('Cancel');
+                }
+            });
+        } else {
+            this.sendAppointment(data);
+        }
+        
+    }
+    sendAppointment(data) {
+        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(r => {
+            message.success('预定成功');
+            setTimeout(() => {
+                location.href = '/home?tab=my-meeting';
+            });
+        }).catch(err => {
+            message.error('预定失败');
+        });
     }
     handleMouseDown = (x, y) => {
         console.log('down', x, y, `${9+parseInt(x/2)}:${(x%2)*30}`)

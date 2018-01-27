@@ -187,7 +187,9 @@ class Appointment extends Component {
                   message: 'Please input subject',
                 }]
               })(
-                <Input placeholder="" />
+                <Input placeholder="" onChang={val => {
+                  localStorage.setItem('__meeting_subject', val);
+                }}/>
                 )}
             </FormItem>
             <FormItem
@@ -281,7 +283,9 @@ class Appointment extends Component {
                   message: 'Please input attendees',
                 }]
               })(
-                <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} />
+                <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={val => {
+                  localStorage.setItem('__meeting_content');
+                }}/>
                 )}
             </div>
           </Form>
