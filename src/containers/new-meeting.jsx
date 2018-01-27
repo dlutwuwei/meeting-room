@@ -6,7 +6,7 @@ import Schedule from './schedule';
 
 class NMeeting extends Component {
     state = {
-        current_show: 1
+        current_show: 0
     }
     handleChange(val) {
         this.setState({

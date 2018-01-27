@@ -12,7 +12,7 @@ const Option = Select.Option;
 
 class Nav extends Component {
     state = {
-        current: 'schedule',
+        current: 'appointment',
         showRecurrence: false,
         important: 2,
         _priviate: false
