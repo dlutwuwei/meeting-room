@@ -77,6 +77,8 @@
             border-collapse: collapse;
             .thead {
                 outline: 1px solid #eee;
+                height: 33px!important;
+                line-height: 33px;
                 .block {
                     min-width: 50px;
                     background-color: #f7fbff;
@@ -98,6 +100,8 @@
                 text-align: center;
                 border-right: 1px solid #eee;
                 border-left: 1px solid #eee;
+                background-repeat: repeat-x;
+                background-position: center;
                 &.active {
                     background-color: rgb(110, 189, 253);
                 }
@@ -109,6 +113,21 @@
                 }
                 &.end {
                     border-right-color: red;
+                }
+                &.busy {
+                    background-image: url(~img/icons/busy.png)
+                }
+                &.out {
+                    background-image: url(~img/icons/out.png)
+                }
+                &.interim {
+                    background-image: url(~img/icons/interim.png)
+                }
+                &.noinfo {
+                    background-image: url('~img/icons/noinfo.png')
+                }
+                &.occupy {
+                    background-image: url('~img/icons/occupy.png')
                 }
             }
         }

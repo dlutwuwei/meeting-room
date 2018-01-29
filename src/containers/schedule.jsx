@@ -45,9 +45,17 @@ class Schedule extends Component {
     }
     state = {
         // 计划表
-        data: [1, 2, 3],
+        data: [[], [{
+            status: 1,
+            start: 2,
+            end: 7
+        }, {
+            status: 3,
+            start: 7,
+            end: 12
+        }], [], []],
         checkAll: false,
-        checkedList: [],
+        checkedList: [ localStorage.getItem('__meeting_user_email') ],
         // 列表选型
         options: [
             {
@@ -259,15 +267,29 @@ class Schedule extends Component {
                                 })}
                             </div>
                             {data.map((item, y) => {
+                                const line = new Array(20).fill('');
+                                item.forEach(block => {
+                                    line.forEach((_, i) => {
+                                        const time = i;
+                                        if(time >= block.start && time <= block.end) {
+                                            line[i] = block.status
+                                        }
+                                    });
+                                });
+                                console.log(line)
                                 return ( <div className="line">
-                                    {new Array(20).fill('').map((cell, x) => {
-                                        // console.log(x >= left && y >= top && y <= bottom && x <= right)
+                                    {line.map((cell, x) => {
                                         return <div
                                                 className={classnames(['block', {
                                                     'active': top >= 0 && left >= 0 && x >= left && x <= right,
                                                     'myself': y === 0,
                                                     'start': x === left,
-                                                    'end': x === right
+                                                    'end': x === right,
+                                                    'busy': cell === 1,
+                                                    'out': cell === 2,
+                                                    'interim': cell === 3,
+                                                    'noinfo': cell === 4,
+                                                    'occupy': cell === 5
                                                 }])}
                                                 onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                 onMouseUp={this.handleMouseUp.bind(this, x, y)}
