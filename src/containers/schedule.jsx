@@ -49,7 +49,12 @@ class Schedule extends Component {
         checkAll: false,
         checkedList: [],
         // 列表选型
-        options: [],
+        options: [
+            {
+                label: localStorage.getItem('__meeting_user_name'),
+                value: localStorage.getItem('__meeting_user_email')
+            }
+        ],
         showAddRooms: false,
         showAddAttendees: false,
         rooms: [],
@@ -244,33 +249,34 @@ class Schedule extends Component {
                             <Icon type="right" className="btn" onClick={this.searchNext} />
                             {date ? date.format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    {new Array(20).fill('').map((item, i) => {
-                                        const time = i+18;
-                                        const h = parseInt(time/2);
-                                        const m = time%h*30 === 0? '00': '30';
-                                        return <th>{h}:{m}</th>
-                                    })}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map((item, y) => {
-                                    return ( <tr>
-                                        {new Array(20).fill('').map((cell, x) => {
-                                            // console.log(x >= left && y >= top && y <= bottom && x <= right)
-                                            return <td
-                                                    className={classnames([{ 'active': top >= 0 && left >= 0 && x >= left && x <= right}])}
-                                                    onMouseDown={this.handleMouseDown.bind(this, x, y)}
-                                                    onMouseUp={this.handleMouseUp.bind(this, x, y)}
-                                                    onMouseOver={this.handleMouseOver.bind(this, x, y)}
-                                                />
-                                        })}
-                                    </tr>);
+                        <div className="table">
+                            <div className="line thead">
+                                {new Array(20).fill('').map((item, i) => {
+                                    const time = i+18;
+                                    const h = parseInt(time/2);
+                                    const m = time%h*30 === 0? '00': '30';
+                                    return <div className="block">{h}:{m}</div>
                                 })}
-                            </tbody>
-                        </table>
+                            </div>
+                            {data.map((item, y) => {
+                                return ( <div className="line">
+                                    {new Array(20).fill('').map((cell, x) => {
+                                        // console.log(x >= left && y >= top && y <= bottom && x <= right)
+                                        return <div
+                                                className={classnames(['block', {
+                                                    'active': top >= 0 && left >= 0 && x >= left && x <= right,
+                                                    'myself': y === 0,
+                                                    'start': x === left,
+                                                    'end': x === right
+                                                }])}
+                                                onMouseDown={this.handleMouseDown.bind(this, x, y)}
+                                                onMouseUp={this.handleMouseUp.bind(this, x, y)}
+                                                onMouseOver={this.handleMouseOver.bind(this, x, y)}
+                                            />
+                                    })}
+                                </div>);
+                            })}
+                        </div>
                     </div>
                 </div>
                 <div className="schedule-footer">
@@ -363,6 +369,14 @@ class Schedule extends Component {
                             >
                             {children}
                         </Select>}
+                    </div>
+                    <div className="item">
+                            <div className="status busy">Busy</div>
+                            <div className="status out">Out</div>
+                            <div className="status interim">Interim</div>
+                            <div className="status noinfo">No Info.</div>
+                            <div className="status occupy">Anothor Location</div>
+                            <div className="status free"></div>
                     </div>
                 </div>
             </div>

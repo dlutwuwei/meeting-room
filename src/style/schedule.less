@@ -70,38 +70,45 @@
                 }
             }
         }
-        table {
+        .table {
             border-left: 1px dashed #eee;
             border-right: 1px dashed #eee;
-            table-layout:auto;
             background-color: #fffbff;
-            thead {
+            border-collapse: collapse;
+            .thead {
                 outline: 1px solid #eee;
-            }
-            tbody {
-                tr {
-                    height: 20px;
+                .block {
+                    min-width: 50px;
+                    background-color: #f7fbff;
+                    text-align: left;
+                    height: 33px;
+                    color: #999;
+                    font-size: 12px;
                 }
             }
-            tr {
-                outline: 1px dashed #eee;
+            .line {
+                // outline: 1px dashed #eee;
+                display: flex;
+                height: 20px;
             }
-            th {
-                min-width: 50px;
-                background-color: #f7fbff;
-                text-align: left;
-                height: 33px;
-                color: #999;
-                font-size: 12px;
-            }
-            td {
+            .block {
+                flex: 1;
                 background-color: #fffbff;
                 min-width: 50px;
                 text-align: center;
-                height: 18px;
                 border-right: 1px solid #eee;
+                border-left: 1px solid #eee;
                 &.active {
-                    background-color: bisque;
+                    background-color: rgb(110, 189, 253);
+                }
+                &.myself {
+                    background-color: aqua;
+                }
+                &.start {
+                    border-left-color: red;
+                }
+                &.end {
+                    border-right-color: red;
                 }
             }
         }
@@ -113,6 +120,36 @@
             line-height: 18px;
             .label {
                 line-height: 33px;
+            }
+            .status {
+                margin-right: 20px;
+                vertical-align: middle;
+                line-height: 20px;
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    width: 16px;
+                    height: 16px;
+                    background-size: contain;
+                    background-repeat: no-repeat;
+                    vertical-align: middle;
+                    margin-right: 6px;
+                }
+                &.busy::before {
+                    background-image: url('~img/icons/busy.png')
+                }
+                &.interim::before {
+                    background-image: url('~img/icons/interim.png')
+                }
+                &.noinfo::before {
+                    background-image: url('~img/icons/noinfo.png')
+                }
+                &.out::before {
+                    background-image: url('~img/icons/out.png')
+                }
+                &.occupy::before {
+                    background-image: url('~img/icons/occupy.png')
+                }
             }
         }
     }

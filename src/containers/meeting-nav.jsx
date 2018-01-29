@@ -90,12 +90,12 @@ class Nav extends Component {
                             onClose={() => this.setState({ showRecurrence: false})}
                         />
                         <div className="nav-item recurrence" onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
-                        <div className="nav-item time-zone"><div className="time-zone-icon" onClick={() => {
+                        <div className="nav-item time-zone" onClick={() => {
                             this.props.actions.toggleTimezone(!this.state.showTimezone);
                             this.setState({
                                 showTimezone: !this.state.showTimezone
                             });
-                        }}/>TimeZones</div>
+                        }}><div className="time-zone-icon"/>TimeZones</div>
                     </div>
                     <div className="option-title">Options</div>
                 </div>
