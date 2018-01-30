@@ -300,7 +300,7 @@ class Schedule extends Component {
                                                     'busy': cell === 1,
                                                     'out': cell === 2,
                                                     'interim': cell === 3,
-                                                    'noinfo': cell === 4,
+                                                    'unkown': cell === 4,
                                                     'occupy': cell === 5
                                                 }])}
                                                 onMouseDown={this.handleMouseDown.bind(this, x, y)}
@@ -408,7 +408,7 @@ class Schedule extends Component {
                             <div className="status busy">忙</div>
                             <div className="status out">外出</div>
                             <div className="status interim">暂定</div>
-                            <div className="status noinfo">未知</div>
+                            <div className="status unkown">未知</div>
                             <div className="status occupy">在其他地方工作</div>
                     </div>
                 </div>
