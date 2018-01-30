@@ -53,7 +53,19 @@ class Schedule extends Component {
             status: 3,
             start: 7,
             end: 12
-        }], [], []],
+        }], [{
+            status: 4,
+            start: 5,
+            end: 7
+        }, {
+            status: 5,
+            start: 8,
+            end: 12
+        }, {
+            status: 2,
+            start: 12,
+            end: 15
+        }], []],
         checkAll: false,
         checkedList: [ localStorage.getItem('__meeting_user_email') ],
         // 列表选型
@@ -137,7 +149,7 @@ class Schedule extends Component {
             options: this.state.options.concat(options),
             checkedList: this.state.checkedList.concat(options.map(item => item.value)),
             checkAll: true,
-            data: this.state.data.concat(options.map(item => ({})))
+            data: this.state.data.concat(options.map(item => ([])))
         });
     }
     onSelectRoom(rooms) {
@@ -393,12 +405,11 @@ class Schedule extends Component {
                         </Select>}
                     </div>
                     <div className="item">
-                            <div className="status busy">Busy</div>
-                            <div className="status out">Out</div>
-                            <div className="status interim">Interim</div>
-                            <div className="status noinfo">No Info.</div>
-                            <div className="status occupy">Anothor Location</div>
-                            <div className="status free"></div>
+                            <div className="status busy">忙</div>
+                            <div className="status out">外出</div>
+                            <div className="status interim">暂定</div>
+                            <div className="status noinfo">未知</div>
+                            <div className="status occupy">在其他地方工作</div>
                     </div>
                 </div>
             </div>

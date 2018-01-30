@@ -140,36 +140,37 @@
             .label {
                 line-height: 33px;
             }
-            .status {
-                margin-right: 20px;
-                vertical-align: middle;
-                line-height: 20px;
-                &::before {
-                    content: '';
-                    display: inline-block;
-                    width: 16px;
-                    height: 16px;
-                    background-size: contain;
-                    background-repeat: no-repeat;
-                    vertical-align: middle;
-                    margin-right: 6px;
-                }
-                &.busy::before {
-                    background-image: url('~img/icons/busy.png')
-                }
-                &.interim::before {
-                    background-image: url('~img/icons/interim.png')
-                }
-                &.noinfo::before {
-                    background-image: url('~img/icons/noinfo.png')
-                }
-                &.out::before {
-                    background-image: url('~img/icons/out.png')
-                }
-                &.occupy::before {
-                    background-image: url('~img/icons/occupy.png')
-                }
-            }
         }
+    }
+}
+
+.status {
+    margin-right: 20px;
+    vertical-align: middle;
+    line-height: 20px;
+    &::before {
+        content: '';
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+    &.busy::before {
+        background-image: url('~img/icons/busy.png')
+    }
+    &.interim::before {
+        background-image: url('~img/icons/interim.png')
+    }
+    &.unkown::before {
+        background-image: url('~img/icons/noinfo.png')
+    }
+    &.out::before {
+        background-image: url('~img/icons/out.png')
+    }
+    &.occupy::before {
+        background-image: url('~img/icons/occupy.png')
     }
 }

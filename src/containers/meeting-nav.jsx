@@ -68,9 +68,11 @@ class Nav extends Component {
                                 <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
-                                    <Option key="1" value="1">Busy</Option>
-                                    <Option key="2"  value="2">Free</Option>
-                                    <Option key="3" value="3">Out</Option>
+                                    <Option key="1" value="1" className="status busy">忙</Option>
+                                    <Option key="2"  value="2" className="status out">外出</Option>
+                                    <Option key="3" value="3" className="status interim">暂定</Option>
+                                    <Option key="3" value="4" className="status unkown">未知</Option>
+                                    <Option key="3" value="5" className="status occupy">在其他地方工作</Option>
                                 </Select>
                             </div>
                             <div className="nav-item1">
@@ -78,7 +80,7 @@ class Nav extends Component {
                                 <Select defaultValue="15" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_reminder', val);
                                 }}>
-                                    <Option key={1} value="15">15 minutes</Option>
+                                    <Option key={1} value="15" >15 minutes</Option>
                                     <Option key={2} value="30">30 minutes</Option>
                                     <Option key={3} value="45">45 minutes</Option>
                                     <Option key={4} value="60">1 hour</Option>
