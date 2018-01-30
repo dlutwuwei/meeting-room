@@ -70,7 +70,7 @@ class AddRooms extends Component {
             }
         }, {
             title: 'Whiteboard',
-            dataIndex: 'hasWhiteboard',
+            dataIndex: 'hasWhiteBoard',
             key: 'whiteboard',
             render: (val, record) => {
                 return val && <Icon type="check" />
