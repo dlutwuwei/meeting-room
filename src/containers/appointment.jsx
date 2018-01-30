@@ -187,7 +187,7 @@ class Appointment extends Component {
                   message: 'Please input subject',
                 }]
               })(
-                <Input placeholder="" onChang={val => {
+                <Input placeholder="" onChange={val => {
                   localStorage.setItem('__meeting_subject', val);
                 }}/>
                 )}
