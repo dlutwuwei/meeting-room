@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 
 import './style/board.less';
 
-const statusMap = ['Started', 'Scheduled', 'Free'];
+const statusMap = ['未知', '预定中', '进行中', '会议被取消', '会议已结束'];
 
 function convertToTime(str) {
     const span = str.split('-');
