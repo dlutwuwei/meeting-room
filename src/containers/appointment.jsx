@@ -284,7 +284,7 @@ class Appointment extends Component {
                 }]
               })(
                 <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={val => {
-                  localStorage.setItem('__meeting_content');
+                  localStorage.setItem('__meeting_content', val);
                 }}/>
                 )}
             </div>
