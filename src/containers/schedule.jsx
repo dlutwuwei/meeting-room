@@ -86,7 +86,10 @@ class Schedule extends Component {
         left: -1,
         right: 0,
         bottom: 0,
-        timezone: { key: 'CCT'}
+        timezone: {
+            key: 'CCT',
+            label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
+        }
     }
     hover = false
     componentDidMount() {
@@ -288,7 +291,6 @@ class Schedule extends Component {
                                         }
                                     });
                                 });
-                                console.log(line)
                                 return ( <div className="line">
                                     {line.map((cell, x) => {
                                         return <div
@@ -330,7 +332,7 @@ class Schedule extends Component {
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
                             onChange={(date) => { this.setState({ date })}}
-                            value={date}
+                            value={date.zone(timezone.label.split(' ')[0])}
                             className="my-date-picker"
                             style={{'margin-right': 10}}
                         />
@@ -338,7 +340,7 @@ class Schedule extends Component {
                             prefixCls="ant-time-picker"
                             placeholder="Select Time"
                             showSecond={false}
-                            value={startTime}
+                            value={startTime.zone(timezone.label.split(' ')[0])}
                             hideDisabledOptions={true}
                             onChange={date => { this.setState({ startTime: date })}}
                             disabledHours={(h) => {
@@ -373,7 +375,7 @@ class Schedule extends Component {
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
                             onChange={(date) => { date && this.setState({ date })}}
-                            value={date}
+                            value={date.zone(timezone.label.split(' ')[0])}
                             className="my-date-picker"
                             style={{'margin-right': 10}}
                         />
@@ -381,7 +383,7 @@ class Schedule extends Component {
                             prefixCls="ant-time-picker"
                             placeholder="Select Time"
                             showSecond={false}
-                            value={endTime}
+                            value={endTime.zone(timezone.label.split(' ')[0])}
                             hideDisabledOptions={true}
                             disabledHours={(h) => {
                                 return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];

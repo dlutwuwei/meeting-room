@@ -49,8 +49,7 @@ fetch.get('/api/user/getUserInfo', {
   token: token || '40a56c3e9cc9465f60c810f2d26d38c'
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
-  localStorage.setItem('__meeting_user_name', r.data.userName)
-
+  localStorage.setItem('__meeting_user_name', r.data.userName);
 });
 
 localStorage.setItem('__meeting_token', token || '40a56c3e9cc9465f60c810f2d26d38c')
