@@ -67,11 +67,11 @@ class Admin extends React.Component {
             />
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-            <Route path={`/admin/meeting/:type`} component={List}/>
-            <Route path={`/admin/user/:type`} component={List}/>
-            <Route path={`/admin/setting/:type`} component={List}/>
-            <Route path={`/admin/charts`} component={List}/>
-            <Route path={`/admin/monitor`} component={List}/>
+            <Route path={`meeting/:type`} component={List}/>
+            <Route path={`user/:type`} component={List}/>
+            <Route path={`setting/:type`} component={List}/>
+            <Route path={`charts`} component={List}/>
+            <Route path={`monitor`} component={List}/>
           </Content>
         </Layout>
       </Layout>
