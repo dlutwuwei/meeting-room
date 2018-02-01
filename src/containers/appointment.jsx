@@ -53,8 +53,8 @@ const timeConfig = {
 const children = [];
 const zones = Object.keys(Timezone);
 for (let i = 0; i < zones.length; i++) {
-    const zone = Timezone[zones[i]]
-    children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
+  const zone = Timezone[zones[i]]
+  children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
 
 function generateOptions(length, include) {
@@ -73,10 +73,10 @@ class Appointment extends Component {
     fetching: false,
     attendees: '',
     dataSource: [],
-    timezone: {
+    timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || {
       key: 'CCT',
       label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
-    }
+    })
   }
   openRooms() {
     this.setState({
@@ -137,9 +137,16 @@ class Appointment extends Component {
       'location': rooms
     });
   }
+  componentDidMount() {
+    this.handleTimezoneChange(this.state.timezone);
+  }
   handleTimezoneChange = (val) => {
+    this.setState({
+      timezone: val
+    });
+    localStorage.setItem('__meeting_timezone', JSON.stringify(val));
     const offset = val.label.split(' ')[0];
-    const { startDate, startTime, endDate, endTime} = this.props.form.getFieldsValue(['startDate', 'startTime', 'endDate', 'endTime']);
+    const { startDate, startTime, endDate, endTime } = this.props.form.getFieldsValue(['startDate', 'startTime', 'endDate', 'endTime']);
     this.props.form.setFieldsValue({
       'startDate': startDate.zone(offset),
       'startTime': startTime.zone(offset),
@@ -164,7 +171,7 @@ class Appointment extends Component {
             <FormItem
               label={<Select defaultValue="1" style={{ width: 85 }}>
                 <Option key="1" value="1">From</Option>
-        </Select>}
+              </Select>}
               {...formItemLayout}
             >
               {getFieldDecorator('from', {
@@ -176,7 +183,7 @@ class Appointment extends Component {
                 }]
               })(
                 <Input placeholder="wuwei@meeting.com" disabled />
-              )}
+                )}
             </FormItem>
             <FormItem
               label={<Button style={{ width: 85 }}>To...</Button>}
@@ -199,7 +206,7 @@ class Appointment extends Component {
                 >
                   {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
                 </Select>
-              )}
+                )}
             </FormItem>
             <FormItem
               label="Subject"
@@ -215,7 +222,7 @@ class Appointment extends Component {
               })(
                 <Input placeholder="" onChange={val => {
                   localStorage.setItem('__meeting_subject', val);
-                }}/>
+                }} />
                 )}
             </FormItem>
             <FormItem
@@ -225,7 +232,7 @@ class Appointment extends Component {
               <div className="item">
                 <AddRooms
                   visible={showAddRooms}
-                  onClose={() => this.setState({ showAddRooms: false})}
+                  onClose={() => this.setState({ showAddRooms: false })}
                   onSelect={this.onSelectRoom}
                 />
                 {getFieldDecorator('location', {
@@ -270,15 +277,15 @@ class Appointment extends Component {
                   }}
                 />
               )}
-              { showTimezone && <Select
-                  size="default"
-                  defaultValue={Timezone['CCT']}
-                  value={timezone}
-                  labelInValue
-                  onChange={this.handleTimezoneChange}
-                  style={{ width: 200, marginLeft: 20 }}
-                  >
-                  {children}
+              {showTimezone && <Select
+                size="default"
+                defaultValue={Timezone['CCT']}
+                value={timezone}
+                labelInValue
+                onChange={this.handleTimezoneChange}
+                style={{ width: 200, marginLeft: 20 }}
+              >
+                {children}
               </Select>}
             </FormItem>
             <FormItem
@@ -309,15 +316,15 @@ class Appointment extends Component {
                   }}
                 />
               )}
-              { showTimezone && <Select
-                  size="default"
-                  defaultValue={Timezone['CCT']}
-                  value={timezone}
-                  labelInValue
-                  onChange={this.handleTimezoneChange}
-                  style={{ width: 200, marginLeft: 20 }}
-                  >
-                  {children}
+              {showTimezone && <Select
+                size="default"
+                defaultValue={Timezone['CCT']}
+                value={timezone}
+                labelInValue
+                onChange={this.handleTimezoneChange}
+                style={{ width: 200, marginLeft: 20 }}
+              >
+                {children}
               </Select>}
             </FormItem>
             <div className="item">
@@ -331,7 +338,7 @@ class Appointment extends Component {
               })(
                 <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={val => {
                   localStorage.setItem('__meeting_content', val);
-                }}/>
+                }} />
                 )}
             </div>
           </Form>
@@ -347,12 +354,12 @@ const WrappedDynamicRule = Form.create()(Appointment);
 
 const mapStateToProps = state => {
   return {
-      ...state.navReducer
+    ...state.navReducer
   };
 };
 
 function mapDispatchToProps(dispatch) {
-return null;
+  return null;
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);
