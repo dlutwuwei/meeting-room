@@ -7,7 +7,10 @@ import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import fetch from 'lib/fetch';
 import LocationRoom from 'components/location';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import AddRooms from './addRooms';
+import Timezone from '../constant/timezone';
 
 import '../style/appointment.less';
 const dateFormat = 'YYYY/MM/DD';
@@ -47,6 +50,13 @@ const timeConfig = {
   }]
 };
 
+const children = [];
+const zones = Object.keys(Timezone);
+for (let i = 0; i < zones.length; i++) {
+    const zone = Timezone[zones[i]]
+    children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
+}
+
 function generateOptions(length, include) {
   const arr = [];
   for (let value = 0; value < length; value++) {
@@ -62,7 +72,11 @@ class Appointment extends Component {
     showAddRooms: false,
     fetching: false,
     attendees: '',
-    dataSource: []
+    dataSource: [],
+    timezone: {
+      key: 'CCT',
+      label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
+    }
   }
   openRooms() {
     this.setState({
@@ -123,9 +137,21 @@ class Appointment extends Component {
       'location': rooms
     });
   }
+  handleTimezoneChange = (val) => {
+    const offset = val.label.split(' ')[0];
+    const { startDate, startTime, endDate, endTime} = this.props.form.getFieldsValue(['startDate', 'startTime', 'endDate', 'endTime']);
+    this.props.form.setFieldsValue({
+      'startDate': startDate.zone(offset),
+      'startTime': startTime.zone(offset),
+      'endDate': endDate.zone(offset),
+      'endTime': endTime.zone(offset)
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showAddRooms, dataSource, fetching } = this.state;
+    const { showTimezone } = this.props;
+    const { showAddRooms, dataSource, fetching, timezone } = this.state;
+
     return (
       <div className="appointment-container">
         <div className="appoint-left">
@@ -244,6 +270,16 @@ class Appointment extends Component {
                   }}
                 />
               )}
+              { showTimezone && <Select
+                  size="default"
+                  defaultValue={Timezone['CCT']}
+                  value={timezone}
+                  labelInValue
+                  onChange={this.handleTimezoneChange}
+                  style={{ width: 200, marginLeft: 20 }}
+                  >
+                  {children}
+              </Select>}
             </FormItem>
             <FormItem
               label="End Time"
@@ -273,6 +309,16 @@ class Appointment extends Component {
                   }}
                 />
               )}
+              { showTimezone && <Select
+                  size="default"
+                  defaultValue={Timezone['CCT']}
+                  value={timezone}
+                  labelInValue
+                  onChange={this.handleTimezoneChange}
+                  style={{ width: 200, marginLeft: 20 }}
+                  >
+                  {children}
+              </Select>}
             </FormItem>
             <div className="item">
               {getFieldDecorator('content', {
@@ -297,4 +343,17 @@ class Appointment extends Component {
 
 const WrappedDynamicRule = Form.create()(Appointment);
 
-export default WrappedDynamicRule
+// export default WrappedDynamicRule
+
+const mapStateToProps = state => {
+  return {
+      ...state.navReducer
+  };
+};
+
+function mapDispatchToProps(dispatch) {
+return null;
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);
+
