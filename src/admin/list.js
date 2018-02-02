@@ -1,15 +1,10 @@
 import React, { PureComponent, Fragment } from 'react';
-import moment from 'moment';
-import { Modal, Divider, List, Card, Form, Row, Col, Badge, Radio, Input, Progress, Button, Icon, Dropdown, Menu, Avatar } from 'antd';
+import { Modal, Divider, Card, Form, Input, Button, Icon, message} from 'antd';
 import fetch from 'lib/fetch';
 import StandardTable from 'components/standard-table';
 
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const { Search } = Input;
 const styles = {};
-const statusMap = ['default', 'processing', 'success', 'error'];
-const status = ['关闭', '运行中', '已上线', '异常'];
+
 const columns = [
     {
         title: '姓名',
@@ -92,8 +87,7 @@ export default class BasicList extends PureComponent {
             });
         });
     }
-    componentWillReceiveProps(nextProps) {
-        const { match } = nextProps;
+    componentWillReceiveProps() {
         this.fetchUsers();
     }
     handleSelectRows = () => {
@@ -123,32 +117,10 @@ export default class BasicList extends PureComponent {
     render() {
         const { list: data, selectedRows, loading, modalVisible } = this.state;
 
-        const paginationProps = {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            pageSize: 5,
-            total: 50,
-        };
         const parentMethods = {
             handleAdd: this.handleAdd,
             handleModalVisible: this.handleModalVisible,
         };
-        const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
-            <div className={styles.listContent}>
-                <div className={styles.listContentItem}>
-                    <span>Owner</span>
-                    <p>{owner}</p>
-                </div>
-                <div className={styles.listContentItem}>
-                    <span>开始时间</span>
-                    <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
-                </div>
-                <div className={styles.listContentItem}>
-                    <Progress statusMap={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
-                </div>
-            </div>
-        );
-
         return (
             <div className="">
                 <Card

@@ -7,12 +7,6 @@ import List from './list';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
-const Topic = ({ match }) => (
-    <div>
-      <h3>{match.params.topicId}</h3>
-    </div>
-  )
-
 class Admin extends React.Component {
   state = {
     collapsed: false,

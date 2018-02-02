@@ -16,10 +16,9 @@ function navReducer(state = initState, action) {
     default:
       return state;
   }
-  return {};
 }
 
-function reducer2(state, action) {
+function reducer2() {
   return {};
 }
 

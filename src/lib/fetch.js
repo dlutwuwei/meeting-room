@@ -67,7 +67,7 @@ function request(method, url, data, opts) {
         .then((res) => {
             // 处理response
             if (res.headers.get('content-type').indexOf('application/json') !== -1) {
-                return res.json().catch(err => {
+                return res.json().catch(() => {
                     return Promise.reject({ s: 810, msg: '无法解析成JSON' })
                 })
             } else {
