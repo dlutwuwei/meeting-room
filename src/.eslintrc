@@ -14,10 +14,15 @@
     },
     "plugins": ["react"],
     "rules": {
-        "react/jsx-uses-vars": "error"
+        "react/jsx-uses-vars": "error",
+        "react/jsx-uses-react": "error",
+        "react/prop-types": "error",
+        "react/require-default-props": "error",
+        "symbol-description": "error"
     },
     "globals": {
-        "Promise": true
+        "Promise": true,
+        "Symbol": true
     }
   }
   

@@ -101,13 +101,7 @@ export default class BasicList extends PureComponent {
             modalVisible: !!flag,
         });
     }
-    handleAdd = (fields) => {
-        this.props.dispatch({
-            type: 'rule/add',
-            payload: {
-                description: fields.desc,
-            },
-        });
+    handleAdd = () => {
 
         message.success('添加成功');
         this.setState({

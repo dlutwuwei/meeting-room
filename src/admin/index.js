@@ -3,7 +3,7 @@ import { Link, Route } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
 import './admin.less';
 import List from './list';
-
+import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -88,5 +88,7 @@ class Admin extends React.Component {
 //         )
 //     }
 // }
-
+Admin.propTypes = {
+  match: PropTypes.object.isRequired
+}
 export default Admin
