@@ -193,6 +193,7 @@ module.exports = Object.keys(languages).map(lan => {
           lib: path.resolve(__dirname, './src/lib'),
           utils: path.resolve(__dirname, './src/utils'),
           components: path.resolve(__dirname, './src/components'),
+          layouts: path.resolve(__dirname, './src/layouts')
         }
     }
   };

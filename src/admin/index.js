@@ -23,6 +23,7 @@ class Admin extends React.Component {
     });
   }
   render() {
+    const { match } = this.props;
     return (
       <Layout className="admin-container">
         <Sider
@@ -67,11 +68,11 @@ class Admin extends React.Component {
             />
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-            <Route path={`meeting/:type`} component={List}/>
-            <Route path={`user/:type`} component={List}/>
-            <Route path={`setting/:type`} component={List}/>
-            <Route path={`charts`} component={List}/>
-            <Route path={`monitor`} component={List}/>
+            <Route path={`${match.url}/meeting/:type`} component={List}/>
+            <Route path={`${match.url}user/:type`} component={List}/>
+            <Route path={`${match.url}setting/:type`} component={List}/>
+            <Route path={`${match.url}charts`} component={List}/>
+            <Route path={`${match.url}monitor`} component={List}/>
           </Content>
         </Layout>
       </Layout>
