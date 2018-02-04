@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Form, AutoComplete, Spin, message } from 'antd';
+import { DatePicker, Form, Spin, message } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -8,12 +8,16 @@ import moment from 'moment';
 import fetch from 'lib/fetch';
 import LocationRoom from 'components/location';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import AddRooms from './addRooms';
 import Timezone from '../constant/timezone';
+import { bindActionCreators } from 'redux';
+import {
+  changeReceivers,
+  changeStartTime,
+  changeEndTime
+} from '../redux/home-redux';
 
 import '../style/appointment.less';
-const dateFormat = 'YYYY/MM/DD';
 const { TextArea } = Input;
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -140,6 +144,7 @@ class Appointment extends Component {
   componentDidMount() {
     this.handleTimezoneChange(this.state.timezone);
   }
+  
   handleTimezoneChange = (val) => {
     this.setState({
       timezone: val
@@ -153,6 +158,25 @@ class Appointment extends Component {
       'endDate': endDate.zone(offset),
       'endTime': endTime.zone(offset)
     });
+  }
+  handleRecevierSelect = (val) => {
+    const userList = JSON.parse(localStorage.getItem('__meeting_to') || '[]');
+    const user = this.state.dataSource.find(item => item.mail = val);
+    userList.push(user);
+    localStorage.setItem('__meeting_to', JSON.stringify(userList));
+  }
+  handleTime(type, time) {
+    if(type === 'startTime') {
+        this.setState({
+            startTime: time
+        });
+        this.props.actions.changeStartTime(time);
+    } else if(type === 'endTime') {
+        this.setState({
+            endTime: time
+        });
+        this.props.actions.changeEndTime(time)
+    }
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -202,6 +226,7 @@ class Appointment extends Component {
                   placeholder="Please select attendees!"
                   notFoundContent={fetching ? <Spin size="small" /> : null}
                   filterOption={false}
+                  onSelect={this.handleRecevierSelect}
                   onSearch={this.handleSearch}
                 >
                   {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
@@ -256,8 +281,7 @@ class Appointment extends Component {
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
-                  onChange={() => { }}
-                  onOk={() => { }}
+                  onChange={(date) => { this.handleTime('startTime',date) }}
                   className="my-date-picker"
                 />
               )}
@@ -267,14 +291,15 @@ class Appointment extends Component {
                   placeholder="Select Time"
                   showSecond={false}
                   hideDisabledOptions={true}
-                  disabledHours={(h) => {
+                  disabledHours={() => {
                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                   }}
-                  disabledMinutes={(m) => {
+                  disabledMinutes={() => {
                     return generateOptions(60, (m) => {
                       return m % 30 !== 0
                     });
                   }}
+                  onChange={(date) => { this.handleTime('startTime',date) }}
                 />
               )}
               {showTimezone && <Select
@@ -296,7 +321,7 @@ class Appointment extends Component {
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
-                  onChange={() => { }}
+                  onChange={(date) => { this.handleTime('endTime',date) }}
                   className="my-date-picker"
                 />
               )}
@@ -306,14 +331,15 @@ class Appointment extends Component {
                   placeholder="Select Time"
                   showSecond={false}
                   hideDisabledOptions={true}
-                  disabledHours={(h) => {
+                  disabledHours={() => {
                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                   }}
-                  disabledMinutes={(m) => {
+                  disabledMinutes={() => {
                     return generateOptions(60, (m) => {
                       return m % 30 !== 0
                     });
                   }}
+                  onChange={(date) => { this.handleTime('endTime',date) }}
                 />
               )}
               {showTimezone && <Select
@@ -354,12 +380,19 @@ const WrappedDynamicRule = Form.create()(Appointment);
 
 const mapStateToProps = state => {
   return {
-    ...state.navReducer
+    ...state.navReducer,
+    ...state.appointmentReducer
   };
 };
 
 function mapDispatchToProps(dispatch) {
-  return null;
+  return {
+    actions: bindActionCreators({
+        changeReceivers,
+        changeStartTime,
+        changeEndTime
+    }, dispatch)
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);

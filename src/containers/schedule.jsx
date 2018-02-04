@@ -7,20 +7,21 @@ import moment from 'moment';
 import classnames from 'classNames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
-import Nav from './meeting-nav';
 import { Checkbox, DatePicker, Icon, message, Modal, Select } from 'antd';
 import TimePicker from 'rc-time-picker';
 
 import '../style/schedule.less';
-import addAttendees from './addAttendees';
 import Timezone from '../constant/timezone';
+import {
+    changeReceivers,
+    changeStartTime,
+    changeEndTime
+} from '../redux/home-redux';
 
 const CheckboxGroup = Checkbox.Group;
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
-const options = [];
 
 function generateOptions(length, include) {
     const arr = [];
@@ -67,13 +68,13 @@ class Schedule extends Component {
             end: 15
         }], []],
         checkAll: false,
-        checkedList: [ localStorage.getItem('__meeting_user_email') ],
+        checkedList: [],
         // 列表选型
         options: [
-            {
-                label: localStorage.getItem('__meeting_user_name'),
-                value: localStorage.getItem('__meeting_user_email')
-            }
+            // {
+            //     label: localStorage.getItem('__meeting_user_name'),
+            //     value: localStorage.getItem('__meeting_user_email')
+            // }
         ],
         showAddRooms: false,
         showAddAttendees: false,
@@ -103,7 +104,7 @@ class Schedule extends Component {
         const { attendees, date } = this.state;
         this.search(date.add(1, 'd'), attendees);
     }
-    search(date, users = []) {
+    search(date) {
         this.setState({
             date
         });
@@ -152,7 +153,7 @@ class Schedule extends Component {
             options: this.state.options.concat(options),
             checkedList: this.state.checkedList.concat(options.map(item => item.value)),
             checkAll: true,
-            data: this.state.data.concat(options.map(item => ([])))
+            data: this.state.data.concat(options.map(() => ([])))
         });
     }
     onSelectRoom(rooms) {
@@ -166,7 +167,7 @@ class Schedule extends Component {
             attendees
         });
         this.addToList(attendees)
-    };
+    }
     handleSend = () => {
         const { attendees, rooms, date, startTime, endTime } = this.state;
         const data = {};
@@ -182,57 +183,57 @@ class Schedule extends Component {
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_private') || '';
         localStorage.setItem('__appointment_data', JSON.stringify(data));
-        if(!data.receiver || !data.roomMails) {
+        if (!data.receiver || !data.roomMails) {
             Modal.error({
                 title: '没有填写收件人或会议室',
             });
-        } else if(!data.content || !data.subject) {
+        } else if (!data.content || !data.subject) {
             confirm({
                 title: '没有填写标题和内容，确认发送？',
                 onOk: () => {
                     this.sendAppointment(data)
                 },
                 onCancel() {
-                    console.log('Cancel');
+                    // console.log('Cancel');
                 }
             });
         } else {
             this.sendAppointment(data);
         }
-        
+
     }
     sendAppointment(data) {
-        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(r => {
+        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
             message.success('预定成功');
             setTimeout(() => {
                 location.href = '/home?tab=my-meeting';
             });
-        }).catch(err => {
+        }).catch(() => {
             message.error('预定失败');
         });
     }
     handleMouseDown = (x, y) => {
-        console.log('down', x, y, `${9+parseInt(x/2)}:${(x%2)*30}`)
+        // console.log('down', x, y, `${9+parseInt(x/2)}:${(x%2)*30}`)
         this.hover = true;
         this.setState({
             left: x,
             top: y,
             right: -1,
             bottom: -1,
-            startTime: moment(`${9+parseInt(x/2)}:${(x%2)*30}`, 'HH:mm')
+            startTime: moment(`${9 + parseInt(x / 2)}:${(x % 2) * 30}`, 'HH:mm')
         });
     }
     handleMouseOver = (x, y) => {
-        if(this.hover) {
+        if (this.hover) {
             this.setState({
                 right: x,
                 bottom: y,
-                endTime: moment(`${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`, 'HH:mm')
+                endTime: moment(`${9 + parseInt((x + 1) / 2)}:${((x + 1) % 2) * 30}`, 'HH:mm')
             });
-            console.log('UP', x, y, `${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`)
+            // console.log('UP', x, y, `${9+parseInt((x+1)/2)}:${((x+1)%2)*30}`)
         }
     }
-    handleMouseUp = (x, y) => {
+    handleMouseUp = () => {
         this.hover = false;
     }
     handleTimezoneChange = (val) => {
@@ -241,9 +242,22 @@ class Schedule extends Component {
         });
         localStorage.setItem('__meeting_timezone', JSON.stringify(val));
     }
-    render () {
-        const { data, checkAll, checkedList, options, date, showAddRooms,
-            showAddAttendees, left, right, top, bottom,
+    handleTime(type, time) {
+        if(type === 'startTime') {
+            this.setState({
+                startTime: time
+            });
+            this.props.actions.changeStartTime(time);
+        } else if(type === 'endTime') {
+            this.setState({
+                endTime: time
+            });
+            this.props.actions.changeEndTime(time)
+        }
+    }
+    render() {
+        const { data, checkedList, options, date, showAddRooms,
+            showAddAttendees, left, right, top,
             startTime, endTime, timezone } = this.state;
         const { showTimezone } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
@@ -277,9 +291,9 @@ class Schedule extends Component {
                         <div className="table">
                             <div className="line thead">
                                 {new Array(20).fill('').map((item, i) => {
-                                    const time = i+18;
-                                    const h = parseInt(time/2);
-                                    const m = time%h*30 === 0? '00': '30';
+                                    const time = i + 18;
+                                    const h = parseInt(time / 2);
+                                    const m = time % h * 30 === 0 ? '00' : '30';
                                     return <div className="block">{h}:{m}</div>
                                 })}
                             </div>
@@ -288,29 +302,29 @@ class Schedule extends Component {
                                 item.forEach(block => {
                                     line.forEach((_, i) => {
                                         const time = i;
-                                        if(time >= block.start && time <= block.end) {
+                                        if (time >= block.start && time <= block.end) {
                                             line[i] = block.status
                                         }
                                     });
                                 });
-                                return ( <div className="line">
+                                return (<div className="line">
                                     {line.map((cell, x) => {
                                         return <div
-                                                className={classnames(['block', {
-                                                    'active': top >= 0 && left >= 0 && x >= left && x <= right,
-                                                    'myself': y === 0,
-                                                    'start': x === left,
-                                                    'end': x === right,
-                                                    'busy': cell === 1,
-                                                    'out': cell === 2,
-                                                    'interim': cell === 3,
-                                                    'unkown': cell === 4,
-                                                    'occupy': cell === 5
-                                                }])}
-                                                onMouseDown={this.handleMouseDown.bind(this, x, y)}
-                                                onMouseUp={this.handleMouseUp.bind(this, x, y)}
-                                                onMouseOver={this.handleMouseOver.bind(this, x, y)}
-                                            />
+                                            className={classnames(['block', {
+                                                'active': top >= 0 && left >= 0 && x >= left && x <= right,
+                                                'myself': y === 0,
+                                                'start': x === left,
+                                                'end': x === right,
+                                                'busy': cell === 1,
+                                                'out': cell === 2,
+                                                'interim': cell === 3,
+                                                'unkown': cell === 4,
+                                                'occupy': cell === 5
+                                            }])}
+                                            onMouseDown={this.handleMouseDown.bind(this, x, y)}
+                                            onMouseUp={this.handleMouseUp.bind(this, x, y)}
+                                            onMouseOver={this.handleMouseOver.bind(this, x, y)}
+                                        />
                                     })}
                                 </div>);
                             })}
@@ -321,7 +335,7 @@ class Schedule extends Component {
                     <div className="item">
                         <AddAttendees
                             visible={showAddAttendees}
-                            onClose={() => this.setState({ showAddAttendees: false})}
+                            onClose={() => this.setState({ showAddAttendees: false })}
                             onSelect={this.onSelectAttendee.bind(this)}
                         />
                         <Button style={{ width: 125, marginRight: 8 }} onClick={() => {
@@ -329,14 +343,14 @@ class Schedule extends Component {
                                 showAddAttendees: true
                             });
                         }}>Add Attendees</Button>
-                        <div className="label" style={{'width': 70, 'marginRight': 10}}>Start Time</div>
+                        <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>Start Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
-                            onChange={(date) => { this.setState({ date })}}
+                            onChange={(date) => { this.handleTime('startTime',date) }}
                             value={date.zone(offsetUTC)}
                             className="my-date-picker"
-                            style={{'margin-right': 10}}
+                            style={{ 'margin-right': 10 }}
                         />
                         <TimePicker
                             prefixCls="ant-time-picker"
@@ -344,42 +358,42 @@ class Schedule extends Component {
                             showSecond={false}
                             value={startTime.zone(offsetUTC)}
                             hideDisabledOptions={true}
-                            onChange={date => { this.setState({ startTime: date })}}
-                            disabledHours={(h) => {
+                            onChange={date => { this.handleTime('startTime', date) }}
+                            disabledHours={() => {
                                 return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                             }}
-                            disabledMinutes={(m) => {
+                            disabledMinutes={() => {
                                 return generateOptions(60, (m) => {
                                     return m % 30 !== 0
                                 });
                             }}
                         />
-                        { showTimezone && <Select
+                        {showTimezone && <Select
                             size="default"
                             defaultValue={Timezone['CCT']}
                             value={timezone}
                             labelInValue
                             onChange={this.handleTimezoneChange}
                             style={{ width: 200, marginLeft: 20 }}
-                            >
+                        >
                             {children}
                         </Select>}
                     </div>
                     <div className="item">
                         <AddRooms
                             visible={showAddRooms}
-                            onClose={() => this.setState({ showAddRooms: false})}
+                            onClose={() => this.setState({ showAddRooms: false })}
                             onSelect={this.onSelectRoom.bind(this)}
                         />
-                        <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({showAddRooms: true})}}>Add Rooms</Button>
-                        <div className="label" style={{'width': 70, 'marginRight': 10}}>End Time</div>
+                        <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({ showAddRooms: true }) }}>Add Rooms</Button>
+                        <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>End Time</div>
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
-                            onChange={(date) => { date && this.setState({ date })}}
+                            onChange={(date) => { this.handleTime('endDate',date) }}
                             value={date.zone(offsetUTC)}
                             className="my-date-picker"
-                            style={{'margin-right': 10}}
+                            style={{ 'margin-right': 10 }}
                         />
                         <TimePicker
                             prefixCls="ant-time-picker"
@@ -387,33 +401,33 @@ class Schedule extends Component {
                             showSecond={false}
                             value={endTime.zone(offsetUTC)}
                             hideDisabledOptions={true}
-                            disabledHours={(h) => {
+                            disabledHours={() => {
                                 return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                             }}
-                            disabledMinutes={(m) => {
+                            disabledMinutes={() => {
                                 return generateOptions(60, (m) => {
                                     return m % 30 !== 0
                                 });
                             }}
-                            onChange={date => { this.setState({ endTime: date })}}
+                            onChange={(date) => { this.handleTime('endTime',date) }}
                         />
-                        { showTimezone && <Select
+                        {showTimezone && <Select
                             size="default"
                             defaultValue={Timezone['CCT']}
                             value={timezone}
                             labelInValue
                             onChange={this.handleTimezoneChange}
                             style={{ width: 200, marginLeft: 20 }}
-                            >
+                        >
                             {children}
                         </Select>}
                     </div>
                     <div className="item">
-                            <div className="status busy">忙</div>
-                            <div className="status out">外出</div>
-                            <div className="status interim">暂定</div>
-                            <div className="status unkown">未知</div>
-                            <div className="status occupy">在其他地方工作</div>
+                        <div className="status busy">忙</div>
+                        <div className="status out">外出</div>
+                        <div className="status interim">暂定</div>
+                        <div className="status unkown">未知</div>
+                        <div className="status occupy">在其他地方工作</div>
                     </div>
                 </div>
             </div>
@@ -424,12 +438,19 @@ class Schedule extends Component {
 
 const mapStateToProps = state => {
     return {
-        ...state.navReducer
+        ...state.navReducer,
+        ...state.appointmentReducer
     };
 };
 
 function mapDispatchToProps(dispatch) {
-  return null;
+    return {
+        actions: bindActionCreators({
+            changeReceivers,
+            changeStartTime,
+            changeEndTime
+        }, dispatch)
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
