@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import fetch from './lib/fetch';
-import { Spin } from 'antd';
 import QueueAnim from 'rc-queue-anim';
 import classnames from 'classNames';
 import { Modal } from 'antd';
@@ -10,11 +9,6 @@ import './style/board.less';
 
 const statusMap = ['未知', '预定中', '进行中', '会议被取消', '会议已结束'];
 
-function convertToTime(str) {
-    const span = str.split('-');
-    const start = span[0], end = span[1];
-    return `${parseInt(start/2)}:${start%2?'3':'0'}0-${parseInt(end/2)}:${end%2?'3':'0'}0`
-}
 class MeetingBoard extends Component {
     state = {
         loading: true,
@@ -50,11 +44,11 @@ class MeetingBoard extends Component {
                     data: r.data
                 });
             }, 500);
-        }).catch(e => {
-            Modal.error({
-                content: e.message || e
-            });
-            clearInterval(this.timer);
+        }).catch(() => {
+            // Modal.error({
+            //     content: e.message || e
+            // });
+            // clearInterval(this.timer);
             this.setState({
                 loading: false
             });
