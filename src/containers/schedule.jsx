@@ -85,8 +85,8 @@ class Schedule extends Component {
         endTime: moment().minute(0),
         top: -1,
         left: -1,
-        right: 0,
-        bottom: 0,
+        right: -1,
+        bottom: -1,
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || {
             key: 'CCT',
             label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
