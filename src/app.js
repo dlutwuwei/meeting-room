@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux'
+import logger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk';
 import homeReducer from './redux/home-redux';
 
@@ -15,7 +16,7 @@ import Topics from './containers/topics';
 import About from './containers/about';
 import Admin from './admin';
 
-const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware));
+const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware, logger));
 
 ReactDOM.render((
   <Provider store={store}>

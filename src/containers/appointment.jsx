@@ -11,10 +11,10 @@ import { connect } from 'react-redux';
 import AddRooms from './addRooms';
 import Timezone from '../constant/timezone';
 import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+
 import {
-  changeReceivers,
-  changeStartTime,
-  changeEndTime
+  changeProp
 } from '../redux/home-redux';
 
 import '../style/appointment.less';
@@ -87,7 +87,7 @@ class Appointment extends Component {
       showAddRooms: true
     });
   }
-  handleSubmit(e) {
+  handleSubmit() {
     const { dataSource } = this.state;
     this.props.form.validateFields((err, values) => {
       const data = values;
@@ -110,7 +110,7 @@ class Appointment extends Component {
           setTimeout(() => {
             location.href = '/home?tab=my-meeting';
           })
-        }).catch(err => {
+        }).catch(() => {
           message.error('预定失败');
         });
       }
@@ -136,6 +136,14 @@ class Appointment extends Component {
       });
     });
   }
+  setValues = (props) => {
+    const { startTime, endTime } = props;
+    this.props.form.setFieldsValue({
+      startTime,
+      endTime
+    });
+
+  }
   onSelectRoom = (rooms) => {
     this.props.form.setFieldsValue({
       'location': rooms
@@ -143,19 +151,17 @@ class Appointment extends Component {
   }
   componentDidMount() {
     this.handleTimezoneChange(this.state.timezone);
+    this.setValues(this.props);
   }
-  
   handleTimezoneChange = (val) => {
     this.setState({
       timezone: val
     });
     localStorage.setItem('__meeting_timezone', JSON.stringify(val));
     const offset = val.label.split(' ')[0];
-    const { startDate, startTime, endDate, endTime } = this.props.form.getFieldsValue(['startDate', 'startTime', 'endDate', 'endTime']);
+    const { startTime, endTime } = this.props
     this.props.form.setFieldsValue({
-      'startDate': startDate.zone(offset),
       'startTime': startTime.zone(offset),
-      'endDate': endDate.zone(offset),
       'endTime': endTime.zone(offset)
     });
   }
@@ -167,16 +173,14 @@ class Appointment extends Component {
   }
   handleTime(type, time) {
     if(type === 'startTime') {
-        this.setState({
-            startTime: time
-        });
-        this.props.actions.changeStartTime(time);
+        this.props.actions.changeProp('startTime', time);
     } else if(type === 'endTime') {
-        this.setState({
-            endTime: time
-        });
-        this.props.actions.changeEndTime(time)
+        this.props.actions.changeProp('endTime', time)
     }
+    this.setValues(this.props);
+  }
+  handleChangeSubject = (e) => {
+    this.props.actions.changeProp('subject', e.target.value);
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -245,9 +249,7 @@ class Appointment extends Component {
                   message: 'Please input subject',
                 }]
               })(
-                <Input placeholder="" onChange={val => {
-                  localStorage.setItem('__meeting_subject', val);
-                }} />
+                <Input placeholder="" onChange={this.handleChangeSubject} />
                 )}
             </FormItem>
             <FormItem
@@ -277,7 +279,7 @@ class Appointment extends Component {
               label="Start Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('startDate', dateConfig)(
+              {getFieldDecorator('startTime', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -317,7 +319,7 @@ class Appointment extends Component {
               label="End Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('endDate', dateConfig)(
+              {getFieldDecorator('endTime', dateConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -388,12 +390,17 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-        changeReceivers,
-        changeStartTime,
-        changeEndTime
+        changeProp
     }, dispatch)
   };
 }
 
+Appointment.propTypes = {
+  actions: PropTypes.object.isRequired,
+  startTime: PropTypes.object.isRequired,
+  endTime: PropTypes.object.isRequired,
+  showTimezone: PropTypes.bool.isRequired,
+  form: PropTypes.object.isRequired
+}
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);
 

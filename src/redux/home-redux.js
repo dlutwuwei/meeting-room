@@ -6,9 +6,8 @@ const initState = {
 }
 
 const TOGGLE_TIMEZONE = 'TOGGLE_TIMEZONE';
-const CHANGE_RECEIVERS = 'CHANGE_RECEIVERS';
-const CHANGE_STARTTIME = 'CHANGE_STARTTIME';
-const CHANGE_ENDTIME = 'CHANGE_ENDTIME';
+const CHANGE_PROP = 'CHANGE_PROP';
+
 // ---------------- export default is reducer -------------
 // reducers
 function navReducer(state = initState, action) {
@@ -26,24 +25,15 @@ const appointment = {
   to: [],
   startTime: moment(),
   endTime: moment(),
-  
+  subject: '',
+  location: []
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {
-    case CHANGE_RECEIVERS:
+    case CHANGE_PROP:
       return {
         ...state,
-        to: action.to
-      };
-    case CHANGE_STARTTIME:
-      return {
-        ...state,
-        startTime: action.startTime
-      };
-    case CHANGE_ENDTIME:
-      return {
-        ...state,
-        endTime: action.endTime
+        [action.prop]: action.data
       };
     default:
       return state;
@@ -67,30 +57,16 @@ const toggleTimezone = (toggle) => {
   }
 }
 
-const changeReceivers = (to) => {
+const changeProp = (prop, data) => {
   return {
-    type: CHANGE_RECEIVERS,
-    to
+    type: CHANGE_PROP,
+    prop,
+    data
   }
 }
 
-const changeStartTime = (startTime) => {
-  return {
-    type: CHANGE_STARTTIME,
-    startTime
-  }
-}
-
-const changeEndTime = (endTime) => {
-  return {
-    type: CHANGE_ENDTIME,
-    endTime
-  }
-}
 
 export {
   toggleTimezone,
-  changeReceivers,
-  changeStartTime,
-  changeEndTime
+  changeProp
 };

@@ -9,13 +9,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Checkbox, DatePicker, Icon, message, Modal, Select } from 'antd';
 import TimePicker from 'rc-time-picker';
+import PropTypes from 'prop-types';
 
 import '../style/schedule.less';
 import Timezone from '../constant/timezone';
 import {
-    changeReceivers,
-    changeStartTime,
-    changeEndTime
+    changeProp
 } from '../redux/home-redux';
 
 const CheckboxGroup = Checkbox.Group;
@@ -169,15 +168,16 @@ class Schedule extends Component {
         this.addToList(attendees)
     }
     handleSend = () => {
-        const { attendees, rooms, date, startTime, endTime } = this.state;
+        const { attendees, rooms, date } = this.state;
+        const { startTime, endTime, subject } = this.props;
         const data = {};
         data.content = localStorage.getItem('__meeting_content') || '';
-        data.subject = localStorage.getItem('__meeting_subject') || '';
+        data.subject = subject || '';
         data.from = localStorage.getItem('__meeting_user_email') || '';
         data.receiver = attendees.map(item => item.mail).join(';');
         data.roomMails = rooms.map(item => item.mail).join(';');
-        data.startTime = date.utc().format('YYYY-MM-DD') + ' ' + startTime.utc().format('HH:mm');
-        data.endTime = date.utc().format('YYYY-MM-DD') + ' ' + endTime.utc().format('HH:mm');
+        data.startTime = startTime.utc().format('YYYY-MM-DD') + ' ' + startTime.utc().format('HH:mm');
+        data.endTime = endTime.utc().format('YYYY-MM-DD') + ' ' + endTime.utc().format('HH:mm');
         data.showas = localStorage.getItem('__meeting_showas') || '';
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
@@ -244,22 +244,16 @@ class Schedule extends Component {
     }
     handleTime(type, time) {
         if(type === 'startTime') {
-            this.setState({
-                startTime: time
-            });
-            this.props.actions.changeStartTime(time);
+            this.props.actions.changeProp('startTime', time.utc());
         } else if(type === 'endTime') {
-            this.setState({
-                endTime: time
-            });
-            this.props.actions.changeEndTime(time)
+            this.props.actions.changeProp('endTime', time.utc());
         }
     }
     render() {
         const { data, checkedList, options, date, showAddRooms,
             showAddAttendees, left, right, top,
-            startTime, endTime, timezone } = this.state;
-        const { showTimezone } = this.props;
+            timezone } = this.state;
+        const { startTime, endTime, showTimezone} = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <div className="schedule-contianer">
@@ -348,9 +342,9 @@ class Schedule extends Component {
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
                             onChange={(date) => { this.handleTime('startTime',date) }}
-                            value={date.zone(offsetUTC)}
+                            value={startTime.zone(offsetUTC)}
                             className="my-date-picker"
-                            style={{ 'margin-right': 10 }}
+                            style={{ 'marginRight': 10 }}
                         />
                         <TimePicker
                             prefixCls="ant-time-picker"
@@ -390,10 +384,10 @@ class Schedule extends Component {
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
-                            onChange={(date) => { this.handleTime('endDate',date) }}
-                            value={date.zone(offsetUTC)}
+                            onChange={(date) => { this.handleTime('endTime',date) }}
+                            value={endTime.zone(offsetUTC)}
                             className="my-date-picker"
-                            style={{ 'margin-right': 10 }}
+                            style={{ 'marginRight': 10 }}
                         />
                         <TimePicker
                             prefixCls="ant-time-picker"
@@ -446,11 +440,16 @@ const mapStateToProps = state => {
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
-            changeReceivers,
-            changeStartTime,
-            changeEndTime
+            changeProp
         }, dispatch)
     };
+}
+
+Schedule.propTypes = {
+    actions: PropTypes.object.isRequired,
+    startTime: PropTypes.object.isRequired,
+    endTime: PropTypes.object.isRequired,
+    showTimezone: PropTypes.bool.isRequired
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Schedule);
