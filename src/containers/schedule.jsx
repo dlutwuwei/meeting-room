@@ -161,14 +161,13 @@ class Schedule extends Component {
         this.addToList(attendees)
     }
     handleSend = () => {
-        const {rooms } = this.state;
-        const { startTime, endTime, subject, receivers, content } = this.props;
+        const { startTime, endTime, subject, receivers, content, location } = this.props;
         const data = {};
         data.content = content || '';
         data.subject = subject || '';
         data.from = localStorage.getItem('__meeting_user_email') || '';
         data.receiver = receivers.map(item => item.mail).join(';');
-        data.roomMails = rooms.map(item => item.mail).join(';');
+        data.roomMails = location.map(item => item.mail).join(';');
         data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
         data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
         data.showas = localStorage.getItem('__meeting_showas') || '';

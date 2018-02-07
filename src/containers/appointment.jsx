@@ -190,26 +190,19 @@ class Appointment extends Component {
     const offsetUTC = this.state.timezone.label.split(' ')[0];
 
     if(type === 'startTime') {
-        this.props.actions.changeProp('startTime', time.utc());
-        this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes').utc());
+        this.props.actions.changeProp('startTime', time);
+        this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes'));
         this.props.form.setFieldsValue({
           endTime: time.clone().add(30, 'minutes').zone(offsetUTC)
         });
     } else if(type === 'endTime') {
-        this.props.actions.changeProp('endTime', time.utc())
+        this.props.actions.changeProp('endTime', time);
     }
-    this.setValues(this.props);
   }
   handleChangeSubject = (e) => {
-    this.props.form.setFieldsValue({
-      subject: e.target.value
-    });
     this.props.actions.changeProp('subject', e.target.value);
   }
   handleContent = (e) => {
-    this.props.form.setFieldsValue({
-      content: e.target.value
-    });
     this.props.actions.changeProp('content', e.target.value);
   }
   render() {
