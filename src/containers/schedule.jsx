@@ -86,10 +86,7 @@ class Schedule extends Component {
         left: -1,
         right: -1,
         bottom: -1,
-        timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || {
-            key: 'CCT',
-            label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
-        })
+        timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}')
     }
     hover = false
     componentDidMount() {
