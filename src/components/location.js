@@ -10,12 +10,13 @@ class LocationRoom extends Component {
         )
     }
 }
+
 LocationRoom.propTypes = {
-    value: PropTypes.array
+    value: PropTypes.oneOfType([PropTypes.array, undefined]).isRequired
 }
 
-LocationRoom.defaultProps = {
-    value: []
-}
+// LocationRoom.defaultProps = {
+//     value: []
+// }
 
 export default LocationRoom

@@ -22,11 +22,12 @@ function navReducer(state = initState, action) {
 }
 
 const appointment = {
-  to: [],
+  receivers: [],
   startTime: moment(),
   endTime: moment(),
   subject: '',
-  location: []
+  location: [],
+  content: ''
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {

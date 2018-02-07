@@ -37,7 +37,7 @@ const formItemLayout = {
 };
 
 const dateConfig = {
-  initialValue: moment(),
+  initialValue: moment().minute(0),
   rules: [{
     type: 'object',
     required: true,
@@ -92,10 +92,8 @@ class Appointment extends Component {
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
-        data.startTime = data.startDate.utc().format('YYYY-MM-DD') + ' ' + data.startTime.utc().format('HH:mm');
-        delete data.startDate;
-        data.endTime = data.endDate.utc().format('YYYY-MM-DD') + ' ' + data.endTime.utc().format('HH:mm');
-        delete data.endDate;
+        data.startTime = data.startTime.utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = data.endTime.utc().format('YYYY-MM-DD HH:mm');
         data.roomMails = data.location.map(item => item.mail).join(';');
         delete data.location;
         data.showas = localStorage.getItem('__meeting_showas') || '';
@@ -125,7 +123,7 @@ class Appointment extends Component {
     }).then((r) => {
       this.setState({
         dataSource: r.data.list.map(item => ({
-          name: item.userName,
+          name: item.name,
           id: item.userId,
           mail: item.mail
         })),
@@ -134,18 +132,17 @@ class Appointment extends Component {
     });
   }
   setValues = (props) => {
-    const { startTime, endTime } = props;
+    const { startTime, endTime, location, receivers, content, subject } = props;
     this.props.form.setFieldsValue({
       startTime,
-      endTime
+      endTime,
+      location,
+      receivers: receivers.map(item => item.mail),
+      content,
+      subject
     });
+  }
 
-  }
-  onSelectRoom = (rooms) => {
-    this.props.form.setFieldsValue({
-      'location': rooms
-    });
-  }
   componentDidMount() {
     this.handleTimezoneChange(this.state.timezone);
     this.setValues(this.props);
@@ -163,10 +160,31 @@ class Appointment extends Component {
     });
   }
   handleRecevierSelect = (val) => {
-    const userList = JSON.parse(localStorage.getItem('__meeting_to') || '[]');
-    const user = this.state.dataSource.find(item => item.mail = val);
-    userList.push(user);
-    localStorage.setItem('__meeting_to', JSON.stringify(userList));
+    const userList = this.props.receivers.slice();
+    const user = this.state.dataSource.find(item => item.mail == val);
+    if(user) {
+      userList.push(user);
+    }
+    this.props.form.setFieldsValue({
+      receivers: userList.map(item => item.mail)
+    });
+    this.props.actions.changeProp('receivers', userList);
+  }
+  handelDeselect = (val) => {
+    let userList = this.props.receivers;
+    const index = userList.findIndex(item => item.mail === val);
+    userList = userList.slice().splice(index, 1);
+    this.props.form.setFieldsValue({
+      receivers: userList.map(item => item.mail)
+    });
+    this.props.actions.changeProp('receivers', userList);
+  }
+  handleSelectRoom = (rooms) => {
+    const location = this.props.location.concat(rooms);
+    this.props.form.setFieldsValue({
+      location
+    });
+    this.props.actions.changeProp('location', location);
   }
   handleTime(type, time) {
     if(type === 'startTime') {
@@ -177,7 +195,16 @@ class Appointment extends Component {
     this.setValues(this.props);
   }
   handleChangeSubject = (e) => {
+    this.props.form.setFieldsValue({
+      subject: e.target.value
+    });
     this.props.actions.changeProp('subject', e.target.value);
+  }
+  handleContent = (e) => {
+    this.props.form.setFieldsValue({
+      content: e.target.value
+    });
+    this.props.actions.changeProp('content', e.target.value);
   }
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -229,6 +256,7 @@ class Appointment extends Component {
                   filterOption={false}
                   onSelect={this.handleRecevierSelect}
                   onSearch={this.handleSearch}
+                  onDeselect={this.handelDeselect}
                 >
                   {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
                 </Select>
@@ -257,7 +285,7 @@ class Appointment extends Component {
                 <AddRooms
                   visible={showAddRooms}
                   onClose={() => this.setState({ showAddRooms: false })}
-                  onSelect={this.onSelectRoom}
+                  onSelect={this.handleSelectRoom}
                 />
                 {getFieldDecorator('location', {
                   initialValue: [],
@@ -361,9 +389,7 @@ class Appointment extends Component {
                   message: 'Please input attendees',
                 }]
               })(
-                <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={val => {
-                  localStorage.setItem('__meeting_content', val);
-                }} />
+                <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={this.handleContent} />
                 )}
             </div>
           </Form>

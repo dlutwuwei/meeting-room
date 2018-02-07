@@ -77,11 +77,7 @@ class Schedule extends Component {
         ],
         showAddRooms: false,
         showAddAttendees: false,
-        rooms: [],
-        attendees: [],
         date: moment(),
-        startTime: moment().minute(0),
-        endTime: moment().minute(0),
         top: -1,
         left: -1,
         right: -1,
@@ -145,9 +141,10 @@ class Schedule extends Component {
         })).filter(item => {
             return !this.state.checkedList.find(ele => ele === item.value);
         });
+        const newOptions = this.state.options.concat(options);
         this.setState({
-            options: this.state.options.concat(options),
-            checkedList: this.state.checkedList.concat(options.map(item => item.value)),
+            options: newOptions,
+            checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
             checkAll: true,
             data: this.state.data.concat(options.map(() => ([])))
         });
@@ -156,25 +153,24 @@ class Schedule extends Component {
         this.setState({
             rooms
         });
+        this.props.actions.changeProp('location', this.props.location.concat(rooms));
         this.addToList(rooms);
     }
     onSelectAttendee(attendees) {
-        this.setState({
-            attendees
-        });
+        this.props.actions.changeProp('receivers', this.props.receivers.concat(attendees));
         this.addToList(attendees)
     }
     handleSend = () => {
-        const { attendees, rooms, date } = this.state;
-        const { startTime, endTime, subject } = this.props;
+        const {rooms } = this.state;
+        const { startTime, endTime, subject, receivers, content } = this.props;
         const data = {};
-        data.content = localStorage.getItem('__meeting_content') || '';
+        data.content = content || '';
         data.subject = subject || '';
         data.from = localStorage.getItem('__meeting_user_email') || '';
-        data.receiver = attendees.map(item => item.mail).join(';');
+        data.receiver = receivers.map(item => item.mail).join(';');
         data.roomMails = rooms.map(item => item.mail).join(';');
-        data.startTime = startTime.utc().format('YYYY-MM-DD') + ' ' + startTime.utc().format('HH:mm');
-        data.endTime = endTime.utc().format('YYYY-MM-DD') + ' ' + endTime.utc().format('HH:mm');
+        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
         data.showas = localStorage.getItem('__meeting_showas') || '';
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
@@ -247,10 +243,10 @@ class Schedule extends Component {
         }
     }
     render() {
-        const { data, checkedList, options, date, showAddRooms,
+        const { data, checkedList, date, showAddRooms,
             showAddAttendees, left, right, top,
             timezone } = this.state;
-        const { startTime, endTime, showTimezone} = this.props;
+        const { startTime, endTime, showTimezone, receivers, location } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <div className="schedule-contianer">
@@ -267,7 +263,7 @@ class Schedule extends Component {
                                 </Checkbox>
                             </div>
                             <CheckboxGroup
-                                options={options}
+                                options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
                                 value={checkedList}
                                 onChange={this.onChange.bind(this)}
                             />
