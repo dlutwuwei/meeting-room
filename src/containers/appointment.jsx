@@ -77,10 +77,7 @@ class Appointment extends Component {
     fetching: false,
     attendees: '',
     dataSource: [],
-    timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || {
-      key: 'CCT',
-      label: '+08:00 中国北京时间（俄罗斯伊尔库茨克时区）'
-    })
+    timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}')
   }
   openRooms() {
     this.setState({
