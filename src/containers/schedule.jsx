@@ -77,7 +77,7 @@ class Schedule extends Component {
         ],
         showAddRooms: false,
         showAddAttendees: false,
-        date: moment(),
+        date: moment().minutes(0),
         top: -1,
         left: -1,
         right: -1,
@@ -238,6 +238,7 @@ class Schedule extends Component {
     handleTime(type, time) {
         if(type === 'startTime') {
             this.props.actions.changeProp('startTime', time.utc());
+            this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes').utc());
         } else if(type === 'endTime') {
             this.props.actions.changeProp('endTime', time.utc());
         }

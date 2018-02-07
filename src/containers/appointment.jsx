@@ -187,10 +187,16 @@ class Appointment extends Component {
     this.props.actions.changeProp('location', location);
   }
   handleTime(type, time) {
+    const offsetUTC = this.state.timezone.label.split(' ')[0];
+
     if(type === 'startTime') {
-        this.props.actions.changeProp('startTime', time);
+        this.props.actions.changeProp('startTime', time.utc());
+        this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes').utc());
+        this.props.form.setFieldsValue({
+          endTime: time.clone().add(30, 'minutes').zone(offsetUTC)
+        });
     } else if(type === 'endTime') {
-        this.props.actions.changeProp('endTime', time)
+        this.props.actions.changeProp('endTime', time.utc())
     }
     this.setValues(this.props);
   }
