@@ -37,7 +37,7 @@ const formItemLayout = {
 };
 
 const dateConfig = {
-  initialValue: moment().minute(0),
+  initialValue: moment().hours(9).minute(0),
   rules: [{
     type: 'object',
     required: true,
@@ -46,7 +46,7 @@ const dateConfig = {
 };
 
 const timeConfig = {
-  initialValue: moment().minute(0),
+  initialValue: moment().hours(9).minute(0),
   rules: [{
     type: 'object',
     required: true,

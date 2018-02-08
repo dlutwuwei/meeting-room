@@ -23,8 +23,8 @@ function navReducer(state = initState, action) {
 
 const appointment = {
   receivers: [],
-  startTime: moment().minute(0),
-  endTime: moment().minute(0),
+  startTime: moment().hours(9).minute(0),
+  endTime: moment().hours(10).minute(0),
   subject: '',
   location: [],
   content: ''

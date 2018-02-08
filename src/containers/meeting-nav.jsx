@@ -68,11 +68,11 @@ class Nav extends Component {
                                 <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
-                                    <Option key="1" value="1" className="status busy">忙</Option>
-                                    <Option key="2"  value="2" className="status out">外出</Option>
-                                    <Option key="3" value="3" className="status interim">暂定</Option>
-                                    <Option key="3" value="4" className="status unkown">未知</Option>
-                                    <Option key="3" value="5" className="status occupy">在其他地方工作</Option>
+                                    <Option key="1" value="1" className="status busy" title="Busy">Busy</Option>
+                                    <Option key="2"  value="2" className="status out" title="Out of Office">Out of Office</Option>
+                                    <Option key="3" value="3" className="status interim" title="Tentative">Tentative</Option>
+                                    <Option key="3" value="4" className="status unkown" title="No Information">No Information</Option>
+                                    <Option key="3" value="5" className="status occupy" title="Working Elsewhere">Working Elsewhere</Option>
                                 </Select>
                             </div>
                             <div className="nav-item1">

@@ -417,11 +417,11 @@ class Schedule extends Component {
                         </Select>}
                     </div>
                     <div className="item">
-                        <div className="status busy">忙</div>
-                        <div className="status out">外出</div>
-                        <div className="status interim">暂定</div>
-                        <div className="status unkown">未知</div>
-                        <div className="status occupy">在其他地方工作</div>
+                        <div className="status busy">Busy</div>
+                        <div className="status out">Out of Office</div>
+                        <div className="status interim">Tentative</div>
+                        <div className="status unkown">No Information</div>
+                        <div className="status occupy">Working Elsewhere</div>
                     </div>
                 </div>
             </div>
