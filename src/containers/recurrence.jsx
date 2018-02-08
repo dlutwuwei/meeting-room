@@ -129,8 +129,13 @@ class Recurrence extends Component {
             });
         }
     }
+    onPatternChange = (e) => {
+        this.setState({
+            recurrence_pattern: e.target.value
+        });
+    }
     render () {
-        const { visible, list, timezone, startTime, endTime, duration } = this.state;
+        const { visible, list, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Modal
@@ -218,7 +223,7 @@ class Recurrence extends Component {
                 <Card className="section" title={'Recurrence Pattern'} bordered={false}>
                     <div className="section-title"></div>
                     <div className="section-left">
-                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.value}>
+                        <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={this.state.recurrence_pattern}>
                             <Radio value={1}>Daily</Radio>
                             <Radio value={2}>Weekly</Radio>
                             <Radio value={3}>Yearly</Radio>
@@ -230,7 +235,7 @@ class Recurrence extends Component {
                         <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={onChange} />
                     </div>
                 </Card>
-                <Card className="section" title={'Recurrence Pattern'} bordered={false}>
+                <Card className="section" title={'Recurrence Scope'} bordered={false}>
                     <div className="section-left">
                         <label htmlFor="" className="room-title">Start Time:</label>
                         <DatePicker
@@ -242,7 +247,7 @@ class Recurrence extends Component {
                         />
                     </div>
                     <div className="section-right">
-                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.value}>
+                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.recurrence_pattern}>
                             <Radio value={1}>Daily</Radio>
                             <Radio value={2}>Weekly <Input/> occurrence</Radio>
                             <Radio value={4}>Monthly
