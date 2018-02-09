@@ -8,6 +8,7 @@ import { generateOptions } from 'lib/util';
 import fetch from 'lib/fetch';
 import PropTypes from 'prop-types';
 import Timezone from '../constant/timezone';
+import '../style/recurrence.less';
 
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
@@ -74,7 +75,7 @@ class Recurrence extends Component {
         openKeys: [],
         startTime: moment().hours(9).minutes(0),
         endTime: moment().hours(9).minutes(30),
-        recurrence_pattern: '',
+        recurrence_pattern: 1,
         recurrence: [],
         duration: 1,
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}')
@@ -134,6 +135,37 @@ class Recurrence extends Component {
             recurrence_pattern: e.target.value
         });
     }
+    renderPattern(recurrence_pattern) {
+        let pattern;
+        switch(recurrence_pattern) {
+            case 1:
+                pattern = (<div>
+                    <Radio value={4}>Every <Input /> day(s)</Radio>
+                    <Radio value={2}>Every work day</Radio>
+                </div>);
+                break;
+            case 2:
+                pattern = (<div>
+                    Recurrent every <Input /> week(s) on:
+                    <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={onChange} />
+                </div>);
+                break;
+            case 3:
+                pattern = (<div>
+                    <Radio value={4}>Day <Input /> of every <Input /> month(s)</Radio>
+                    <Radio value={4}>The <Select /> <Select /> of every <Input /> month(s)</Radio>
+                </div>);
+                break;
+            case 4:
+                pattern = (<div>
+                    <div>重复间隔为<Input />年</div>
+                    <Radio value={4}>时间: <Select /> <Input />日</Radio>
+                    <Radio value={4}>The <Select />的<Select /> <Select /></Radio>
+                </div>);
+                break;
+        }
+        return pattern;
+    }
     render () {
         const { visible, list, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
@@ -148,7 +180,7 @@ class Recurrence extends Component {
             footer={null}
             wrapClassName="add-recurrence-container"
             >
-                <Card className="section" title={"Appointment Time"} bordered={false}>
+                <Card className="my-card" title={"Appointment Time"} bordered={false}>
                     <div className="rcu-item">
                         <label htmlFor="" className="rcu-title">Start Time:</label>
                         <TimePicker
@@ -220,46 +252,48 @@ class Recurrence extends Component {
                         </Select>
                     </div>
                 </Card>
-                <Card className="section" title={'Recurrence Pattern'} bordered={false}>
-                    <div className="section-title"></div>
-                    <div className="section-left">
-                        <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={this.state.recurrence_pattern}>
-                            <Radio value={1}>Daily</Radio>
-                            <Radio value={2}>Weekly</Radio>
-                            <Radio value={3}>Yearly</Radio>
-                            <Radio value={4}>Monthly</Radio>
-                        </RadioGroup>
-                    </div>
-                    <div className="section-right">
-                        Recurrent every <Input /> week(s) on:
-                        <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={onChange} />
+                <Card className="my-card" title={'Recurrence Pattern'} bordered={false}>
+                    <div className="section">
+                        <div className="section-left" style={{flex: 1}}>
+                            <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={this.state.recurrence_pattern}>
+                                <Radio value={1}>Daily</Radio>
+                                <Radio value={2}>Weekly</Radio>
+                                <Radio value={3}>Monthly</Radio>
+                                <Radio value={4}>Yearly</Radio>
+                            </RadioGroup>
+                        </div>
+                        <div className="section-right" style={{flex: 2}}>
+                            {this.renderPattern(recurrence_pattern)}
+                        </div>
                     </div>
                 </Card>
-                <Card className="section" title={'Recurrence Scope'} bordered={false}>
-                    <div className="section-left">
-                        <label htmlFor="" className="room-title">Start Time:</label>
-                        <DatePicker
-                            format="YYYY-MM-DD"
-                            placeholder="Select Date"
-                            onChange={() => {}}
-                            onOk={() => {}}
-                            className="my-date-picker"
-                        />
-                    </div>
-                    <div className="section-right">
-                        <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.recurrence_pattern}>
-                            <Radio value={1}>Daily</Radio>
-                            <Radio value={2}>Weekly <Input/> occurrence</Radio>
-                            <Radio value={4}>Monthly
-                                <DatePicker
-                                    format="YYYY-MM-DD"
-                                    placeholder="Select Date"
-                                    onChange={() => {}}
-                                    onOk={() => {}}
-                                    className="my-date-picker"
-                                />
-                            </Radio>
-                        </RadioGroup>
+                <Card className="my-card" title={'Recurrence Scope'} bordered={false}>
+                    <div className="section">
+                        <div className="section-left" style={{flex: 2}}>
+                            <label htmlFor="" className="room-title">Start:</label>
+                            <DatePicker
+                                format="YYYY-MM-DD"
+                                placeholder="Select Date"
+                                onChange={() => {}}
+                                onOk={() => {}}
+                                className="my-date-picker"
+                            />
+                        </div>
+                        <div className="section-right">
+                            <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.recurrence_pattern}>
+                                <Radio value={1}>No end date</Radio>
+                                <Radio value={2}>End after: <Input/> occurrences</Radio>
+                                <Radio value={4}>End by:
+                                    <DatePicker
+                                        format="YYYY-MM-DD"
+                                        placeholder="Select Date"
+                                        onChange={() => {}}
+                                        onOk={() => {}}
+                                        className="my-date-picker"
+                                    />
+                                </Radio>
+                            </RadioGroup>
+                        </div>
                     </div>
                 </Card>
                 <div className="rcu-item rcu-select">
