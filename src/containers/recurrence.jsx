@@ -139,10 +139,12 @@ class Recurrence extends Component {
         let pattern;
         switch(recurrence_pattern) {
             case 1:
-                pattern = (<div>
-                    <Radio value={4}>Every <Input /> day(s)</Radio>
-                    <Radio value={2}>Every work day</Radio>
-                </div>);
+                pattern = (
+                    <RadioGroup>
+                        <Radio value={1}>Every <Input /> day(s)</Radio>
+                        <Radio value={2}>Every work day</Radio>
+                    </RadioGroup>
+                );
                 break;
             case 2:
                 pattern = (<div>
@@ -151,16 +153,18 @@ class Recurrence extends Component {
                 </div>);
                 break;
             case 3:
-                pattern = (<div>
-                    <Radio value={4}>Day <Input /> of every <Input /> month(s)</Radio>
-                    <Radio value={4}>The <Select /> <Select /> of every <Input /> month(s)</Radio>
-                </div>);
+                pattern = (<RadioGroup>
+                    <Radio value={1}>Day <Input /> of every <Input /> month(s)</Radio>
+                    <Radio value={2}>The <Select /> <Select /> of every <Input /> month(s)</Radio>
+                </RadioGroup>);
                 break;
             case 4:
                 pattern = (<div>
-                    <div>重复间隔为<Input />年</div>
-                    <Radio value={4}>时间: <Select /> <Input />日</Radio>
-                    <Radio value={4}>The <Select />的<Select /> <Select /></Radio>
+                    <div style={{marginBottom: 6}}>重复间隔为<Input />年</div>
+                    <RadioGroup>
+                        <Radio value={1}>时间: <Select /> <Input />日</Radio>
+                        <Radio value={2}>The <Select />的<Select /> <Select /></Radio>
+                    </RadioGroup>
                 </div>);
                 break;
         }
@@ -244,7 +248,7 @@ class Recurrence extends Component {
                     <div className="rcu-item">
                         <label htmlFor="" className="rcu-title">Duration:</label>
                         <Select
-                            style={{width: 100}}
+                            style={{width: 150}}
                             value={duration}
                             onChange={this.handleDuration}
                         >
@@ -270,7 +274,7 @@ class Recurrence extends Component {
                 <Card className="my-card" title={'Recurrence Scope'} bordered={false}>
                     <div className="section">
                         <div className="section-left" style={{flex: 2}}>
-                            <label htmlFor="" className="room-title">Start:</label>
+                            <label htmlFor="" style={{marginRight: 10}}>Start:</label>
                             <DatePicker
                                 format="YYYY-MM-DD"
                                 placeholder="Select Date"
@@ -280,10 +284,10 @@ class Recurrence extends Component {
                             />
                         </div>
                         <div className="section-right">
-                            <RadioGroup className="my-radio-group" onChange={onChange} value={this.state.recurrence_pattern}>
+                            <RadioGroup className="my-radio-group">
                                 <Radio value={1}>No end date</Radio>
                                 <Radio value={2}>End after: <Input/> occurrences</Radio>
-                                <Radio value={4}>End by:
+                                <Radio value={3}>End by:
                                     <DatePicker
                                         format="YYYY-MM-DD"
                                         placeholder="Select Date"
@@ -297,8 +301,8 @@ class Recurrence extends Component {
                     </div>
                 </Card>
                 <div className="rcu-item rcu-select">
-                    <Button type="primary" size="large">OK</Button>
-                    <Button type="info" size="large">Cancel</Button>
+                    <Button type="primary" size="large" style={{width: 100}}>OK</Button>
+                    <Button type="info" size="large" style={{width: 100}}>Cancel</Button>
                     <Button type="default" size="large">Remove Recurrence</Button>
                 </div>
             </Modal>
