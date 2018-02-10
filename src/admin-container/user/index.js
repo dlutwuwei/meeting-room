@@ -69,7 +69,7 @@ function getColumns(type) {
 }
 
 function getBreadcrumb(type) {
-    let breadcrumb = null;
+    let breadcrumb = <span/>;
     switch(type) {
         case 'list':
             breadcrumb = <Breadcrumb.Item>用户管理</Breadcrumb.Item>;

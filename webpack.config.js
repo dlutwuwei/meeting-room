@@ -19,7 +19,8 @@ module.exports = Object.keys(languages).map(lan => {
     entry: {
         lib: [ 'react', 'react-dom', 'babel-polyfill' ],
         app: ['./src/app.js'],
-        board: ['./src/board.js']
+        board: ['./src/board.js'],
+        admin: ['./src/admin.js']
     },
     output: {
         publicPath: isDev ? '/' : '/static/',
@@ -63,6 +64,12 @@ module.exports = Object.keys(languages).map(lan => {
               changeOrigin: true,
               bypass: function(req, res, proxyOptions) {
                 if (req.headers.accept.indexOf('html') !== -1) {
+                  console.log(req.url)
+                  if(req.url.startsWith('/board')) {
+                    return '/index-board.html';
+                  } else if (req.url.startsWith('/admin')) {
+                    return '/index-admin.html';
+                  }
                   console.log('Skipping proxy for browser request.');
                   return '/index.html';
                 }
@@ -175,10 +182,16 @@ module.exports = Object.keys(languages).map(lan => {
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
-          filename: 'board.html',
+          filename: 'index-board.html',
           chunks: [ 'lib', 'board'],
           inject: true
-      }),
+        }),
+        new HtmlWebpackPlugin({
+          template: 'public/index.html',
+          filename: 'index-admin.html',
+          chunks: [ 'lib', 'admin'],
+          inject: true
+        }),
         new ExtractTextPlugin({
             filename: 'css/app-[contenthash:6].css',
             allChunks: true
