@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Divider, Button, Icon, message, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
 import List from './list';
+import { basename } from 'path';
 
 function getColumns(type) {
     let columns;
@@ -126,7 +127,24 @@ function getColumns(type) {
     return columns;
 }
 
-
+function getBreadcrumb(type) {
+    let breadcrumb = null;
+    switch(type) {
+        case 'area':
+            breadcrumb = <Breadcrumb.Item>区域管理</Breadcrumb.Item>;
+            break;
+        case 'department':
+            breadcrumb = <Breadcrumb.Item>部门管理</Breadcrumb.Item>;
+            break;
+        case 'rooms':
+            breadcrumb = <Breadcrumb.Item>会议室管理</Breadcrumb.Item>;
+            break;
+        case 'type':
+            breadcrumb = <Breadcrumb.Item>会议室类型管理</Breadcrumb.Item>;
+            break;
+    }
+    return breadcrumb;
+}
 export default class BasicList extends PureComponent {
     state = {
         data: [],
@@ -156,6 +174,10 @@ export default class BasicList extends PureComponent {
                 page: res.data.page,
                 pageSize: res.data.pageSize
             });
+        }).catch(() => {
+            this.setState({
+                data: []
+            })
         });
     }
     render() {
@@ -163,6 +185,10 @@ export default class BasicList extends PureComponent {
         const type = this.props.match.params.type;
         return (
             <div className="">
+                <Breadcrumb separator=">">
+                    <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
+                    {getBreadcrumb(type)}
+                </Breadcrumb>
                 <List
                     columns={getColumns(type)}
                     data={data}
