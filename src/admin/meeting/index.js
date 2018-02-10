@@ -163,6 +163,8 @@ export default class BasicList extends PureComponent {
                 return '/api/area/getList';
             case 'rooms':
                 return '/api/meetingRoom/getList';
+            case 'type':
+                return '/api/meetingRoomType/getList';
         }
     }
     fetchData = () => {
