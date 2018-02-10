@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
-import './admin.less';
+import MeetingList from './meeting/';
 import List from './list';
 import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
+
+import './admin.less';
+import './list.less';
 
 class Admin extends React.Component {
   state = {
@@ -62,11 +65,11 @@ class Admin extends React.Component {
             />
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-            <Route path={`${match.url}/meeting/:type`} component={List}/>
-            <Route path={`${match.url}user/:type`} component={List}/>
-            <Route path={`${match.url}setting/:type`} component={List}/>
-            <Route path={`${match.url}charts`} component={List}/>
-            <Route path={`${match.url}monitor`} component={List}/>
+            <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
+            <Route path={`${match.url}/user/:type`} component={List}/>
+            <Route path={`${match.url}/setting/:type`} component={List}/>
+            <Route path={`${match.url}/charts`} component={List}/>
+            <Route path={`${match.url}/monitor`} component={List}/>
           </Content>
         </Layout>
       </Layout>

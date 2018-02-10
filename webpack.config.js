@@ -42,6 +42,10 @@ module.exports = Object.keys(languages).map(lan => {
             target: 'http://mt.api.ig66.com/',
             changeOrigin: true
           },
+          'api/department/': {
+            target: 'http://mt.api.ig66.com/',
+            changeOrigin: true
+          },
           '/api/meeting/': {
             target: 'http://mt.api.ig66.com/',
             changeOrigin: true
@@ -110,25 +114,34 @@ module.exports = Object.keys(languages).map(lan => {
             test: /\.css/,
             loader: ExtractTextPlugin.extract({
               fallback: 'style-loader',
-              use: [{
-                loader: 'css-loader',
-                options: {
-                    modules: true,
-                    localIdentName: '[name]_[local]_[hash:base64:5]',
-                }
-              },{
-                loader: 'postcss-loader',
-                options: {
-                  sourceMap: true,
-                  plugins: function () {
-                    return [
-                      require('autoprefixer')({
-                        browsers: ['iOS >= 7', 'android >= 4', 'ie >= 9'],
-                      }),
-                    ];
-                  },
+              use: [
+                {
+                  loader: 'url-loader',
+                  options: {
+                    limit: 10000,
+                    name: 'iconfont/[name].[hash:8].[ext]',
+                  }
                 },
-              }]
+                {
+                  loader: 'css-loader',
+                  options: {
+                      modules: true,
+                      localIdentName: '[name]_[local]_[hash:base64:5]',
+                  }
+                },{
+                  loader: 'postcss-loader',
+                  options: {
+                    sourceMap: true,
+                    plugins: function () {
+                      return [
+                        require('autoprefixer')({
+                          browsers: ['iOS >= 7', 'android >= 4', 'ie >= 9'],
+                        }),
+                      ];
+                    },
+                  },
+                }
+              ]
             })
           },
           {
@@ -187,6 +200,7 @@ module.exports = Object.keys(languages).map(lan => {
     ] : [ ]),
     resolve: {
         extensions: ['.js', '.jsx'],
+        modules: [ path.resolve(__dirname, 'src/'), 'node_modules'],
         alias: {
           img: path.resolve(__dirname, './src/img'),
           app: path.resolve(__dirname, './src/app'),
