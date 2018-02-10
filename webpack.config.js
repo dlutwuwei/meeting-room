@@ -200,15 +200,7 @@ module.exports = Object.keys(languages).map(lan => {
     ] : [ ]),
     resolve: {
         extensions: ['.js', '.jsx'],
-        modules: [ path.resolve(__dirname, 'src/'), 'node_modules'],
-        alias: {
-          img: path.resolve(__dirname, './src/img'),
-          app: path.resolve(__dirname, './src/app'),
-          lib: path.resolve(__dirname, './src/lib'),
-          utils: path.resolve(__dirname, './src/utils'),
-          components: path.resolve(__dirname, './src/components'),
-          layouts: path.resolve(__dirname, './src/layouts')
-        }
+        modules: [ path.resolve(__dirname, 'src/'), 'node_modules']
     }
   };
 });

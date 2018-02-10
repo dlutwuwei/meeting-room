@@ -1,8 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Divider, Button, Icon, message, Breadcrumb } from 'antd';
+import { Divider, Icon, message, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
-import List from './list';
-import { basename } from 'path';
+import List from '../list';
 
 function getColumns(type) {
     let columns;

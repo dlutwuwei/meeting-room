@@ -1,138 +1,135 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Modal, Divider, Form, Input, Button, Icon, message, Breadcrumb} from 'antd';
+import { Divider, Icon, message, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
-import StandardTable from 'components/standard-table';
+import List from '../list';
 
-const columns = [
-    {
-        title: '姓名',
-        dataIndex: 'name',
-    },
-    {
-        title: '邮箱',
-        dataIndex: 'mail',
-    },
-    {
-        title: '联系方式',
-        dataIndex: 'contact'
-    },
-    {
-        title: '部门',
-        dataIndex: 'departmentName'
-    },
-    {
-        title: '地区',
-        dataIndex: 'cityName'
-    },
-    {
-        title: '操作',
-        render: () => (
-            <Fragment>
-                <a href=""><Icon type="form" /></a>
-                <Divider type="vertical" />
-                <a href=""><Icon type="delete" /></a>
-            </Fragment>
-        ),
-    },
-];
-const FormItem = Form.Item;
+function getColumns(type) {
+    let columns = [];
+    switch (type) {
+        case 'list':
+            columns = [
+                {
+                    title: '姓名',
+                    dataIndex: 'name',
+                },
+                {
+                    title: '邮箱',
+                    dataIndex: 'mail',
+                },
+                {
+                    title: '联系方式',
+                    dataIndex: 'contact',
+                },
+                {
+                    title: '角色',
+                    dataIndex: 'role',
+                },
+                {
+                    title: '是否启用',
+                    dataIndex: 'start',
+                },
+                {
+                    title: '操作',
+                    render: () => (
+                        <Fragment>
+                            <a href=""><Icon type="form" /></a>
+                            <Divider type="vertical" />
+                            <a href=""><Icon type="delete" /></a>
+                        </Fragment>
+                    ),
+                },
+            ];
+            break;
+        case 'role':
+            columns = [
+                {
+                    title: '角色名称',
+                    dataIndex: 'name',
+                },
+                {
+                    title: '名称',
+                    dataIndex: 'shortCode',
+                },
+                {
+                    title: '操作',
+                    render: () => (
+                        <Fragment>
+                            <a href=""><Icon type="form" /></a>
+                            <Divider type="vertical" />
+                            <a href=""><Icon type="delete" /></a>
+                        </Fragment>
+                    ),
+                },
+            ];
+            break;
+        default:
+            columns = [];
+    }
+    return columns;
+}
 
-const CreateForm = Form.create()((props) => {
-    const { modalVisible, form, handleAdd, handleModalVisible } = props;
-    const okHandle = () => {
-        form.validateFields((err, fieldsValue) => {
-            if (err) return;
-            handleAdd(fieldsValue);
-        });
-    };
-    return (
-        <Modal
-            title="新建规则"
-            visible={modalVisible}
-            onOk={okHandle}
-            onCancel={() => handleModalVisible()}
-        >
-            <FormItem
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 15 }}
-                label="描述"
-            >
-                {form.getFieldDecorator('desc', {
-                    rules: [{ required: true, message: 'Please input some description...' }],
-                })(
-                    <Input placeholder="请输入" />
-                    )}
-            </FormItem>
-        </Modal>
-    );
-});
-
+function getBreadcrumb(type) {
+    let breadcrumb = null;
+    switch(type) {
+        case 'list':
+            breadcrumb = <Breadcrumb.Item>用户管理</Breadcrumb.Item>;
+            break;
+        case 'role':
+            breadcrumb = <Breadcrumb.Item>角色管理</Breadcrumb.Item>;
+            break;
+    }
+    return breadcrumb;
+}
 export default class BasicList extends PureComponent {
     state = {
-        list: [],
+        data: [],
         selectedRows: [],
         loading: false,
         modalVisible: false
     }
     componentDidMount() {
     }
-    fetchUsers = () => {
-        fetch.get('/api/user/getList', {
+    getUrl = () => {
+        const type = this.props.match.params.type;
+        switch (type) {
+            case 'list':
+                return '/api/user/getList';
+            case 'role':
+                return '/api/user/getRoleList';
+        }
+    }
+    fetchData = () => {
+        fetch.get(this.getUrl(), {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
             this.setState({
-                list: res.data
+                data: res.data.list,
+                page: res.data.page,
+                pageSize: res.data.pageSize
             });
-        });
-    }
-    componentWillReceiveProps() {
-        this.fetchUsers();
-    }
-    handleSelectRows = () => {
-
-    }
-    handleStandardTableChange = () => {
-
-    }
-    handleModalVisible = (flag) => {
-        this.setState({
-            modalVisible: !!flag,
-        });
-    }
-    handleAdd = () => {
-
-        message.success('添加成功');
-        this.setState({
-            modalVisible: false,
+        }).catch(() => {
+            this.setState({
+                data: []
+            })
         });
     }
     render() {
-        const { list: data, selectedRows, loading, modalVisible } = this.state;
-
-        const parentMethods = {
-            handleAdd: this.handleAdd,
-            handleModalVisible: this.handleModalVisible,
-        };
+        const { data, loading, page, pageSize } = this.state;
+        const type = this.props.match.params.type;
         return (
-            <div className="list-container">
+            <div className="">
                 <Breadcrumb separator=">">
                     <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
-                    <Breadcrumb.Item>区域管理</Breadcrumb.Item>
+                    {getBreadcrumb(type)}
                 </Breadcrumb>
-                <div className="list-main">
-                    <Button type="primary" className="add-button" icon="plus" onClick={() => this.handleModalVisible(true)}>添加</Button>
-                    <StandardTable
-                        selectedRows={selectedRows}
-                        loading={loading}
-                        data={data}
-                        columns={columns}
-                        onSelectRow={this.handleSelectRows}
-                        onChange={this.handleStandardTableChange}
-                    />
-                </div>
-                <CreateForm
-                    {...parentMethods}
-                    modalVisible={modalVisible}
+                <List
+                    columns={getColumns(type)}
+                    data={data}
+                    loading={loading}
+                    fetchData={this.fetchData}
+                    type={type}
+                    page={page}
+                    pageSize={pageSize}
                 />
             </div>
         );

@@ -2,10 +2,13 @@ import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
 import MeetingList from './meeting/';
+import UserList from './user';
 import List from './list';
 import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
+import fetch from 'lib/fetch';
+import * as util from 'lib/util';
 
 import './admin.less';
 import './list.less';
@@ -30,8 +33,8 @@ class Admin extends React.Component {
         >
           <div className="logo" />
           <Menu
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            // defaultSelectedKeys={['1']}
+            // defaultOpenKeys={['sub1']}
             mode="inline"
             theme="dark"
             inlineCollapsed={this.state.collapsed}
@@ -43,7 +46,7 @@ class Admin extends React.Component {
                 <Menu.Item key="4"><Link to="/admin/meeting/type">会议室类型</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
-                <Menu.Item key="5"><Link to="/admin/user/profile">用户管理</Link></Menu.Item>
+                <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>
                 <Menu.Item key="6"><Link to="/admin/user/role">角色管理</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub3" title={<span><Icon type="setting" /><span>系统设置</span></span>}>
@@ -66,7 +69,7 @@ class Admin extends React.Component {
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
-            <Route path={`${match.url}/user/:type`} component={List}/>
+            <Route path={`${match.url}/user/:type`} component={UserList}/>
             <Route path={`${match.url}/setting/:type`} component={List}/>
             <Route path={`${match.url}/charts`} component={List}/>
             <Route path={`${match.url}/monitor`} component={List}/>
@@ -77,21 +80,18 @@ class Admin extends React.Component {
   }
 }
 
-// class Admin extends Component {
-//     render () {
-//         const match = this.props.match;
-//         return (
-//             <div>
-//                 <h2>Topics</h2>
-//                 <Route path={`${match.url}/:topicId`} component={Topic}/>
-//                 <Route exact path={match.url} render={() => (
-//                 <h3>Please select a topic.</h3>
-//                 )}/>
-//             </div>
-//         )
-//     }
-// }
 Admin.propTypes = {
   match: PropTypes.object.isRequired
 }
 export default Admin
+
+const token = util.getQuery('token');
+
+fetch.get('/api/user/getUserInfo', {
+  token: token || '40a56c3e9cc9465f60c810f2d26d38c'
+}).then(r => {
+  localStorage.setItem('__meeting_user_email', r.data.mail);
+  localStorage.setItem('__meeting_user_name', r.data.userName);
+});
+
+localStorage.setItem('__meeting_token', token || '40a56c3e9cc9465f60c810f2d26d38c')

@@ -1,42 +1,7 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Modal, Divider, Card, Form, Input, Button, Icon, message} from 'antd';
-import fetch from 'lib/fetch';
+import React, { PureComponent } from 'react';
+import { Modal, Form, Input, Button, message} from 'antd';
 import StandardTable from 'components/standard-table';
 
-const styles = {};
-
-const columns = [
-    {
-        title: '姓名',
-        dataIndex: 'name',
-    },
-    {
-        title: '邮箱',
-        dataIndex: 'mail',
-    },
-    {
-        title: '联系方式',
-        dataIndex: 'contact'
-    },
-    {
-        title: '部门',
-        dataIndex: 'departmentName'
-    },
-    {
-        title: '地区',
-        dataIndex: 'cityName'
-    },
-    {
-        title: '操作',
-        render: () => (
-            <Fragment>
-                <a href=""><Icon type="form" /></a>
-                <Divider type="vertical" />
-                <a href=""><Icon type="delete" /></a>
-            </Fragment>
-        ),
-    },
-];
 const FormItem = Form.Item;
 
 const CreateForm = Form.create()((props) => {
@@ -71,24 +36,18 @@ const CreateForm = Form.create()((props) => {
 
 export default class BasicList extends PureComponent {
     state = {
-        list: [],
         selectedRows: [],
         loading: false,
         modalVisible: false
     }
     componentDidMount() {
+        this.props.fetchData();
     }
-    fetchUsers = () => {
-        fetch.get('/api/user/getList', {
-            token: localStorage.getItem('__meeting_token')
-        }).then(res => {
-            this.setState({
-                list: res.data
-            });
-        });
-    }
-    componentWillReceiveProps() {
-        this.fetchUsers();
+    componentWillReceiveProps(nextProps) {
+        if(this.props.type !== nextProps.type) {
+            this.props.fetchData();
+        }
+
     }
     handleSelectRows = () => {
 
@@ -109,31 +68,32 @@ export default class BasicList extends PureComponent {
         });
     }
     render() {
-        const { list: data, selectedRows, loading, modalVisible } = this.state;
-
+        const { selectedRows, loading, modalVisible } = this.state;
+        const { data, breadcrumb, columns, page, pageSize } = this.props;
         const parentMethods = {
             handleAdd: this.handleAdd,
             handleModalVisible: this.handleModalVisible,
         };
         return (
-            <div className="">
-                <Card
-                    className={styles.listCard}
-                    bordered={false}
-                    title="用户管理"
-                    style={{ marginTop: 24 }}
-                    bodyStyle={{ padding: '0 32px 40px 32px' }}
-                >
-                    <Button type="primary" style={{ marginTop: 8 }} icon="plus" onClick={() => this.handleModalVisible(true)}>添加</Button>
+            <div className="list-container">
+                {breadcrumb}
+                <div className="list-main">
+                    <Button type="primary" className="add-button" icon="plus" onClick={() => this.handleModalVisible(true)}>添加</Button>
                     <StandardTable
                         selectedRows={selectedRows}
                         loading={loading}
-                        data={data}
+                        data={{
+                            list: data,
+                            pagination: {
+                                page,
+                                pageSize
+                            }
+                        }}
                         columns={columns}
                         onSelectRow={this.handleSelectRows}
                         onChange={this.handleStandardTableChange}
                     />
-                </Card>
+                </div>
                 <CreateForm
                     {...parentMethods}
                     modalVisible={modalVisible}
