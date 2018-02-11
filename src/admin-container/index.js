@@ -4,6 +4,10 @@ import { Layout, Menu, Icon } from 'antd';
 import MeetingList from './meeting/';
 import UserList from './user';
 import List from './list';
+import Setting from './setting';
+import Charts from './charts';
+import Monitor from './monitor';
+
 import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -51,9 +55,9 @@ class Admin extends React.Component {
             </SubMenu>
             <SubMenu key="sub3" title={<span><Icon type="setting" /><span>系统设置</span></span>}>
                 <Menu.Item key="7"><Link to="/admin/setting/exchange">Exchange系统集成</Link></Menu.Item>
-                <Menu.Item key="8"><Link to="/admin/setting/black">黑名单</Link></Menu.Item>
-                <Menu.Item key="9"><Link to="/admin/setting/white">白名单</Link></Menu.Item>
-                <Menu.Item key="10"><Link to="/admin/setting/rooms">会议室设置</Link></Menu.Item>
+                <Menu.Item key="8"><Link to="/admin/setting/blacklist">黑名单</Link></Menu.Item>
+                <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>
+                <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>
             </SubMenu>
             <Menu.Item key="13"><Link to="/admin/charts"><Icon type="pie-chart" /><span>报表分析</span></Link></Menu.Item>
             <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>数据监控</span></Link></Menu.Item>
@@ -70,9 +74,9 @@ class Admin extends React.Component {
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
             <Route path={`${match.url}/user/:type`} component={UserList}/>
-            <Route path={`${match.url}/setting/:type`} component={List}/>
-            <Route path={`${match.url}/charts`} component={List}/>
-            <Route path={`${match.url}/monitor`} component={List}/>
+            <Route path={`${match.url}/setting/`} component={Setting}/>
+            <Route path={`${match.url}/charts`} component={Charts}/>
+            <Route path={`${match.url}/monitor`} component={Monitor}/>
           </Content>
         </Layout>
       </Layout>
