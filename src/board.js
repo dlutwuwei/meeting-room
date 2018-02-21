@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import fetch from './lib/fetch';
 import QueueAnim from 'rc-queue-anim';
 import classnames from 'classNames';
-import { Modal } from 'antd';
 
 import './style/board.less';
 
