@@ -36,7 +36,7 @@ class AddRooms extends Component {
         endTime: moment().format('YYYY-MM-DD HH:mm')
     }
     search() {
-        fetch.get('/api/MeetingRoom/GetList', {
+        fetch.get('/api/meetingRoom/getList', {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
