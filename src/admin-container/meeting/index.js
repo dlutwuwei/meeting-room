@@ -163,7 +163,7 @@ export default class BasicList extends PureComponent {
             case 'rooms':
                 return '/api/meetingRoom/getList';
             case 'type':
-                return '/api/meetingRoomType/getList';
+                return '/api/meetingRoom/getRoomTypes';
         }
     }
     fetchData = () => {
@@ -171,7 +171,7 @@ export default class BasicList extends PureComponent {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
             this.setState({
-                data: res.data.list,
+                data: res.data.length ? res.data: res.data.list,
                 page: res.data.page,
                 pageSize: res.data.pageSize
             });
