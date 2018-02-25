@@ -85,7 +85,6 @@ class Appointment extends Component {
     });
   }
   handleSubmit() {
-    const { dataSource } = this.state;
     this.props.form.validateFields((err, values) => {
       const data = values;
       if (!err) {
@@ -100,7 +99,7 @@ class Appointment extends Component {
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_private') || '';
-        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(r => {
+        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
           message.success('预定成功');
           setTimeout(() => {
             location.href = '/home?tab=my-meeting';
@@ -233,7 +232,7 @@ class Appointment extends Component {
                   message: 'Please input sender',
                 }]
               })(
-                <Input placeholder="wuwei@meeting.com" disabled />
+                <Input placeholder="" disabled />
                 )}
             </FormItem>
             <FormItem
@@ -291,7 +290,7 @@ class Appointment extends Component {
                   rules: [{
                     type: 'array',
                     required: true,
-                    message: 'Please input attendees',
+                    message: 'Please input meeting room',
                   }]
                 })(
                   <LocationRoom />

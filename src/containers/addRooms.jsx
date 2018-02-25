@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Form, Checkbox, Table, TimePicker, Icon, Button } from 'antd';
+import { Modal, DatePicker, Checkbox, Table, TimePicker, Icon, Button } from 'antd';
 import Select from 'components/select';
-import Input from 'components/input';
 import moment from 'moment';
-import { generateOptions } from 'lib/util';
 import fetch from 'lib/fetch';
 
 const CheckboxGroup = Checkbox.Group;
@@ -58,35 +56,35 @@ class AddRooms extends Component {
             title: 'Phone',
             dataIndex: 'hasPhone',
             key: 'phone',
-            render: (val, record) => {
+            render: (val) => {
                 return val && <Icon type="check" />
             }
         }, {
             title: 'TV',
             dataIndex: 'hasTv',
             key: 'tv',
-            render: (val, record) => {
+            render: (val) => {
                 return val && <Icon type="check" />
             }
         }, {
             title: 'Whiteboard',
             dataIndex: 'hasWhiteBoard',
             key: 'whiteboard',
-            render: (val, record) => {
+            render: (val) => {
                 return val && <Icon type="check" />
             }
         }, {
             title: 'Projector',
             dataIndex: 'hasProjector',
             key: 'projector',
-            render: (val, record) => {
+            render: (val) => {
                 return val && <Icon type="check" />
             }
         }, {
             title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (val, record) => {
+            render: (val) => {
                 return val && <Icon type="check" />
             }
         }, {
@@ -169,7 +167,7 @@ class AddRooms extends Component {
         })
     }
     render() {
-        const { visible, list, eqGroup } = this.state;
+        const { visible, list } = this.state;
         return (
             <Modal
                 title="Add Rooms"
@@ -198,7 +196,7 @@ class AddRooms extends Component {
                         defaultValue={moment()}
                         hideDisabledOptions={true}
                         onChange={this.handleChange.bind(this, 'startTime')}
-                        disabledHours={(h) => {
+                        disabledHours={() => {
                             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                         }}
                     />
@@ -220,7 +218,7 @@ class AddRooms extends Component {
                         onChange={this.handleChange.bind(this, 'endTime')}
                         defaultValue={moment()}
                         hideDisabledOptions={true}
-                        disabledHours={(h) => {
+                        disabledHours={() => {
                             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                         }}
                     />
