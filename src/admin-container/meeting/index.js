@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Divider, Icon, message, Breadcrumb } from 'antd';
+import { Divider, Icon, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
 

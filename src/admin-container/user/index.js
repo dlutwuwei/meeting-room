@@ -95,7 +95,7 @@ export default class BasicList extends PureComponent {
             case 'list':
                 return '/api/user/getList';
             case 'role':
-                return '/api/user/getRoleList';
+                return '/api/role/getList';
         }
     }
     fetchData = () => {
