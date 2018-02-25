@@ -18,10 +18,10 @@ import * as util from 'lib/util';
 const token = util.getQuery('token');
 
 fetch.get('/api/user/getUserInfo', {
-  token: token || localStorage.getItem('__meeting_token') || 'bd1fcce8b6f5f99dfda2bb83f07fc1c0'
+  token: token || localStorage.getItem('__meeting_token') || 'be9e4669497b5c236094e5ef21fd25'
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
 });
 
-localStorage.setItem('__meeting_token', token || 'bd1fcce8b6f5f99dfda2bb83f07fc1c0')
+localStorage.setItem('__meeting_token', token || 'be9e4669497b5c236094e5ef21fd25')
