@@ -34,13 +34,13 @@ import * as util from 'lib/util';
 const token = util.getQuery('token');
 
 fetch.get('/api/user/getUserInfo', {
-  token: token || '40a56c3e9cc9465f60c810f2d26d38c'
+  token: token || 'cd435d5dfb5e5261ad963ac9bb1d013'
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
 });
 
-localStorage.setItem('__meeting_token', token || '40a56c3e9cc9465f60c810f2d26d38c')
+localStorage.setItem('__meeting_token', token || 'cd435d5dfb5e5261ad963ac9bb1d013')
 
 
 

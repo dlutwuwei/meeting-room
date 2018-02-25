@@ -142,12 +142,10 @@ class AddRooms extends Component {
         // 后端存储utc时间
         const nowDate = moment.utc().format('YYYY-MM-DD');
         if( type === 'startTime') {
-            value = this.postData['startDate'].utc() || nowDate + ' ' + value.utc().format('HH:mm');
-            delete this.postData['startDate'];
+            value = moment(this.postData['startTime'] || nowDate).utc().format('YYYY-MM-DD HH:mm');
         }
         if (type === 'endTime') {
-            value = this.postData['endDate'].utc() || nowDate + ' ' + value.utc().format('HH:mm');
-            delete this.postData['endDate'];
+            value = moment(this.postData['endTime'] || nowDate).utc().format('YYYY-MM-DD HH:mm');
         }
         this.postData[type] = value;
         fetch.get('/api/MeetingRoom/GetList', {
