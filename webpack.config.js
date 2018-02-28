@@ -59,6 +59,10 @@ module.exports = Object.keys(languages).map(lan => {
             target: 'http://mt.api.ig66.com/',
             changeOrigin: true
           },
+          '/api/schedule': {
+            target: 'http://mt.api.ig66.com/',
+            changeOrigin: true
+          },
           '/api': {
               target:  `${mockserver}`,
               changeOrigin: true,
