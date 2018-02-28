@@ -103,10 +103,9 @@ class AddRooms extends Component {
                             this.state.list.forEach(item => {
                                 if(item.id == record.id) {
                                     item.selected = e.target.checked;
+                                } else {
+                                    item.selected = false;
                                 }
-                                //  else {
-                                //     item.selected = false;
-                                // }
                             });
                             this.setState({
                                 list: this.state.list.slice()
