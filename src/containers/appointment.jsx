@@ -35,7 +35,6 @@ const formItemLayout = {
     span: 21
   }
 };
-
 const dateConfig = {
   initialValue: moment().hours(9).minute(0),
   rules: [{
@@ -71,6 +70,7 @@ function generateOptions(length, include) {
   return arr;
 }
 
+
 class Appointment extends Component {
   state = {
     showAddRooms: false,
@@ -91,8 +91,8 @@ class Appointment extends Component {
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
-        data.startTime = data.startTime.utc().format('YYYY-MM-DD HH:mm');
-        data.endTime = data.endTime.utc().format('YYYY-MM-DD HH:mm');
+        data.startTime = data.startTime.clone().utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = data.endTime.clone().utc().format('YYYY-MM-DD HH:mm');
         data.roomMails = data.location.map(item => item.mail).join(';');
         delete data.location;
         data.showas = localStorage.getItem('__meeting_showas') || '';
@@ -110,7 +110,6 @@ class Appointment extends Component {
       }
 
     });
-    // this.props.form.validateFields(['to'], { force: true });
   }
   handleSearch = (value) => {
     this.setState({
