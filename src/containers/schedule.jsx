@@ -131,10 +131,10 @@ class Schedule extends Component {
         }).then(r => {
             const list = r.data;
             options.forEach((user, i) => {
-                const user_data = list.find(t => t.userName == user.label);
+                const user_data = list.findAll(t => t.mail == user.value);
                 let user_list = [];
-                if(user_data) {
-                    user_list = user_data.schedule.map(item => {
+                if(user_data.length) {
+                    user_list = user_data.map(item => {
                         const startTime = moment(item.startTime*1000);
                         const endTime = moment(item.endTime*1000);
                         const start = startTime.hours()*2 + startTime.minutes()/30;
