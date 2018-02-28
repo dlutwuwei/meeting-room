@@ -40,8 +40,9 @@ const formItemLayout = {
     span: 21
   }
 };
-const dateConfig = {
-  initialValue: moment().hours(9).minute(0),
+const curHour = moment().hours();
+const startTimeConfig = {
+  initialValue: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
   rules: [{
     type: 'object',
     required: true,
@@ -49,8 +50,8 @@ const dateConfig = {
   }]
 };
 
-const timeConfig = {
-  initialValue: moment().hours(9).minute(0),
+const endTimeConfig = {
+  initialValue: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(30),
   rules: [{
     type: 'object',
     required: true,
@@ -306,7 +307,7 @@ class Appointment extends Component {
               label="Start Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('startTime', dateConfig)(
+              {getFieldDecorator('startTime', startTimeConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -315,7 +316,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('startTime', timeConfig)(
+              {getFieldDecorator('startTime', startTimeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"
@@ -347,7 +348,7 @@ class Appointment extends Component {
               label="End Time"
               {...formItemLayout}
             >
-              {getFieldDecorator('endTime', dateConfig)(
+              {getFieldDecorator('endTime', endTimeConfig)(
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
@@ -356,7 +357,7 @@ class Appointment extends Component {
                   className="my-date-picker"
                 />
               )}
-              {getFieldDecorator('endTime', timeConfig)(
+              {getFieldDecorator('endTime', endTimeConfig)(
                 <TimePicker
                   prefixCls="ant-time-picker"
                   placeholder="Select Time"

@@ -20,11 +20,12 @@ function navReducer(state = initState, action) {
       return state;
   }
 }
+const curHour = moment().hours();
 
 const appointment = {
   receivers: [],
-  startTime: moment().hours(9).minute(0),
-  endTime: moment().hours(10).minute(0),
+  startTime: moment().hours( curHour >= 9 ? curHour + 1 : 9).minute(0),
+  endTime: moment().hours(curHour >= 9 ? curHour + 1 : 9).minute(30),
   subject: '',
   location: [],
   content: ''
