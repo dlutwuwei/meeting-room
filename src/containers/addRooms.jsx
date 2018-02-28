@@ -10,6 +10,11 @@ const peopleOptions = new Array(12).fill('').map((item, i) => {
     return <Option key={i} value={i + 1}>{i + 1}</Option>
 });
 
+function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment().endOf('day');
+}
+
 const eqOptions = ['Phone', 'Projector', 'TV', 'Whiteboard'];
 
 const equipment = {
@@ -184,6 +189,7 @@ class AddRooms extends Component {
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
+                        disabledDate={disabledDate}
                         defaultValue={moment()}
                         onChange={this.handleChange.bind(this, 'startDate')}
                         className="my-date-picker"
@@ -206,6 +212,7 @@ class AddRooms extends Component {
                     <DatePicker
                         format="YYYY-MM-DD"
                         placeholder="Select Date"
+                        disabledDate={disabledDate}
                         defaultValue={moment()}
                         onChange={this.handleChange.bind(this, 'endDate')}
                         className="my-date-picker"

@@ -27,6 +27,11 @@ message.config({
   duration: 2,
 });
 
+function disabledDate(current) {
+  // Can not select days before today and today
+  return current && current < moment().endOf('day');
+}
+
 const formItemLayout = {
   labelCol: {
     span: 3
@@ -305,6 +310,7 @@ class Appointment extends Component {
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
+                  disabledDate={disabledDate}
                   onChange={(date) => { this.handleTime('startTime',date) }}
                   className="my-date-picker"
                 />
@@ -345,6 +351,7 @@ class Appointment extends Component {
                 <DatePicker
                   format="YYYY-MM-DD"
                   placeholder="Select Date"
+                  disabledDate={disabledDate}
                   onChange={(date) => { this.handleTime('endTime',date) }}
                   className="my-date-picker"
                 />

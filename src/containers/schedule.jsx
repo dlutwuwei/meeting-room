@@ -21,6 +21,10 @@ const CheckboxGroup = Checkbox.Group;
 const confirm = Modal.confirm;
 const Option = Select.Option;
 
+function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment().endOf('day');
+}
 
 function generateOptions(length, include) {
     const arr = [];
@@ -341,6 +345,7 @@ class Schedule extends Component {
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
+                            disabledDate={disabledDate}
                             onChange={(date) => { this.handleTime('startTime',date) }}
                             value={startTime.zone(offsetUTC)}
                             className="my-date-picker"
@@ -384,6 +389,7 @@ class Schedule extends Component {
                         <DatePicker
                             format="YYYY-MM-DD"
                             placeholder="Select Date"
+                            disabledDate={disabledDate}
                             onChange={(date) => { this.handleTime('endTime',date) }}
                             value={endTime.zone(offsetUTC)}
                             className="my-date-picker"
