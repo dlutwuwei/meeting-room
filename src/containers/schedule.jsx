@@ -110,7 +110,7 @@ class Schedule extends Component {
         const { attendees, date } = this.state;
         this.search(date.add(1, 'd'), attendees);
     }
-    search(date, users = []) {
+    search(date) {
         this.setState({
             date,
             left: -1,
@@ -123,7 +123,8 @@ class Schedule extends Component {
         const { receivers, location } = this.props;
         const options = receivers.concat(location);
         fetch.get('/api/schedule/getList', {
-            userMails: users.map(item => item.mail).join(','),
+            userMails: receivers.map(item => item.mail).join(','),
+            roomMails: location.map(item => item.mail).join(','),
             startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
             endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
             token: localStorage.getItem('__meeting_token') || ''
