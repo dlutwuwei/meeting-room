@@ -70,7 +70,7 @@ class AddAttendees extends Component {
     render() {
         const { list, dataSource } = this.state;
         const children = dataSource.map((item, i) => {
-            return <Option value={item.mail}>{item.name}</Option>;
+            return <Option value={item.mail} key={i}>{item.name}</Option>;
           });
         return (
             <Modal
