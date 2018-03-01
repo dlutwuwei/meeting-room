@@ -61,27 +61,7 @@ class Schedule extends Component {
     }
     state = {
         // 计划表
-        data: [[], [{
-            status: 1,
-            start: 2,
-            end: 7
-        }, {
-            status: 3,
-            start: 7,
-            end: 12
-        }], [{
-            status: 4,
-            start: 5,
-            end: 7
-        }, {
-            status: 5,
-            start: 8,
-            end: 12
-        }, {
-            status: 2,
-            start: 12,
-            end: 15
-        }], []],
+        data: [],
         checkAll: false,
         checkedList: [],
         // 列表选型
@@ -130,8 +110,9 @@ class Schedule extends Component {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             const list = r.data;
+            debugger
             options.forEach((user, i) => {
-                const user_data = list.findAll(t => t.mail == user.value);
+                const user_data = list.filter(t => t.mail == user.mail);
                 let user_list = [];
                 if(user_data.length) {
                     user_list = user_data.map(item => {
@@ -140,7 +121,7 @@ class Schedule extends Component {
                         const start = startTime.hours()*2 + startTime.minutes()/30;
                         const end = endTime.hours()*2 + endTime.minutes()/30;
                         return ({
-                            status: item.showas,
+                            status: item.showAs,
                             start,
                             end
                         })
@@ -334,7 +315,7 @@ class Schedule extends Component {
                                 const line = new Array(20).fill('');
                                 item.forEach(block => {
                                     line.forEach((_, i) => {
-                                        const time = i;
+                                        const time = i + 18;
                                         if (time >= block.start && time <= block.end) {
                                             line[i] = block.status
                                         }
