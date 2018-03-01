@@ -218,7 +218,7 @@ class Schedule extends Component {
         fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
             message.success('预定成功');
             setTimeout(() => {
-                location.href = '/home?tab=my-meeting';
+                location.href = '/home/mymeeting';
             });
         }).catch(() => {
             message.error('预定失败');
