@@ -25,7 +25,7 @@ module.exports = Object.keys(languages).map(lan => {
     output: {
         publicPath: isDev ? '/' : '/static/',
         path: path.join(__dirname, 'dist'),
-        filename: `js/[name]-${lan}-[hash:6].js`
+        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}-[hash:6].js`
     },
     devServer: {
         hot: false,
