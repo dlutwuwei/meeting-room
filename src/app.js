@@ -22,7 +22,8 @@ ReactDOM.render((
   <Provider store={store}>
     <Router>
       <div className="main">
-        <Route path="/home" component={Home}/>
+        <Route path="/home" exact component={Home}/>
+        <Route path="/home/:type" component={Home}/>
         <Route path="/about" component={About}/>
         <Route path="/topics" component={Topics}/>
       </div>
