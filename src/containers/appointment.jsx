@@ -12,6 +12,7 @@ import AddRooms from './addRooms';
 import Timezone from '../constant/timezone';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import AddAttendees from './addAttendees';
 
 import {
   changeProp
@@ -76,10 +77,13 @@ function generateOptions(length, include) {
   return arr;
 }
 
-
+/** 
+ * 由于组件使用了antd的form表单（主要为使用它的表单验证功能），所以为了和其他页面保持数据同步，必须向redux发送一份一样的数据。
+*/
 class Appointment extends Component {
   state = {
     showAddRooms: false,
+    showAddAttendees: false,
     fetching: false,
     attendees: '',
     dataSource: [],
@@ -151,6 +155,7 @@ class Appointment extends Component {
     this.handleTimezoneChange(this.state.timezone);
     this.setValues(this.props);
   }
+  
   handleTimezoneChange = (val) => {
     this.setState({
       timezone: val
@@ -209,10 +214,22 @@ class Appointment extends Component {
   handleContent = (e) => {
     this.props.actions.changeProp('content', e.target.value);
   }
+  onSelectAttendee = (attendees) => {
+    // 注意去重
+    const list = this.props.receivers
+    .filter(item => !this.props.receivers.find(e => item.value === e.value))
+    .concat(attendees);
+    // 发送给全局state
+    this.props.actions.changeProp('receivers', list);
+    // 发送给form
+    this.props.form.setFieldsValue({
+      receivers: list.map(item => item.mail),
+    });
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
     const { showTimezone } = this.props;
-    const { showAddRooms, dataSource, fetching, timezone } = this.state;
+    const { showAddRooms, showAddAttendees, dataSource, fetching, timezone } = this.state;
 
     return (
       <div className="appointment-container">
@@ -222,6 +239,11 @@ class Appointment extends Component {
           }}>Send</div>
         </div>
         <div className="appoint-main">
+          <AddAttendees
+              visible={showAddAttendees}
+              onClose={() => this.setState({ showAddAttendees: false })}
+              onSelect={this.onSelectAttendee}
+          />
           <Form>
             <FormItem
               label={<Select defaultValue="1" style={{ width: 85 }}>
@@ -241,7 +263,11 @@ class Appointment extends Component {
                 )}
             </FormItem>
             <FormItem
-              label={<Button style={{ width: 85 }}>To...</Button>}
+              label={<Button style={{ width: 85 }} onClick={() => {
+                this.setState({
+                  showAddAttendees: true
+                });
+              }}>To...</Button>}
               {...formItemLayout}
             >
               {getFieldDecorator('receivers', {
