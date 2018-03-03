@@ -4,70 +4,7 @@ import fetch from 'lib/fetch';
 import List from '../list';
 import getForm from './getForm';
 
-function getColumns(type) {
-    let columns = [];
-    switch (type) {
-        case 'list':
-            columns = [
-                {
-                    title: '姓名',
-                    dataIndex: 'name',
-                },
-                {
-                    title: '邮箱',
-                    dataIndex: 'mail',
-                },
-                {
-                    title: '联系方式',
-                    dataIndex: 'contact',
-                },
-                {
-                    title: '角色',
-                    dataIndex: 'role',
-                },
-                {
-                    title: '是否启用',
-                    dataIndex: 'start',
-                },
-                {
-                    title: '操作',
-                    render: () => (
-                        <Fragment>
-                            <a href=""><Icon type="form" /></a>
-                            <Divider type="vertical" />
-                            <a href=""><Icon type="delete" /></a>
-                        </Fragment>
-                    ),
-                },
-            ];
-            break;
-        case 'role':
-            columns = [
-                {
-                    title: '角色名称',
-                    dataIndex: 'name',
-                },
-                {
-                    title: '权限',
-                    dataIndex: 'actions',
-                },
-                {
-                    title: '操作',
-                    render: () => (
-                        <Fragment>
-                            <a href=""><Icon type="form" /></a>
-                            <Divider type="vertical" />
-                            <a href=""><Icon type="delete" /></a>
-                        </Fragment>
-                    ),
-                },
-            ];
-            break;
-        default:
-            columns = [];
-    }
-    return columns;
-}
+import getColumns from './getColums';
 
 function getBreadcrumb(type) {
     let breadcrumb = <span/>;
@@ -114,6 +51,12 @@ export default class BasicList extends PureComponent {
             })
         });
     }
+    removeFromTable = (i) => {
+        this.state.data.splice(i, 1);
+        this.setState({
+            data: this.state.data.slice()
+        });
+    }
     render() {
         const { data, loading, page, pageSize } = this.state;
         const type = this.props.match.params.type;
@@ -124,7 +67,7 @@ export default class BasicList extends PureComponent {
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 <List
-                    columns={getColumns(type)}
+                    getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}

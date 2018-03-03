@@ -21,14 +21,18 @@ const KEY_MAP = {
   '/admin/meeting/area': '1',
   '/admin/meeting/department': '2',
   '/admin/meeting/rooms': '3',
-  '/admin/meeting/type': '4'
+  '/admin/meeting/type': '4',
+  '/admin/user/list': '5',
+  '/admin/user/role': '6'
 }
 
 const KEY_OPEN = {
   '/admin/meeting/area': 'sub1',
   '/admin/meeting/department': 'sub1',
   '/admin/meeting/rooms': 'sub1',
-  '/admin/meeting/type': 'sub1'
+  '/admin/meeting/type': 'sub1',
+  '/admin/user/list': 'sub2',
+  '/admin/user/role': 'sub2'
 }
 class Admin extends React.Component {
   state = {

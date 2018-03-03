@@ -14,7 +14,12 @@ class CreateModal extends Component {
         return (
             <Modal
                 title={title}
-                onCancel={onCancel}
+                onCancel={() => {
+                    this.setState({
+                        loading: false
+                    });
+                    onCancel()
+                }}
                 visible={visible}
                 footer={[
                     <Button key="back" onClick={onCancel}>{cancelText}</Button>,
@@ -48,9 +53,9 @@ export default (type, onCreated) => {
                     before && before();
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        fetch.post(isEdit ? '/api/area/update' : '/api/area/add', {
-                            token: localStorage.getItem('__meeting_token'),
+                        fetch.post(`${isEdit ? '/api/area/update' : '/api/area/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             id: values.id,
+                            token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
                             handleModalVisible(false);

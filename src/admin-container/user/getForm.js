@@ -1,8 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Form, Modal, Input } from 'antd';
 import fetch from 'lib/fetch';
 
 const FormItem = Form.Item;
+
+class CreateModal extends Component {
+    state = {
+        loading: false
+    }
+    render () {
+        const { visible, title, onOk, okText, cancelText, onCancel } = this.props;
+        const { loading } = this.state;
+        return (
+            <Modal
+                title={title}
+                onCancel={() => {
+                    this.setState({
+                        loading: false
+                    });
+                    onCancel()
+                }}
+                visible={visible}
+                footer={[
+                    <Button key="back" onClick={onCancel}>{cancelText}</Button>,
+                    <Button key="submit" type="primary" loading={loading} onClick={() => {
+                        onOk(() => {
+                            this.setState({
+                                loading: true
+                            });
+                        }, () => {
+                            this.setState({
+                                loading: false
+                            });
+                        })
+                    }}>
+                        {okText}
+                    </Button>,
+                ]}
+            >
+                {this.props.children}
+            </Modal>
+        )
+    }
+}
 
 export default (type) => {
     switch(type) {

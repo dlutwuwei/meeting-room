@@ -64,9 +64,8 @@ function getColumns(type, removeFromTable, showEditor) {
         case 'area':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post('/api/area/delete', {
-                        id,
-                        token: localStorage.getItem('__meeting_token')
+                    fetch.post(`/api/area/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                        id
                     }).then((r) => {
                         removeFromTable(index)
                     }).catch(() => {
