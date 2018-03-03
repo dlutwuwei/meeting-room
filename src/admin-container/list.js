@@ -2,38 +2,6 @@ import React, { PureComponent } from 'react';
 import { Modal, Form, Input, Button, message} from 'antd';
 import StandardTable from 'components/standard-table';
 
-const FormItem = Form.Item;
-
-const CreateForm = Form.create()((props) => {
-    const { modalVisible, form, handleAdd, handleModalVisible } = props;
-    const okHandle = () => {
-        form.validateFields((err, fieldsValue) => {
-            if (err) return;
-            handleAdd(fieldsValue);
-        });
-    };
-    return (
-        <Modal
-            title="新建规则"
-            visible={modalVisible}
-            onOk={okHandle}
-            onCancel={() => handleModalVisible()}
-        >
-            <FormItem
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 15 }}
-                label="描述"
-            >
-                {form.getFieldDecorator('desc', {
-                    rules: [{ required: true, message: 'Please input some description...' }],
-                })(
-                    <Input placeholder="请输入" />
-                    )}
-            </FormItem>
-        </Modal>
-    );
-});
-
 export default class BasicList extends PureComponent {
     state = {
         selectedRows: [],
@@ -69,10 +37,11 @@ export default class BasicList extends PureComponent {
     }
     render() {
         const { selectedRows, loading, modalVisible } = this.state;
-        const { data, breadcrumb, columns, page, pageSize } = this.props;
+        const { data, breadcrumb, columns, page, pageSize, createForm } = this.props;
+        const CreateForm = createForm;
         const parentMethods = {
             handleAdd: this.handleAdd,
-            handleModalVisible: this.handleModalVisible,
+            handleModalVisible: this.handleModalVisible.bind(this),
         };
         return (
             <div className="list-container">
@@ -94,10 +63,10 @@ export default class BasicList extends PureComponent {
                         onChange={this.handleStandardTableChange}
                     />
                 </div>
-                <CreateForm
+                { createForm && <CreateForm
                     {...parentMethods}
                     modalVisible={modalVisible}
-                />
+                />}
             </div>
         );
     }

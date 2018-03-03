@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Divider, Icon, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
+import getForm from './getForm';
 
 function getColumns(type) {
     let columns = [];
@@ -47,8 +48,8 @@ function getColumns(type) {
                     dataIndex: 'name',
                 },
                 {
-                    title: '名称',
-                    dataIndex: 'shortCode',
+                    title: '权限',
+                    dataIndex: 'actions',
                 },
                 {
                     title: '操作',
@@ -130,6 +131,7 @@ export default class BasicList extends PureComponent {
                     type={type}
                     page={page}
                     pageSize={pageSize}
+                    createForm={getForm(type)}
                 />
             </div>
         );
