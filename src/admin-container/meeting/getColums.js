@@ -24,10 +24,10 @@ function getColumns(type, removeFromTable, showEditor) {
 
     switch (type) {
         case 'department':
-            onDeleteClick = (index) => {
+            onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post('/api/department/delete', {
-                        token: localStorage.getItem('__meeting_token')
+                    fetch.post(`/api/department/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                        id
                     }).then((r) => {
                         removeFromTable(index)
                     }).catch(() => {
@@ -103,6 +103,21 @@ function getColumns(type, removeFromTable, showEditor) {
             ];
             break;
         case 'rooms':
+            onDeleteClick = (index, id) => {
+                removeCurrent(() => {
+                    fetch.post('/api/meetingRoom/delete', {
+                        id,
+                        token: localStorage.getItem('__meeting_token')
+                    }).then((r) => {
+                        removeFromTable(index)
+                    }).catch(() => {
+                        message.error('删除失败');
+                    });
+                })
+            }
+            onEditClick = (index) => {
+                showEditor(index);
+            }
             columns = [
                 {
                     title: '会议室名称',
@@ -148,7 +163,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     title: '操作',
                     render: () => (
                         <Fragment>
-                            <a href="#" style={{color: '#00ddc6'}}><Icon type="form" /></a>
+                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
                             <Divider type="vertical" />
                             <a href="#" style={{color: '#ff680d'}}onClick={removeCurrent}><Icon type="delete"/></a>
                         </Fragment>

@@ -111,15 +111,29 @@ export default (type, onCreated) => {
             });
         case 'department':
             return Form.create()((props) => {
-                const { modalVisible, form, handleAdd, handleModalVisible } = props;
-                const okHandle = () => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    before && before();
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        handleAdd(fieldsValue);
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                            fieldsValue.areaId = values.areaId;
+                        }
+                        fetch.post(`${isEdit ? '/api/department/update' : '/api/department/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                            ...fieldsValue
+                        }).then(res => {
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
+                        }).catch((e) => {
+                            message.error('修改失败')
+                            handleModalVisible(false);
+                        });
                     });
                 };
                 return (
-                    <Modal
+                    <CreateModal
                         title={ isEdit ? '编辑部门' : '新建部门'}
                         visible={modalVisible}
                         onOk={okHandle}
@@ -134,6 +148,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请输入名称' }],
+                                initialValue: values.name
                             })(
                                 <Input placeholder="请输入" />
                             )}
@@ -143,26 +158,41 @@ export default (type, onCreated) => {
                             wrapperCol={{ span: 15 }}
                             label="简码"
                         >
-                            {form.getFieldDecorator('code', {
+                            {form.getFieldDecorator('shortCode', {
                                 rules: [{ required: true, message: '请输入简码' }],
+                                initialValue: values.shortCode
                             })(
                                 <Input placeholder="请输入" />
                             )}
                         </FormItem>
-                    </Modal>
+                    </CreateModal>
                 );
             });
         case 'rooms':
             return Form.create()((props) => {
-                const { modalVisible, form, handleAdd, handleModalVisible } = props;
-                const okHandle = () => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    before && before();
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        handleAdd(fieldsValue);
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                            fieldsValue.areaId = values.areaId;
+                        }
+                        fetch.post(`${isEdit ? '/api/meetingRoom/update' : '/api/meetingRoom/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                            ...fieldsValue
+                        }).then(res => {
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
+                        }).catch((e) => {
+                            message.error('修改失败')
+                            handleModalVisible(false);
+                        });
                     });
                 };
                 return (
-                    <Modal
+                    <CreateModal
                         title={ isEdit ? '编辑规则' : '新建规则'}
                         visible={modalVisible}
                         onOk={okHandle}
@@ -280,7 +310,7 @@ export default (type, onCreated) => {
                                 <Input placeholder="请输入类型" />
                             )}
                         </FormItem>
-                    </Modal>
+                    </CreateModal>
                 );
             });
         case 'type':
@@ -293,7 +323,7 @@ export default (type, onCreated) => {
                     });
                 };
                 return (
-                    <Modal
+                    <CreateModal
                         title={ isEdit ? '编辑会议室类型' : '新建会议室类型'}
                         visible={modalVisible}
                         onOk={okHandle}
@@ -321,7 +351,7 @@ export default (type, onCreated) => {
                                 <Input placeholder="请输入描述" />
                             )}
                         </FormItem>
-                    </Modal>
+                    </CreateModal>
                 );
             });
     }
