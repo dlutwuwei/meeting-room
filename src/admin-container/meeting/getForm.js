@@ -314,45 +314,6 @@ export default (type, onCreated) => {
                 );
             });
         case 'type':
-            return Form.create()((props) => {
-                const { modalVisible, form, handleAdd, handleModalVisible } = props;
-                const okHandle = () => {
-                    form.validateFields((err, fieldsValue) => {
-                        if (err) return;
-                        handleAdd(fieldsValue);
-                    });
-                };
-                return (
-                    <CreateModal
-                        title={ isEdit ? '编辑会议室类型' : '新建会议室类型'}
-                        visible={modalVisible}
-                        onOk={okHandle}
-                        onCancel={() => handleModalVisible(false)}
-                    >
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="类型名称"
-                        >
-                            {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '请输入名称' }],
-                            })(
-                                <Input placeholder="请输入名称" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="描述"
-                        >
-                            {form.getFieldDecorator('description', {
-                                rules: [{ required: true, message: '请输入描述' }],
-                            })(
-                                <Input placeholder="请输入描述" />
-                            )}
-                        </FormItem>
-                    </CreateModal>
-                );
-            });
+            return null;
     }
 }
