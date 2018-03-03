@@ -13,7 +13,7 @@ var languages = {
 	"cn": require("./src/locale/cn.json")
 };
 
-const mockserver = "http://47.95.238.222:9001/mock/11/mt/"
+const mockserver = "http://mt.api.ig66.com"
 module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
@@ -39,36 +39,11 @@ module.exports = Object.keys(languages).map(lan => {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
-          '/api/meetingRoom/': {
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          'api/department/': {
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          '/api/meeting/': {
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          '/api/board':{
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          '/api/user':{
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          '/api/schedule': {
-            target: 'http://mt.api.ig66.com/',
-            changeOrigin: true
-          },
-          '/api': {
+          '/api/*': {
               target:  `${mockserver}`,
-              changeOrigin: true,
               bypass: function(req, res, proxyOptions) {
+                console.log(req.url)
                 if (req.headers.accept.indexOf('html') !== -1) {
-                  console.log(req.url)
                   if(req.url.startsWith('/board')) {
                     return '/index-board.html';
                   } else if (req.url.startsWith('/admin')) {

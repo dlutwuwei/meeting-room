@@ -1,10 +1,43 @@
 import React, { Fragment } from 'react';
-import  { Icon, Divider } from 'antd';
+import  { Icon, Divider, Modal, message } from 'antd';
+import fetch from 'lib/fetch';
 
-function getColumns(type) {
-    let columns;
+const confirm = Modal.confirm;
+
+function getColumns(type, removeFromTable, showEditor) {
+    let columns, onDeleteClick, onEditClick;
+    const removeCurrent = (delCurrent = () => {}) => {
+        confirm({
+            title: '确定删除?',
+            content: '删除后无法恢复',
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+                delCurrent();
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
+
     switch (type) {
         case 'department':
+            onDeleteClick = (index) => {
+                removeCurrent(() => {
+                    fetch.post('/api/department/delete', {
+                        token: localStorage.getItem('__meeting_token')
+                    }).then((r) => {
+                        removeFromTable(index)
+                    }).catch(() => {
+                        message.error('删除失败');
+                    });
+                })
+            }
+            onEditClick = (index) => {
+                showEditor(index);
+            }
             columns = [
                 {
                     title: '部门名称',
@@ -16,17 +49,34 @@ function getColumns(type) {
                 },
                 {
                     title: '操作',
-                    render: () => (
-                        <Fragment>
-                            <a href=""><Icon type="form" /></a>
-                            <Divider type="vertical" />
-                            <a href=""><Icon type="delete" /></a>
-                        </Fragment>
-                    ),
+                    render: (text, record, index) => {
+                        return (
+                            <Fragment>
+                                <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
+                                <Divider type="vertical" />
+                                <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                            </Fragment>
+                        )
+                    }
                 },
             ];
             break;
         case 'area':
+            onDeleteClick = (index, id) => {
+                removeCurrent(() => {
+                    fetch.post('/api/area/delete', {
+                        id,
+                        token: localStorage.getItem('__meeting_token')
+                    }).then((r) => {
+                        removeFromTable(index)
+                    }).catch(() => {
+                        message.error('删除失败');
+                    });
+                })
+            }
+            onEditClick = (index) => {
+                showEditor(index);
+            }
             columns = [
                 {
                     title: '区域名称',
@@ -42,11 +92,11 @@ function getColumns(type) {
                 },
                 {
                     title: '操作',
-                    render: () => (
+                    render: (text, record, index) => (
                         <Fragment>
-                            <a href=""><Icon type="form" /></a>
+                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
                             <Divider type="vertical" />
-                            <a href=""><Icon type="delete" /></a>
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },
@@ -98,9 +148,9 @@ function getColumns(type) {
                     title: '操作',
                     render: () => (
                         <Fragment>
-                            <a href=""><Icon type="form" /></a>
+                            <a href="#" style={{color: '#00ddc6'}}><Icon type="form" /></a>
                             <Divider type="vertical" />
-                            <a href=""><Icon type="delete" /></a>
+                            <a href="#" style={{color: '#ff680d'}}onClick={removeCurrent}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },

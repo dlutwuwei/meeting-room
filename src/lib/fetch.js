@@ -86,7 +86,7 @@ function request(method, url, data, opts) {
                 return Promise.reject({ code: data.code, msg: `错误码${data.code}` })
             }
         }).catch(res => {
-            if(res.message) {
+            if(res.code) {
                 return Promise.reject(res);
             }
             return res.text().then((data) => {

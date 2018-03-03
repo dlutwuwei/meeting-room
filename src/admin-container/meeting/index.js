@@ -61,6 +61,12 @@ export default class BasicList extends PureComponent {
             })
         });
     }
+    removeFromTable = (i) => {
+        this.state.data.splice(i, 1);
+        this.setState({
+            data: this.state.data.slice()
+        });
+    }
     render() {
         const { data, loading, page, pageSize } = this.state;
         const type = this.props.match.params.type;
@@ -71,14 +77,19 @@ export default class BasicList extends PureComponent {
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 <List
-                    columns={getColumns(type)}
+                    getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
+                    // columns={getColumns(type, this.removeFromTable.bind(this))}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}
                     type={type}
                     page={page}
                     pageSize={pageSize}
-                    createForm={getForm(type)}
+                    createForm={getForm(type, () => {
+                        // 创建完成之后
+                        this.fetchData();
+                    })}
+                    showAdd={type !== 'type'}
                 />
             </div>
         );

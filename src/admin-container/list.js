@@ -6,7 +6,9 @@ export default class BasicList extends PureComponent {
     state = {
         selectedRows: [],
         loading: false,
-        modalVisible: false
+        modalVisible: false,
+        record: {},
+        isEdit: false
     }
     componentDidMount() {
         this.props.fetchData();
@@ -25,29 +27,31 @@ export default class BasicList extends PureComponent {
     }
     handleModalVisible = (flag) => {
         this.setState({
+            isEdit: false,
+            record: {},
             modalVisible: !!flag,
         });
     }
-    handleAdd = () => {
-
-        message.success('添加成功');
-        this.setState({
-            modalVisible: false,
-        });
-    }
     render() {
-        const { selectedRows, loading, modalVisible } = this.state;
-        const { data, breadcrumb, columns, page, pageSize, createForm } = this.props;
+        const { selectedRows, loading, modalVisible, record, isEdit } = this.state;
+        const { data, breadcrumb, getColumns, page, pageSize, createForm, showAdd } = this.props;
         const CreateForm = createForm;
         const parentMethods = {
-            handleAdd: this.handleAdd,
             handleModalVisible: this.handleModalVisible.bind(this),
         };
+        const columns = getColumns((index) => {
+            // 打开编辑框的方法, 传递给编辑按钮
+            this.setState({
+                modalVisible: true,
+                isEdit: true,
+                record: data[index]
+            });
+        });
         return (
             <div className="list-container">
                 {breadcrumb}
                 <div className="list-main">
-                    <Button type="primary" className="add-button" icon="plus" onClick={() => this.handleModalVisible(true)}>添加</Button>
+                    { showAdd && <Button type="primary" className="add-button" icon="plus" onClick={() => this.handleModalVisible(true)}>添加</Button>}
                     <StandardTable
                         selectedRows={selectedRows}
                         loading={loading}
@@ -65,9 +69,15 @@ export default class BasicList extends PureComponent {
                 </div>
                 { createForm && <CreateForm
                     {...parentMethods}
+                    values={record}
+                    isEdit={isEdit}
                     modalVisible={modalVisible}
                 />}
             </div>
         );
     }
 }
+
+BasicList.defaultProps = {
+    showAdd: true
+};

@@ -1,36 +1,75 @@
-import React from 'react';
-import { Form, Modal, Input } from 'antd';
+import React, { Component } from 'react'
+import { Form, Modal, Input, Button, message } from 'antd';
 import fetch from 'lib/fetch';
 
 const FormItem = Form.Item;
 
-export default (type) => {
+class CreateModal extends Component {
+    state = {
+        loading: false
+    }
+    render () {
+        const { visible, title, onOk, okText, cancelText, onCancel } = this.props;
+        const { loading } = this.state;
+        return (
+            <Modal
+                title={title}
+                onCancel={onCancel}
+                visible={visible}
+                footer={[
+                    <Button key="back" onClick={onCancel}>{cancelText}</Button>,
+                    <Button key="submit" type="primary" loading={loading} onClick={() => {
+                        onOk(() => {
+                            this.setState({
+                                loading: true
+                            });
+                        }, () => {
+                            this.setState({
+                                loading: false
+                            });
+                        })
+                    }}>
+                        {okText}
+                    </Button>,
+                ]}
+            >
+                {this.props.children}
+            </Modal>
+        )
+    }
+}
+
+export default (type, onCreated) => {
     switch (type) {
         case 'area':
             return Form.create()((props) => {
-                const { modalVisible, form, handleModalVisible } = props;
-                const okHandle = () => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    before && before();
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        console.log(fieldsValue);
-                        fetch.post('/api/area/add', {
+                        fetch.post(isEdit ? '/api/area/update' : '/api/area/add', {
                             token: localStorage.getItem('__meeting_token'),
+                            id: values.id,
                             ...fieldsValue
                         }).then(res => {
-                            this.handleModalVisible(false);
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
                         }).catch((e) => {
-                            
+                            message.error('修改失败')
+                            handleModalVisible(false);
                         });
                     });
                 };
                 return (
-                    <Modal
-                        title="新建区域"
+                    <CreateModal
+                        title={ isEdit ? '编辑区域' : '新建区域'}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="添加"
+                        okText="确认"
                         cancelText="取消"
-                        onCancel={() => handleModalVisible()}
+                        onCancel={() => handleModalVisible(false)}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
@@ -39,6 +78,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '"请输入区域名称' }],
+                                initialValue: values.name
                             })(
                                 <Input placeholder="请输入区域名称" />
                             )}
@@ -50,11 +90,12 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('shortCode', {
                                 rules: [{ required: true, message: '请输入简码' }],
+                                initialValue: values.shortCode
                             })(
                                 <Input placeholder="请输入简码" />
                             )}
                         </FormItem>
-                        <FormItem
+                        {/* <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
                             label="管理员"
@@ -64,8 +105,8 @@ export default (type) => {
                             })(
                                 <Input placeholder="请输入管理员用户名" />
                             )}
-                        </FormItem>
-                    </Modal>
+                        </FormItem> */}
+                    </CreateModal>
                 );
             });
         case 'department':
@@ -79,12 +120,12 @@ export default (type) => {
                 };
                 return (
                     <Modal
-                        title="新建部门"
+                        title={ isEdit ? '编辑部门' : '新建部门'}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="添加"
+                        okText="确认"
                         cancelText="取消"
-                        onCancel={() => handleModalVisible()}
+                        onCancel={() => handleModalVisible(false)}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
@@ -122,7 +163,7 @@ export default (type) => {
                 };
                 return (
                     <Modal
-                        title="新建规则"
+                        title={ isEdit ? '编辑规则' : '新建规则'}
                         visible={modalVisible}
                         onOk={okHandle}
                         okText="添加"
@@ -253,10 +294,10 @@ export default (type) => {
                 };
                 return (
                     <Modal
-                        title="新建会议室类型"
+                        title={ isEdit ? '编辑会议室类型' : '新建会议室类型'}
                         visible={modalVisible}
                         onOk={okHandle}
-                        onCancel={() => handleModalVisible()}
+                        onCancel={() => handleModalVisible(false)}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
