@@ -39,7 +39,7 @@ class AddRooms extends Component {
         endTime: moment().format('YYYY-MM-DD HH:mm')
     }
     search() {
-        fetch.get('/api/meetingRoom/getList', {
+        fetch.get('/api/meeting/getRooms', {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
@@ -150,7 +150,7 @@ class AddRooms extends Component {
             value = moment(this.postData['endTime'] || nowDate).utc().format('YYYY-MM-DD HH:mm');
         }
         this.postData[type] = value;
-        fetch.get('/api/meetingRoom/getList', {
+        fetch.get('/api/meeting/getRooms', {
             ...this.postData,
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
@@ -161,7 +161,7 @@ class AddRooms extends Component {
     }
     onEuipmentChange(value) {
         this.postData['equipment'] = value.map(val => equipment[val]).join(',');
-        fetch.get('/api/meetingRoom/getList', {
+        fetch.get('/api/meeting/getRooms', {
             ...this.postData,
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {

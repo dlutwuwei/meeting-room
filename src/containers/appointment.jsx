@@ -125,7 +125,7 @@ class Appointment extends Component {
     this.setState({
       fetching: true
     });
-    fetch.get('/api/user/getList', {
+    fetch.get('/api/meeting/getAttenders', {
       keyword: value,
       token: localStorage.getItem('__meeting_token') || ''
     }).then((r) => {
