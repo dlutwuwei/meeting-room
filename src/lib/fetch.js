@@ -80,7 +80,7 @@ function request(method, url, data, opts) {
             if(data.code === 0) {
                 return Promise.resolve(data);
             } else {
-                if(data.code ===  402) {
+                if(data.code ===  402 || data.code === 404) {
                     location.href='http://mt.auth.ig66.com?callback=' + encodeURIComponent(location.href);
                 }
                 return Promise.reject({ code: data.code, msg: `错误码${data.code}` })
