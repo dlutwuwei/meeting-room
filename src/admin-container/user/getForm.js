@@ -50,20 +50,23 @@ export default (type, onCreated) => {
         case 'list':
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values } = props;
-                const okHandle = () => {
+                const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
                         if(values.userId){
                             fieldsValue.id = values.userId;
                             fieldsValue.userName = values.userName;
                         }
+                        before && before();
                         fetch.post('/api/user/update', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
                             handleModalVisible(false);
+                            after && after();
                         }).catch((e) => {
                             handleModalVisible(false);
+                            after && after();
                         });
                     });
                 };
@@ -181,17 +184,21 @@ export default (type, onCreated) => {
                         actions.push(action.action)
                     });
                 });
-                const okHandle = () => {
+                const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        console.log(fieldsValue);
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                        }
                         fieldsValue.actions= fieldsValue.actions.join(',');
+                        before && before();
                         fetch.post(isEdit? '/api/role/update' : '/api/role/add', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
                             handleModalVisible(false);
                             onCreated();
+                            after && after();
                         }).catch((e) => {
                             handleModalVisible(false);
                         });
