@@ -75,6 +75,7 @@ export default class BasicList extends PureComponent {
                     page={page}
                     pageSize={pageSize}
                     createForm={getForm(type)}
+                    showAdd={false}
                 />
             </div>
         );

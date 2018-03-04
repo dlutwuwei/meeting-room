@@ -22,6 +22,7 @@ const removeCurrent = (delCurrent = () => {}) => {
 
 const onDeleteClick = (index, id) => {
     removeCurrent(() => {
+        debugger
         fetch.post(`/api/blackList/delete?token=${localStorage.getItem('__meeting_token')}`, {
             id
         }).then((r) => {
@@ -53,7 +54,7 @@ const columns = [
     },
     {
         title: '操作',
-        render: () => (
+        render: (_, record, index) => (
             <Fragment>
                 <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
             </Fragment>

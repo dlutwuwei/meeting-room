@@ -66,7 +66,6 @@ class BlackList extends Component {
                     fetchData={this.fetchData}
                     page={page}
                     pageSize={pageSize}
-                    showAdd={false}
                 />
             </div>
         )

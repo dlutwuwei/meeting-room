@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import  { Icon, Divider, Modal, message } from 'antd';
+import  { Icon, Divider, Modal, message, Checkbox } from 'antd';
 import fetch from 'lib/fetch';
 
 const confirm = Modal.confirm;
@@ -56,7 +56,9 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 },
                 {
                     title: '是否启用',
-                    dataIndex: 'start',
+                    render: (text, record, index) => (
+                        <Checkbox checked={record.isEnable}></Checkbox>
+                    )
                 },
                 {
                     title: '操作',

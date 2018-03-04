@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Input } from 'antd';
+import { Form, Modal, Input, Checkbox } from 'antd';
 import fetch from 'lib/fetch';
 
 const FormItem = Form.Item;
@@ -48,7 +48,7 @@ export default (type) => {
     switch(type) {
         case 'list':
             return Form.create()((props) => {
-                const { modalVisible, form, handleModalVisible } = props;
+                const { modalVisible, form, handleModalVisible, values } = props;
                 const okHandle = () => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
@@ -65,10 +65,10 @@ export default (type) => {
                 };
                 return (
                     <Modal
-                        title="新建用户"
+                        title="编辑用户"
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="添加"
+                        okText="确定"
                         cancelText="取消"
                         onCancel={() => handleModalVisible()}
                     >
@@ -79,6 +79,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请输入姓名' }],
+                                initialValue: values.name
                             })(
                                 <Input placeholder="请输入姓名" />
                             )}
@@ -90,6 +91,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('mail', {
                                 rules: [{ required: true, message: '请输入邮箱' }],
+                                initialValue: values.mail
                             })(
                                 <Input placeholder="请输入邮箱" />
                             )}
@@ -101,6 +103,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('contact', {
                                 rules: [{ required: true, message: '请输入联系方式' }],
+                                initialValue: values.contact
                             })(
                                 <Input placeholder="请输入联系方式" />
                             )}
@@ -112,6 +115,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('role', {
                                 rules: [{ required: true, message: '请输入角色' }],
+                                initialValue: values.role
                             })(
                                 <Input placeholder="请输入角色" />
                             )}
@@ -121,10 +125,11 @@ export default (type) => {
                             wrapperCol={{ span: 15 }}
                             label="是否启用"
                         >
-                            {form.getFieldDecorator('role', {
+                            {form.getFieldDecorator('isEnable', {
                                 rules: [{ required: true, message: '请输入是否启用' }],
+                                initialValue: values.isEnable
                             })(
-                                <Input placeholder="请输入是否启用" />
+                                <Checkbox></Checkbox>
                             )}
                         </FormItem>
                     </Modal>
