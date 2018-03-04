@@ -45,6 +45,7 @@ export default class BasicList extends PureComponent {
                 fetch.get(this.getUrl('role'), {
                     token: localStorage.getItem('__meeting_token')
                 }).then(r => {
+                    debugger
                     localStorage.setItem('__meeting_role', JSON.stringify(r.data.list || '[]'));
                     this.setState({
                         data: res.data.list,
@@ -57,7 +58,7 @@ export default class BasicList extends PureComponent {
                 fetch.get('/api/action/getList', {
                     token: localStorage.getItem('__meeting_token')
                 }).then(r => {
-                    localStorage.setItem('__meeting_role', JSON.stringify(r.data.data || '[]'));
+                    localStorage.setItem('__meeting_role', JSON.stringify(r.data.list || '[]'));
                     this.setState({
                         data: res.data.list,
                         page: res.data.page,
