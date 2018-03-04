@@ -33,8 +33,7 @@ export default class BasicList extends PureComponent {
     }
     componentDidMount() {
     }
-    getUrl = () => {
-        const type = this.props.match.params.type;
+    getUrl = (type) => {
         switch (type) {
             case 'department':
                 return '/api/department/getList';
@@ -47,14 +46,37 @@ export default class BasicList extends PureComponent {
         }
     }
     fetchData = () => {
-        fetch.get(this.getUrl(), {
+        const type = this.props.match.params.type;
+        fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
-            this.setState({
-                data: res.data.length ? res.data: res.data.list,
-                page: res.data.page,
-                pageSize: res.data.pageSize
-            });
+            
+            if(type === 'rooms') {
+                // 会议室信息展示需要
+                Promise.all([fetch.get(this.getUrl('area'), {
+                    token: localStorage.getItem('__meeting_token')
+                }), fetch.get(this.getUrl('department'), {
+                    token: localStorage.getItem('__meeting_token')
+                }), fetch.get(this.getUrl('type'), {
+                    token: localStorage.getItem('__meeting_token')
+                })]).then(([areas, departments, types]) => {
+                    console.log(areas, departments, types);
+                    localStorage.setItem('__meeting_areas', JSON.stringify(areas.data.list));
+                    localStorage.setItem('__meeting_department', JSON.stringify(departments.data.list));
+                    localStorage.setItem('__meeting_type', JSON.stringify(types.data));
+                    this.setState({
+                        data: res.data.length ? res.data: res.data.list,
+                        page: res.data.page,
+                        pageSize: res.data.pageSize
+                    });
+                });
+            } else {
+                this.setState({
+                    data: res.data.length ? res.data: res.data.list,
+                    page: res.data.page,
+                    pageSize: res.data.pageSize
+                });
+            }
         }).catch(() => {
             this.setState({
                 data: []

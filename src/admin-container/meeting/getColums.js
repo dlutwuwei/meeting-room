@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import  { Icon, Divider, Modal, message } from 'antd';
+import  { Icon, Divider, Modal, message, Checkbox, Tag } from 'antd';
 import fetch from 'lib/fetch';
 
 const confirm = Modal.confirm;
@@ -128,15 +128,31 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
                 {
                     title: '区域',
-                    dataIndex: 'area',
+                    dataIndex: 'areaId',
                 },
                 {
                     title: '部门',
-                    dataIndex: 'department',
+                    dataIndex: 'departmentId',
                 },
                 {
                     title: '设备',
-                    dataIndex: 'device',
+                    dataIndex: 'hasProjector',
+                    render: (text, record, index ) => {
+                        const devices = [];
+                        if(record.hasProjector) {
+                            devices.push(<Tag>投影仪</Tag>)
+                        }
+                        if(record.hasTv) {
+                            devices.push(<Tag>电视</Tag>)
+                        }
+                        if(record.hasPhone) {
+                            devices.push(<Tag>电话</Tag>)
+                        }
+                        if(record.hasWhiteBoard) {
+                            devices.push(<Tag>白板</Tag>)
+                        }
+                        return devices;
+                    }
                 },
                 {
                     title: '楼层',
@@ -144,7 +160,7 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
                 {
                     title: '大小',
-                    dataIndex: 'size',
+                    dataIndex: 'capacity',
                 },
                 {
                     title: '会议室类型',
@@ -156,11 +172,13 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
                 {
                     title: '可预订',
-                    dataIndex: 'canOrder',
+                    render: (text, record, index) => {
+                        return <Checkbox checked={record.isEnable}></Checkbox>
+                    }
                 },
                 {
                     title: '操作',
-                    render: () => (
+                    render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
                             <Divider type="vertical" />
