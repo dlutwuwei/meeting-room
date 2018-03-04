@@ -157,17 +157,20 @@ module.exports = Object.keys(languages).map(lan => {
             template: 'public/index.html',
             filename: 'index.html',
             chunks: ['lib', 'app'],
+            title: '会议室预定',
             inject: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-board.html',
           chunks: [ 'lib', 'board'],
+          title: '会议室看板',
           inject: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-admin.html',
+          title: '会议室管理',
           chunks: [ 'lib', 'admin'],
           inject: true
         }),

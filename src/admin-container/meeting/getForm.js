@@ -192,9 +192,15 @@ export default (type, onCreated) => {
             const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
             const roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
             const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
-
+            
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const devices = [];
+                Object.keys(values).forEach(item => {
+                    if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
+                        devices.push(item);
+                    }
+                });
                 const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
@@ -203,11 +209,11 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             fieldsValue.areaId = values.areaId;
                         }
-                        fieldsValue.device.forEach(item => {
+                        fieldsValue.devices.forEach(item => {
                             fieldsValue[item] = true
                         });
-                        delete fieldsValue.device;
-                        debugger
+                        delete fieldsValue.devices;
+                        fieldsValue.device = fieldsValue.deviceCode;
                         fetch.post(`${isEdit ? '/api/meetingRoom/update' : '/api/meetingRoom/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             ...fieldsValue
                         }).then(res => {
@@ -225,7 +231,7 @@ export default (type, onCreated) => {
                         title={ isEdit ? '编辑会议室' : '新建会议室'}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="添加"
+                        okText="确定"
                         cancelText="取消"
                         onCancel={() => handleModalVisible()}
                     >
@@ -286,9 +292,9 @@ export default (type, onCreated) => {
                             wrapperCol={{ span: 15 }}
                             label="设备"
                         >
-                            {form.getFieldDecorator('device', {
+                            {form.getFieldDecorator('devices', {
                                 rules: [{ required: true, message: '请输入设备' }],
-                                initialValue: []
+                                initialValue: devices
                             })(
                                 <Select
                                     mode="multiple"
@@ -306,6 +312,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('floor', {
                                 rules: [{ required: true, message: '请输入设备' }],
+                                initialValue: values.floor
                             })(
                                 <Input placeholder="请输入设备" />
                             )}
@@ -317,6 +324,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('capacity', {
                                 rules: [{ required: true, message: '请输入设备' }],
+                                initialValue: values.capacity
                             })(
                                 <Input placeholder="请输入设备" />
                             )}
@@ -328,6 +336,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('roomType', {
                                 rules: [{ required: true, message: '请输入类型' }],
+                                initialValue: values.roomType
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
@@ -341,6 +350,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('deviceCode', {
                                 rules: [{ required: true, message: '请输入类型' }],
+                                initialValue: values.deviceCode
                             })(
                                 <Input placeholder="请输入类型" />
                             )}
@@ -352,6 +362,8 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('isEnable', {
                                 rules: [{ required: true, message: '请输入' }],
+                                initialValue: values.isEnable,
+                                valuePropName: 'checked'
                             })(
                                 <Checkbox></Checkbox>
                             )}

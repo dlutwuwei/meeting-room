@@ -1,5 +1,37 @@
 .monitor {
     font-size: 16px;
+    .monitor-body {
+        margin-top: 30px;
+    }
+    .status {
+        .status-item {
+            display: inline-block;
+            line-height: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 20px;     
+
+        }
+        .tag {
+            width: 20px;
+            height: 20px;     
+            display: inline-block;  
+            vertical-align: -4px;
+            margin-right: 5px;
+        }
+        .free {
+            background-color: #00ddc6;
+            color: #fff;
+        }
+        .busy {
+            background-color: #ff6000;
+            color: #fff;
+        }
+        .fault {
+            background-color: #aaaaaa;
+            color: #fff;
+        }
+    }
     .room-list {
         font-size: 18px;
         margin-top: 20px;
