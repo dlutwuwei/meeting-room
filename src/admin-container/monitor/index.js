@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Icon, Divider, Checkbox, Row, Col} from 'antd';
+import { Breadcrumb, Icon, Divider, Radio, Row, Col} from 'antd';
 import fetch from 'lib/fetch';
 
-const CheckboxGroup = Checkbox.Group;
+const RadioGroup = Radio.Group;
 
-const areaList = ['北京', '上海'];
 const statusList = ['空闲', '会议在', '故障'];
 import './index.less';
 
 class Monitor extends Component {
     state = {
-        checkedList: [],
-        data: []
+        value: '',
+        data: [],
+        areas: []
     }
-    onChange = () => {
-
-    }
-    componentDidMount () {
+    onChange = (e) => {
+        this.setState({
+            value: e.target.value
+        });
         fetch.get('/api/meetingRoom/deviceMonitor', {
-            area: 2
+            token: localStorage.getItem('__meeting_token'),
+            area: this.state.areas.find(item => item.name === e.target.value).id
         }).then(r => {
             this.setState({
                 data: r.data
@@ -26,6 +27,30 @@ class Monitor extends Component {
         }).catch(r => {
 
         });
+    }
+    componentDidMount () {
+        fetch.get('/api/area/getList', {
+            token: localStorage.getItem('__meeting_token')
+        }).then(r => {
+            this.setState({
+                areas: r.data.list.map(item => ({
+                    name: item.name,
+                    id: item.id
+                })),
+                value: r.data.list[0].name
+            });
+            fetch.get('/api/meetingRoom/deviceMonitor', {
+                token: localStorage.getItem('__meeting_token'),
+                area: r.data.list[0].id
+            }).then(r => {
+                this.setState({
+                    data: r.data
+                });
+            }).catch(r => {
+    
+            });
+        });
+        
     }
     
     render () {
@@ -40,7 +65,7 @@ class Monitor extends Component {
                             区域:
                         </Col>
                         <Col span={16}>
-                            <CheckboxGroup options={areaList} value={this.state.checkedList} onChange={this.onChange} />
+                            <RadioGroup options={this.state.areas.map(item => item.name)} value={this.state.value} onChange={this.onChange} />
                         </Col>
                     </Row>
                     <Row style={{marginTop: 20}}>
@@ -55,7 +80,7 @@ class Monitor extends Component {
                             </div>
                         </Col>
                     </Row>
-                    { this.state.data.forEach(item => {
+                    { this.state.data.map(item => {
                         return (
                             <div className="room-list">
                                 <div className="room-list-header">{item.name}</div>
