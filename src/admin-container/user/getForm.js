@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Modal, Input, Checkbox } from 'antd';
+import { Form, Modal, Input, Checkbox, Select } from 'antd';
 import fetch from 'lib/fetch';
+const Option = Select.Option;
 
 const FormItem = Form.Item;
 
@@ -44,7 +45,7 @@ class CreateModal extends Component {
     }
 }
 
-export default (type) => {
+export default (type, onCreated) => {
     switch(type) {
         case 'list':
             return Form.create()((props) => {
@@ -52,17 +53,23 @@ export default (type) => {
                 const okHandle = () => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        console.log(fieldsValue);
-                        fetch.post('/api/area/add', {
+                        if(values.userId){
+                            fieldsValue.id = values.userId;
+                            fieldsValue.userName = values.userName;
+                        }
+                        fetch.post('/api/user/update', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
-                            this.handleModalVisible(false);
+                            handleModalVisible(false);
                         }).catch((e) => {
-                            
+                            handleModalVisible(false);
                         });
                     });
                 };
+                const roles = JSON.parse(localStorage.getItem('__meeting_role')|| '[]');
+                const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+                const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
                 return (
                     <Modal
                         title="编辑用户"
@@ -101,8 +108,8 @@ export default (type) => {
                             wrapperCol={{ span: 15 }}
                             label="联系方式"
                         >
-                            {form.getFieldDecorator('contact', {
-                                rules: [{ required: true, message: '请输入联系方式' }],
+                            {form.getFieldDecorator('tel', {
+                                rules: [{ required: false }],
                                 initialValue: values.contact
                             })(
                                 <Input placeholder="请输入联系方式" />
@@ -114,10 +121,40 @@ export default (type) => {
                             label="角色"
                         >
                             {form.getFieldDecorator('role', {
-                                rules: [{ required: true, message: '请输入角色' }],
+                                rules: [{ required: true, message: '请选择角色' }],
                                 initialValue: values.role
                             })(
-                                <Input placeholder="请输入角色" />
+                                <Select style={{ width: 130 }} placeholder="请选择角色" >
+                                    {roles.map(item => <Option key={item.id}>{item.name}</Option>)}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="所属区域"
+                        >
+                            {form.getFieldDecorator('areaId', {
+                                rules: [{ required: true, message: '请输入区域' }],
+                                initialValue: values.areaId
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="所属部门"
+                        >
+                            {form.getFieldDecorator('departmentId', {
+                                rules: [{ required: false, message: '请输入部门' }],
+                                initialValue: values.departmentId
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入部门" >
+                                    { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                </Select>
                             )}
                         </FormItem>
                         <FormItem
@@ -137,27 +174,35 @@ export default (type) => {
             });
         case 'role':
             return Form.create()((props) => {
-                const { modalVisible, form, handleModalVisible } = props;
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const actions = [];
+                JSON.parse(localStorage.getItem('__meeting_role') || '[]').forEach(item => {
+                    item.actions.forEach(action => {
+                        actions.push(action.action)
+                    });
+                });
                 const okHandle = () => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
                         console.log(fieldsValue);
-                        fetch.post('/api/area/add', {
+                        fieldsValue.actions= fieldsValue.actions.join(',');
+                        fetch.post(isEdit? '/api/role/update' : '/api/role/add', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
-                            this.handleModalVisible(false);
+                            handleModalVisible(false);
+                            onCreated();
                         }).catch((e) => {
-                            
+                            handleModalVisible(false);
                         });
                     });
                 };
                 return (
                     <Modal
-                        title="新建角色"
+                        title={ isEdit ? "编辑角色" : "新建角色"}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="添加"
+                        okText="确定"
                         cancelText="取消"
                         onCancel={() => handleModalVisible()}
                     >
@@ -168,6 +213,7 @@ export default (type) => {
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '"请输入名称' }],
+                                initialValue: values.name
                             })(
                                 <Input placeholder="请输入名称" />
                             )}
@@ -178,9 +224,16 @@ export default (type) => {
                             label="权限"
                         >
                             {form.getFieldDecorator('actions', {
-                                rules: [{ required: true, message: '请输入简码' }],
+                                rules: [{ required: true, message: '请选择权限' }],
+                                initialValue: values.actions ? values.actions.split(',') : []
                             })(
-                                <Input placeholder="请输入简码" />
+                                <Select
+                                    mode="multiple"
+                                    style={{ width: '100%' }}
+                                    placeholder="请选择权限"
+                                >
+                                    {actions.map(item => <Option key={item}>{item}</Option>)}
+                                </Select>
                             )}
                         </FormItem>
                     </Modal>

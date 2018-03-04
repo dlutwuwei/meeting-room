@@ -27,8 +27,7 @@ export default class BasicList extends PureComponent {
     }
     componentDidMount() {
     }
-    getUrl = () => {
-        const type = this.props.match.params.type;
+    getUrl = (type) => {
         switch (type) {
             case 'list':
                 return '/api/user/getList';
@@ -37,14 +36,42 @@ export default class BasicList extends PureComponent {
         }
     }
     fetchData = () => {
-        fetch.get(this.getUrl(), {
+        const type = this.props.match.params.type;
+        fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
-            this.setState({
-                data: res.data.list,
-                page: res.data.page,
-                pageSize: res.data.pageSize
-            });
+            if(type === 'list') {
+                // 拉取最新role列表
+                fetch.get(this.getUrl('role'), {
+                    token: localStorage.getItem('__meeting_token')
+                }).then(r => {
+                    localStorage.setItem('__meeting_role', JSON.stringify(r.data.list || '[]'));
+                    this.setState({
+                        data: res.data.list,
+                        page: res.data.page,
+                        pageSize: res.data.pageSize
+                    });
+                });
+            } else if(type === 'role') {
+                // role拉取所有权限
+                fetch.get('/api/action/getList', {
+                    token: localStorage.getItem('__meeting_token')
+                }).then(r => {
+                    localStorage.setItem('__meeting_role', JSON.stringify(r.data.data || '[]'));
+                    this.setState({
+                        data: res.data.list,
+                        page: res.data.page,
+                        pageSize: res.data.pageSize
+                    });
+                });
+            } else {
+                this.setState({
+                    data: res.data.list,
+                    page: res.data.page,
+                    pageSize: res.data.pageSize
+                });
+            }
+
         }).catch(() => {
             this.setState({
                 data: []
@@ -74,8 +101,11 @@ export default class BasicList extends PureComponent {
                     type={type}
                     page={page}
                     pageSize={pageSize}
-                    createForm={getForm(type)}
-                    showAdd={false}
+                    createForm={getForm(type, () => {
+                        // 创建完成之后
+                        this.fetchData();
+                    })}
+                    showAdd={type !== 'list'}
                 />
             </div>
         );

@@ -25,7 +25,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
         case 'list':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post(`/api/area/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    fetch.post(`/api/role/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
                     }).then((r) => {
                         removeFromTable(index)
@@ -48,11 +48,19 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 },
                 {
                     title: '联系方式',
-                    dataIndex: 'contact',
+                    dataIndex: 'tel',
+                },
+                {
+                    title: '所属区域',
+                    dataIndex: 'areaName',
+                },
+                {
+                    title: '所属部门',
+                    dataIndex: 'departmentName',
                 },
                 {
                     title: '角色',
-                    dataIndex: 'role',
+                    dataIndex: 'roleName',
                 },
                 {
                     title: '是否启用',
@@ -75,7 +83,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
         case 'role':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post(`/api/area/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    fetch.post(`/api/role/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
                     }).then((r) => {
                         removeFromTable(index)
@@ -102,7 +110,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
                             <Divider type="vertical" />
-                            <a href="#" style={{color: '#ff680d'}} onClick={removeCurrent}><Icon type="delete"/></a>
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },
