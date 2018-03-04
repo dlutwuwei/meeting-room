@@ -128,11 +128,11 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
                 {
                     title: '区域',
-                    dataIndex: 'areaId',
+                    dataIndex: 'areaName',
                 },
                 {
                     title: '部门',
-                    dataIndex: 'departmentId',
+                    dataIndex: 'departmentName',
                 },
                 {
                     title: '设备',
@@ -182,7 +182,7 @@ function getColumns(type, removeFromTable, showEditor) {
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
                             <Divider type="vertical" />
-                            <a href="#" style={{color: '#ff680d'}}onClick={removeCurrent}><Icon type="delete"/></a>
+                            <a href="#" style={{color: '#ff680d'}}onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },

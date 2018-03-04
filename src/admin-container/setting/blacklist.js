@@ -1,7 +1,36 @@
 import React, { Component, Fragment } from 'react';
-import { Breadcrumb, Icon, Divider } from 'antd';
+import { Breadcrumb, Icon, Divider, Modal } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
+const confirm = Modal.confirm;
+
+const removeCurrent = (delCurrent = () => {}) => {
+    confirm({
+        title: '确定删除?',
+        content: '删除后无法恢复',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+            delCurrent();
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
+
+const onDeleteClick = (index, id) => {
+    removeCurrent(() => {
+        fetch.post(`/api/blackList/delete?token=${localStorage.getItem('__meeting_token')}`, {
+            id
+        }).then((r) => {
+            removeFromTable(index)
+        }).catch(() => {
+            message.error('删除失败');
+        });
+    })
+}
 
 const columns = [
     {
@@ -26,9 +55,7 @@ const columns = [
         title: '操作',
         render: () => (
             <Fragment>
-                <a href=""><Icon type="form" /></a>
-                <Divider type="vertical" />
-                <a href=""><Icon type="delete" /></a>
+                <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
             </Fragment>
         ),
     },
@@ -65,12 +92,13 @@ class BlackList extends Component {
                     <Breadcrumb.Item>黑名单</Breadcrumb.Item>
                 </Breadcrumb>
                 <List
-                    columns={columns}
+                    getColumns={() => columns}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}
                     page={page}
                     pageSize={pageSize}
+                    showAdd={false}
                 />
             </div>
         )

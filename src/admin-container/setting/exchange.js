@@ -32,7 +32,7 @@ class Exchange extends Component {
             <div>
                 <Breadcrumb separator=">">
                     <Breadcrumb.Item>系统设置</Breadcrumb.Item>
-                    <Breadcrumb.Item>黑名单</Breadcrumb.Item>
+                    <Breadcrumb.Item>exchange</Breadcrumb.Item>
                 </Breadcrumb>
                 <Form onSubmit={this.handleSubmit} className="login-form" style={{width: 500, marginTop: 30}}>
                     <FormItem {...formItemLayout} label="协议">

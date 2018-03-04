@@ -60,12 +60,13 @@ class BlackList extends Component {
                     <Breadcrumb.Item>白名单</Breadcrumb.Item>
                 </Breadcrumb>
                 <List
-                    columns={columns}
+                    getColumns={() => columns}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}
                     page={page}
                     pageSize={pageSize}
+                    showAdd={false}
                 />
             </div>
         )

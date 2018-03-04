@@ -236,6 +236,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '请输入会议室名称' }],
+                                initialValue: values.name
                             })(
                                 <Input placeholder="请输入会议室名称" />
                             )}
@@ -247,6 +248,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('mail', {
                                 rules: [{ required: true, message: '请输入邮箱' }],
+                                initialValue: values.mail
                             })(
                                 <Input placeholder="请输入邮箱" />
                             )}
@@ -258,9 +260,24 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('areaId', {
                                 rules: [{ required: true, message: '请输入区域' }],
+                                initialValue: values.areaId
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="所属部门"
+                        >
+                            {form.getFieldDecorator('departmentId', {
+                                rules: [{ required: false, message: '请输入部门' }],
+                                initialValue: values.departmentId
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入部门" >
+                                    { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
                         </FormItem>
