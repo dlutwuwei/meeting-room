@@ -1,7 +1,38 @@
 import React, { Component, Fragment} from 'react';
-import { Breadcrumb, Icon, Divider} from 'antd';
+import { Breadcrumb, Icon, Divider, Modal, message } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
+import getForm from './getForm';
+
+const confirm = Modal.confirm;
+
+const removeCurrent = (delCurrent = () => {}) => {
+    confirm({
+        title: '确定删除?',
+        content: '删除后无法恢复',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk() {
+            delCurrent();
+        },
+        onCancel() {
+            console.log('Cancel');
+        },
+    });
+}
+
+const onDeleteClick = (index, id) => {
+    removeCurrent(() => {
+        fetch.post(`/api/whitelist/delete?token=${localStorage.getItem('__meeting_token')}`, {
+            id
+        }).then((r) => {
+            removeFromTable(index)
+        }).catch(() => {
+            message.error('删除失败');
+        });
+    })
+}
 
 const columns = [
     {
@@ -18,11 +49,9 @@ const columns = [
     },
     {
         title: '操作',
-        render: () => (
+        render: (_, record, index) => (
             <Fragment>
-                <a href=""><Icon type="form" /></a>
-                <Divider type="vertical" />
-                <a href=""><Icon type="delete" /></a>
+                <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
             </Fragment>
         ),
     },
@@ -66,6 +95,10 @@ class BlackList extends Component {
                     fetchData={this.fetchData}
                     page={page}
                     pageSize={pageSize}
+                    createForm={getForm('', () => {
+                        // 创建完成之后
+                        this.fetchData();
+                    })}
                 />
             </div>
         )
