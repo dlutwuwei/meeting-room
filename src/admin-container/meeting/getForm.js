@@ -8,6 +8,13 @@ class CreateModal extends Component {
     state = {
         loading: false
     }
+    componentWillReceiveProps(nextProps) {
+        if(this.props.visible !== nextProps.visible) {
+            this.setState({
+                loading: false
+            });
+        }
+    }
     render () {
         const { visible, title, onOk, okText, cancelText, onCancel } = this.props;
         const { loading } = this.state;
@@ -53,8 +60,10 @@ export default (type, onCreated) => {
                     before && before();
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                        }
                         fetch.post(`${isEdit ? '/api/area/update' : '/api/area/add'}?token=${localStorage.getItem('__meeting_token')}`, {
-                            id: values.id,
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(res => {
