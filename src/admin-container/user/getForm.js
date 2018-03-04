@@ -179,7 +179,7 @@ export default (type, onCreated) => {
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const actions = [];
-                JSON.parse(localStorage.getItem('__meeting_role') || '[]').forEach(item => {
+                JSON.parse(localStorage.getItem('__meeting_actions') || '[]').forEach(item => {
                     item.actions.forEach(action => {
                         actions.push(action.action)
                     });
