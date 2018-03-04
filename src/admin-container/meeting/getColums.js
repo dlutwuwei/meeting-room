@@ -86,10 +86,6 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'shortCode',
                 },
                 {
-                    title: '管理员',
-                    dataIndex: 'admin',
-                },
-                {
                     title: '操作',
                     render: (text, record, index) => (
                         <Fragment>

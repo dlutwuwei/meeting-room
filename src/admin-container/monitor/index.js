@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Breadcrumb, Icon, Divider, Checkbox, Row, Col} from 'antd';
+import fetch from 'lib/fetch';
+
 const CheckboxGroup = Checkbox.Group;
 
 const areaList = ['北京', '上海'];
@@ -8,11 +10,24 @@ import './index.less';
 
 class Monitor extends Component {
     state = {
-        checkedList: []
+        checkedList: [],
+        data: []
     }
     onChange = () => {
 
     }
+    componentDidMount () {
+        fetch.get('/api/meetingRoom/deviceMonitor', {
+            area: 2
+        }).then(r => {
+            this.setState({
+                data: r.data
+            });
+        }).catch(r => {
+
+        });
+    }
+    
     render () {
         return (
             <div className="monitor">
@@ -40,24 +55,16 @@ class Monitor extends Component {
                             </div>
                         </Col>
                     </Row>
-                    <div className="room-list">
-                        <div className="room-list-header">12F</div>
-                        <div className="room-list-body status">
-                            <span className="free">乌镇</span>
-                            <span className="busy">鼓浪屿</span>
-                            <span className="fault">寒山寺</span>
-                            <span className="free">杭州</span>
-                        </div>
-                    </div>
-                    <div className="room-list">
-                        <div className="room-list-header">13F</div>
-                        <div className="room-list-body status">
-                            <span className="free">乌镇</span>
-                            <span className="busy">鼓浪屿</span>
-                            <span className="fault">寒山寺</span>
-                            <span className="free">杭州</span>
-                        </div>
-                    </div>
+                    { this.state.data.forEach(item => {
+                        return (
+                            <div className="room-list">
+                                <div className="room-list-header">{item.name}</div>
+                                <div className="room-list-body status">
+                                    {item.rooms.map(rm => <span className="free">{rm.name}</span>)}
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         )

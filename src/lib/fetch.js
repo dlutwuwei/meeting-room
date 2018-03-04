@@ -1,5 +1,6 @@
 import 'whatwg-fetch'
 import { abortableFetch } from './abort-controller';
+import { Modal } from 'antd';
 
 const defOpts = {
     mode: 'cors',
@@ -80,8 +81,17 @@ function request(method, url, data, opts) {
             if(data.code === 0) {
                 return Promise.resolve(data);
             } else {
-                if(data.code ===  402 || data.code === 404) {
-                    location.href='http://mt.auth.ig66.com?callback=' + encodeURIComponent(location.href);
+                if(data.code ===  404) {
+                    Modal.confirm({
+                        title: 'Token过期，重新授权?',
+                        okText: '确认',
+                        cancelText: '取消',
+                        onOk() {
+                            location.href='http://mt.auth.ig66.com?callback=' + encodeURIComponent(location.href);
+                        },
+                        onCancel() {
+                        },
+                    })
                 }
                 return Promise.reject({ code: data.code, msg: `错误码${data.code}` })
             }
