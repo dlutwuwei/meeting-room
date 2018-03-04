@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Input, Checkbox, Select } from 'antd';
+import { Form, Modal, Input, Checkbox, Select, Button } from 'antd';
 import fetch from 'lib/fetch';
 const Option = Select.Option;
 
@@ -74,7 +74,7 @@ export default (type, onCreated) => {
                 const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
                 const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
                 return (
-                    <Modal
+                    <CreateModal
                         title="编辑用户"
                         visible={modalVisible}
                         onOk={okHandle}
@@ -172,7 +172,7 @@ export default (type, onCreated) => {
                                 <Checkbox></Checkbox>
                             )}
                         </FormItem>
-                    </Modal>
+                    </CreateModal>
                 );
             });
         case 'role':
@@ -205,7 +205,7 @@ export default (type, onCreated) => {
                     });
                 };
                 return (
-                    <Modal
+                    <CreateModal
                         title={ isEdit ? "编辑角色" : "新建角色"}
                         visible={modalVisible}
                         onOk={okHandle}
@@ -243,7 +243,7 @@ export default (type, onCreated) => {
                                 </Select>
                             )}
                         </FormItem>
-                    </Modal>
+                    </CreateModal>
                 );
             });
     }
