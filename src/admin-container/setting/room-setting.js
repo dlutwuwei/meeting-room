@@ -58,6 +58,10 @@ class RoomSettings extends Component {
         fetch.get('/api/meetingRoomSetting/getSetting?', {
             token: localStorage.getItem('__meeting_token')
         }).then(r => {
+            this.setState({
+                imageUrl1: r.data.bgForFree,
+                imageUrl2: r.data.bgForBusy
+            });
             delete r.data.bgForBusy;
             delete r.data.bgForFree;
             this.props.form.setFieldsValue(r.data);
