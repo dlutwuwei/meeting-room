@@ -45,12 +45,12 @@ export default class BasicList extends PureComponent {
                 return '/api/meetingRoom/getRoomTypes';
         }
     }
-    fetchData = () => {
+    fetchData = (done) => {
         const type = this.props.match.params.type;
         fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
-            
+            done && done();
             if(type === 'rooms') {
                 // 会议室信息展示需要
                 Promise.all([fetch.get(this.getUrl('area'), {
@@ -78,6 +78,7 @@ export default class BasicList extends PureComponent {
                 });
             }
         }).catch(() => {
+            done && done();
             this.setState({
                 data: []
             })

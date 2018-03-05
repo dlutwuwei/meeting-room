@@ -68,16 +68,18 @@ class BlackList extends Component {
         loading: false,
         modalVisible: false
     }
-    fetchData = () => {
+    fetchData = (done) => {
         fetch.get('/api/blackList/getList', {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
+            done && done();
             this.setState({
                 data: res.data.list,
                 page: res.data.page,
                 pageSize: res.data.pageSize
             });
         }).catch(() => {
+            done && done();
             this.setState({
                 data: []
             })

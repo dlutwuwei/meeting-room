@@ -35,11 +35,12 @@ export default class BasicList extends PureComponent {
                 return '/api/role/getList';
         }
     }
-    fetchData = () => {
+    fetchData = (done) => {
         const type = this.props.match.params.type;
         fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
+            done && done();
             if(type === 'list') {
                 // 拉取最新role列表
                 fetch.get(this.getUrl('role'), {
@@ -74,6 +75,7 @@ export default class BasicList extends PureComponent {
             }
 
         }).catch(() => {
+            done && done();
             this.setState({
                 data: []
             })

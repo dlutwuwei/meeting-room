@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Button, message} from 'antd';
+import { Modal, Form, Input, Button, message } from 'antd';
 import StandardTable from 'components/standard-table';
 
 export default class BasicList extends PureComponent {
@@ -15,7 +15,14 @@ export default class BasicList extends PureComponent {
     }
     componentWillReceiveProps(nextProps) {
         if(this.props.type !== nextProps.type) {
-            this.props.fetchData();
+            this.setState({
+                loading: true
+            });
+            this.props.fetchData(() => {
+                this.setState({
+                    loading: false
+                });
+            });
         }
 
     }
