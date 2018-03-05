@@ -8,11 +8,7 @@ import {
   } from 'react-router-dom';
 
 import Admin from './admin-container';
-ReactDOM.render((
-    <Router>
-        <Route path="/admin" component={Admin}/>
-    </Router>
-), document.getElementById('root'));
+
 
 import * as util from 'lib/util';
 const token = util.getQuery('token');
@@ -25,3 +21,9 @@ fetch.get('/api/public/getCurrentUserInfo', {
 });
 
 token && localStorage.setItem('__meeting_token', token)
+
+ReactDOM.render((
+  <Router>
+      <Route path="/admin" component={Admin}/>
+  </Router>
+), document.getElementById('root'));

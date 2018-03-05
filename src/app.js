@@ -15,6 +15,18 @@ import './style/index.css';
 import Home from './containers/home';
 import Topics from './containers/topics';
 import About from './containers/about';
+import * as util from 'lib/util';
+const token = util.getQuery('token');
+
+fetch.get('/api/public/getCurrentUserInfo', {
+  token: token
+}).then(r => {
+  localStorage.setItem('__meeting_user_email', r.data.mail);
+  localStorage.setItem('__meeting_user_name', r.data.userName);
+});
+
+token && localStorage.setItem('__meeting_token', token)
+
 
 const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware, logger));
 
@@ -30,18 +42,6 @@ ReactDOM.render((
     </Router>
   </Provider>), document.getElementById('root'));
 
-
-import * as util from 'lib/util';
-const token = util.getQuery('token');
-
-fetch.get('/api/public/getCurrentUserInfo', {
-  token: token
-}).then(r => {
-  localStorage.setItem('__meeting_user_email', r.data.mail);
-  localStorage.setItem('__meeting_user_name', r.data.userName);
-});
-
-token && localStorage.setItem('__meeting_token', token)
 
 
 
