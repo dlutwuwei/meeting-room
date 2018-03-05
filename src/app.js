@@ -34,7 +34,7 @@ ReactDOM.render((
 import * as util from 'lib/util';
 const token = util.getQuery('token');
 
-fetch.get('/api/user/getUserInfo', {
+fetch.get('/api/public/getCurrentUserInfo', {
   token: token
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
