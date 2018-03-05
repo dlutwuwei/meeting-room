@@ -309,10 +309,10 @@ export default (type, onCreated) => {
                             label="大小"
                         >
                             {form.getFieldDecorator('capacity', {
-                                rules: [{ required: true, message: '请输入设备' }],
+                                rules: [{ required: true, message: '请输入容量' }],
                                 initialValue: values.capacity
                             })(
-                                <Input placeholder="请输入设备" />
+                                <Input placeholder="请输入容量" />
                             )}
                         </FormItem>
                         <FormItem
@@ -324,7 +324,7 @@ export default (type, onCreated) => {
                                 rules: [{ required: true, message: '请输入类型' }],
                                 initialValue: values.roomType
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select style={{ width: 120 }} placeholder="请输入类型" >
                                     { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
                                 </Select>
                             )}
@@ -349,10 +349,10 @@ export default (type, onCreated) => {
                             label="设备码"
                         >
                             {form.getFieldDecorator('deviceCode', {
-                                rules: [{ required: true, message: '请输入类型' }],
+                                rules: [{ required: true, message: '请输入设备码' }],
                                 initialValue: values.deviceCode
                             })(
-                                <Input placeholder="请输入类型" />
+                                <Input placeholder="请输入设备码" />
                             )}
                         </FormItem>
                         <FormItem
