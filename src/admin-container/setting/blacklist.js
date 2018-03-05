@@ -49,7 +49,7 @@ const columns = [
     {
         title: '已冻结天数',
         render: (val, record) => (
-            <span>{record.releaseDate - record.frozenDate}</span>
+            <span>{parseInt((new Date().getTime() - record.frozenDate*1000)/3600000/24)}天</span>
         )
     },
     {
