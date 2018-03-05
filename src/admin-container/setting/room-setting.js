@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Icon, Divider, Modal, Form, Radio, Input, Button, message, Row, Col, Upload } from 'antd';
+import { Checkbox, Breadcrumb, Icon, Divider, Modal, Form, Radio, Input, Button, message, Row, Col, Upload } from 'antd';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 import fetch from 'lib/fetch';
@@ -52,7 +52,8 @@ class RoomSettings extends Component {
         imageUrl1: '',
         imageUrl2: '',
         selectBusy: false,
-        selectFree: false
+        selectFree: false,
+        responseMsg: false
     }
     componentDidMount() {
         fetch.get('/api/meetingRoomSetting/getSetting?', {
@@ -60,7 +61,8 @@ class RoomSettings extends Component {
         }).then(r => {
             this.setState({
                 imageUrl1: r.data.bgForFree,
-                imageUrl2: r.data.bgForBusy
+                imageUrl2: r.data.bgForBusy,
+                responseMsg: r.data.responseMessage
             });
             delete r.data.bgForBusy;
             delete r.data.bgForFree;
@@ -79,6 +81,9 @@ class RoomSettings extends Component {
             const { imageUrl1, imageUrl2 } = this.state;
             fieldsValue.bgForFree = imageUrl1;
             fieldsValue.bgForBusy = imageUrl2;
+            if(!this.state.responseMsg) {
+                fieldsValue.responseMessage = '';
+            }
             fetch.post('/api/meetingRoomSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
             }).then(r => {
@@ -91,12 +96,14 @@ class RoomSettings extends Component {
     }
     handleFreeChange = (e) => {
         this.setState({
-            selectFree: e.target.value
+            selectFree: e.target.value,
+            imageUrl1: e.target.value ? '' : this.state.imageUrl1
         });
     }
     handleBusyChange = (e) => {
         this.setState({
-            selectBusy: e.target.value
+            selectBusy: e.target.value,
+            imageUrl2: e.target.value ? '' : this.state.imageUrl1
         });
     }
     handleChange = (type, info) => {
@@ -106,7 +113,6 @@ class RoomSettings extends Component {
         }
         if (info.file.status === 'done') {
           const image = info.file.response.data;
-          debugger
           if(type === 'free') {
               this.setState({
                   loading1: false,
@@ -197,21 +203,27 @@ class RoomSettings extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label="报故邮箱">
                         {getFieldDecorator('noticeMail', {
-                            rules: [{ required: true, message: '请输入邮箱' }],
+                            rules: [{ required: true, message: '多个邮箱请用；隔开' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="回复消息">
+                        <Checkbox onChange={(e) => {
+                            this.setState({
+                                responseMsg: e.target.checked
+                            });
+                        }} checked={this.state.responseMsg}>回复会议请求时自动添加以下文本</Checkbox>
                         {getFieldDecorator('responseMessage', {
                             rules: [{ required: true, message: '请写入消息' }],
                         })(
-                            <Input.TextArea />
+                            <Input.TextArea placeholder="" />
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="会议室展板背景图片">
                         <Row>
                             <Col span={10} className="left">
+                                <div>1. 空闲状态</div>
                                 <RadioGroup onChange={this.handleFreeChange} value={selectFree}>
                                     <Radio value={true}>默认背景</Radio>
                                     <Radio value={false}>自定义背景</Radio>
@@ -230,8 +242,9 @@ class RoomSettings extends Component {
                                     </Upload>
                                 }
                             </Col>
-                            <Col span={4} />
+                            <Col span={3} />
                             <Col span={10} className="right">
+                                <div>2. 会议状态</div>
                                 <RadioGroup onChange={this.handleBusyChange} value={selectBusy}>
                                     <Radio value={true}>默认背景</Radio>
                                     <Radio value={false}>自定义背景</Radio>
