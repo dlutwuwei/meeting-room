@@ -30,16 +30,16 @@ class MyMeeting extends Component {
     
     handlCancel = (i) => {
         Modal.confirm({
-            title: 'Ara you sure to cancel the meeting?',
+            title: 'Are you sure to cancel the meeting?',
             onOk: () => {
                 fetch.post(`/api/meeting/cancel?token=${localStorage.getItem('__meeting_token')}`,{
                     id: this.state.data[i].id
-                }).then(r => {
+                }).then(() => {
                     this.state.split(i, 1);
                     this.setState({
                         data: this.state.data.slice(),
                     });
-                }).catch(r => {
+                }).catch(() => {
                     message.error('Cancel meeting failed');
                 });
             },
@@ -90,7 +90,7 @@ class MyMeeting extends Component {
         });
     }
     render () {
-        const { data, type, loading, visible, meeting, selectId } = this.state;
+        const { data, type, loading, visible, selectId } = this.state;
         return (
             <div className="my-meeting">
                 <div className="my-top">
@@ -160,7 +160,7 @@ class MyMeeting extends Component {
     }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = () => ({});
 
 function mapDispatchToProps(dispatch) {
     return {
