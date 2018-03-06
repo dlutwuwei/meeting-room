@@ -18,12 +18,13 @@ fetch.get('/api/public/getCurrentUserInfo', {
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
+
+  ReactDOM.render((
+    <Router>
+        <Route path="/admin" component={Admin}/>
+    </Router>
+  ), document.getElementById('root'));
 });
 
 token && localStorage.setItem('__meeting_token', token)
 
-ReactDOM.render((
-  <Router>
-      <Route path="/admin" component={Admin}/>
-  </Router>
-), document.getElementById('root'));

@@ -16,35 +16,30 @@ import Home from './containers/home';
 import Topics from './containers/topics';
 import About from './containers/about';
 import * as util from 'lib/util';
+
+const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware, logger));
+
 const token = util.getQuery('token');
 
 fetch.get('/api/public/getCurrentUserInfo', {
-  token: token
+  token: token || localStorage.getItem('__meeting_token')
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
+
+  ReactDOM.render((
+    <Provider store={store}>
+      <Router>
+        <div className="main">
+          <Route path="/home" exact component={Home} />
+          <Route path="/home/:type" component={Home} />
+          <Route path="/about" component={About} />
+          <Route path="/topics" component={Topics} />
+        </div>
+      </Router>
+    </Provider>), document.getElementById('root'));
+
 });
 
 token && localStorage.setItem('__meeting_token', token)
 
-
-const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware, logger));
-
-ReactDOM.render((
-  <Provider store={store}>
-    <Router>
-      <div className="main">
-        <Route path="/home" exact component={Home}/>
-        <Route path="/home/:type" component={Home}/>
-        <Route path="/about" component={About}/>
-        <Route path="/topics" component={Topics}/>
-      </div>
-    </Router>
-  </Provider>), document.getElementById('root'));
-
-
-
-
-
-import registerServiceWorker from './registerServiceWorker';
-registerServiceWorker();
