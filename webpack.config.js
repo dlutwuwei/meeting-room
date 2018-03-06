@@ -13,7 +13,7 @@ var languages = {
 	"cn": require("./src/locale/cn.json")
 };
 
-const mockserver = "http://mt.api.ig66.com"
+const mockserver = "http://mt.ig66.com"
 module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
