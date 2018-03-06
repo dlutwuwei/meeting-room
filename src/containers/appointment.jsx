@@ -87,17 +87,28 @@ class Appointment extends Component {
     fetching: false,
     attendees: '',
     dataSource: [],
+    loading: false,
     timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}')
   }
+    
+  componentDidMount() {
+    this.handleTimezoneChange(this.state.timezone);
+    this.setValues(this.props);
+  }
+
   openRooms() {
     this.setState({
       showAddRooms: true
     });
   }
   handleSubmit() {
+    
     this.props.form.validateFields((err, values) => {
       const data = values;
       if (!err) {
+        this.setState({
+          loading: true
+        });
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
@@ -109,13 +120,23 @@ class Appointment extends Component {
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_private') || '';
-        fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
+        if(this.props.isEdit) {
+          data.id = this.props.editId;
+        }
+        const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
+        fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
           message.success('预定成功');
           setTimeout(() => {
             location.href = '/home/mymeeting';
-          })
+          });
+          this.setState({
+            loading: false
+          });
         }).catch(() => {
           message.error('预定失败');
+          this.setState({
+            loading: false
+          });
         });
       }
 
@@ -149,11 +170,6 @@ class Appointment extends Component {
       content,
       subject
     });
-  }
-
-  componentDidMount() {
-    this.handleTimezoneChange(this.state.timezone);
-    this.setValues(this.props);
   }
   
   handleTimezoneChange = (val) => {
@@ -232,200 +248,202 @@ class Appointment extends Component {
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone } = this.state;
 
     return (
-      <div className="appointment-container">
-        <div className="appoint-left">
-          <div className="send-btn" onClick={e => {
-            this.handleSubmit(e)
-          }}>Send</div>
-        </div>
-        <div className="appoint-main">
-          <AddAttendees
-              visible={showAddAttendees}
-              onClose={() => this.setState({ showAddAttendees: false })}
-              onSelect={this.onSelectAttendee}
-          />
-          <Form>
-            <FormItem
-              label={<Select defaultValue="1" style={{ width: 85 }}>
-                <Option key="1" value="1">From</Option>
-              </Select>}
-              {...formItemLayout}
-            >
-              {getFieldDecorator('from', {
-                initialValue: localStorage.getItem('__meeting_user_email'),
-                rules: [{
-                  type: 'string',
-                  required: true,
-                  message: 'Please input sender',
-                }]
-              })(
-                <Input placeholder="" disabled />
-                )}
-            </FormItem>
-            <FormItem
-              label={<Button style={{ width: 85 }} onClick={() => {
-                this.setState({
-                  showAddAttendees: true
-                });
-              }}>To...</Button>}
-              {...formItemLayout}
-            >
-              {getFieldDecorator('receivers', {
-                initialValue: [],
-                rules: [{
-                  type: 'array',
-                  required: true,
-                  message: 'Please input attendees',
-                }]
-              })(
-                <Select
-                  mode="multiple"
-                  placeholder="Please select attendees!"
-                  notFoundContent={fetching ? <Spin size="small" /> : null}
-                  filterOption={false}
-                  onSelect={this.handleRecevierSelect}
-                  onSearch={this.handleSearch}
-                  onDeselect={this.handelDeselect}
-                >
-                  {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
-                </Select>
-                )}
-            </FormItem>
-            <FormItem
-              label="Subject"
-              {...formItemLayout}
-            >
-              {getFieldDecorator('subject', {
-                initialValue: '',
-                rules: [{
-                  type: 'string',
-                  required: true,
-                  message: 'Please input subject',
-                }]
-              })(
-                <Input placeholder="" onChange={this.handleChangeSubject} />
-                )}
-            </FormItem>
-            <FormItem
-              label="Location"
-              {...formItemLayout}
-            >
-              <div className="item">
-                <AddRooms
-                  visible={showAddRooms}
-                  onClose={() => this.setState({ showAddRooms: false })}
-                  onSelect={this.handleSelectRoom}
-                />
-                {getFieldDecorator('location', {
+      <Spin spinning={this.state.loading}>
+        <div className="appointment-container">
+          <div className="appoint-left">
+            <div className="send-btn" onClick={e => {
+              this.handleSubmit(e)
+            }}>Send</div>
+          </div>
+          <div className="appoint-main">
+            <AddAttendees
+                visible={showAddAttendees}
+                onClose={() => this.setState({ showAddAttendees: false })}
+                onSelect={this.onSelectAttendee}
+            />
+            <Form>
+              <FormItem
+                label={<Select defaultValue="1" style={{ width: 85 }}>
+                  <Option key="1" value="1">From</Option>
+                </Select>}
+                {...formItemLayout}
+              >
+                {getFieldDecorator('from', {
+                  initialValue: localStorage.getItem('__meeting_user_email'),
+                  rules: [{
+                    type: 'string',
+                    required: true,
+                    message: 'Please input sender',
+                  }]
+                })(
+                  <Input placeholder="" disabled />
+                  )}
+              </FormItem>
+              <FormItem
+                label={<Button style={{ width: 85 }} onClick={() => {
+                  this.setState({
+                    showAddAttendees: true
+                  });
+                }}>To...</Button>}
+                {...formItemLayout}
+              >
+                {getFieldDecorator('receivers', {
                   initialValue: [],
                   rules: [{
                     type: 'array',
                     required: true,
-                    message: 'Please input meeting room',
+                    message: 'Please input attendees',
                   }]
                 })(
-                  <LocationRoom />
+                  <Select
+                    mode="multiple"
+                    placeholder="Please select attendees!"
+                    notFoundContent={fetching ? <Spin size="small" /> : null}
+                    filterOption={false}
+                    onSelect={this.handleRecevierSelect}
+                    onSearch={this.handleSearch}
+                    onDeselect={this.handelDeselect}
+                  >
+                    {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
+                  </Select>
                   )}
-                <div className="rooms" onClick={this.openRooms.bind(this)} />
-              </div>
-            </FormItem>
-            <FormItem
-              label="Start Time"
-              {...formItemLayout}
-            >
-              {getFieldDecorator('startTime', startTimeConfig)(
-                <DatePicker
-                  format="YYYY-MM-DD"
-                  placeholder="Select Date"
-                  disabledDate={disabledDate}
-                  onChange={(date) => { this.handleTime('startTime',date) }}
-                  className="my-date-picker"
-                />
-              )}
-              {getFieldDecorator('startTime', startTimeConfig)(
-                <TimePicker
-                  prefixCls="ant-time-picker"
-                  placeholder="Select Time"
-                  showSecond={false}
-                  hideDisabledOptions={true}
-                  disabledHours={() => {
-                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
-                  }}
-                  disabledMinutes={() => {
-                    return generateOptions(60, (m) => {
-                      return m % 30 !== 0
-                    });
-                  }}
-                  onChange={(date) => { this.handleTime('startTime',date) }}
-                />
-              )}
-              {showTimezone && <Select
-                size="default"
-                defaultValue={Timezone['CCT']}
-                value={timezone}
-                labelInValue
-                onChange={this.handleTimezoneChange}
-                style={{ width: 200, marginLeft: 20 }}
+              </FormItem>
+              <FormItem
+                label="Subject"
+                {...formItemLayout}
               >
-                {children}
-              </Select>}
-            </FormItem>
-            <FormItem
-              label="End Time"
-              {...formItemLayout}
-            >
-              {getFieldDecorator('endTime', endTimeConfig)(
-                <DatePicker
-                  format="YYYY-MM-DD"
-                  placeholder="Select Date"
-                  disabledDate={disabledDate}
-                  onChange={(date) => { this.handleTime('endTime',date) }}
-                  className="my-date-picker"
-                />
-              )}
-              {getFieldDecorator('endTime', endTimeConfig)(
-                <TimePicker
-                  prefixCls="ant-time-picker"
-                  placeholder="Select Time"
-                  showSecond={false}
-                  hideDisabledOptions={true}
-                  disabledHours={() => {
-                    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
-                  }}
-                  disabledMinutes={() => {
-                    return generateOptions(60, (m) => {
-                      return m % 30 !== 0
-                    });
-                  }}
-                  onChange={(date) => { this.handleTime('endTime',date) }}
-                />
-              )}
-              {showTimezone && <Select
-                size="default"
-                defaultValue={Timezone['CCT']}
-                value={timezone}
-                labelInValue
-                onChange={this.handleTimezoneChange}
-                style={{ width: 200, marginLeft: 20 }}
+                {getFieldDecorator('subject', {
+                  initialValue: '',
+                  rules: [{
+                    type: 'string',
+                    required: true,
+                    message: 'Please input subject',
+                  }]
+                })(
+                  <Input placeholder="" onChange={this.handleChangeSubject} />
+                  )}
+              </FormItem>
+              <FormItem
+                label="Location"
+                {...formItemLayout}
               >
-                {children}
-              </Select>}
-            </FormItem>
-            <div className="item">
-              {getFieldDecorator('content', {
-                initialValue: '',
-                rules: [{
-                  type: 'string',
-                  required: false,
-                  message: 'Please input attendees',
-                }]
-              })(
-                <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={this.handleContent} />
+                <div className="item">
+                  <AddRooms
+                    visible={showAddRooms}
+                    onClose={() => this.setState({ showAddRooms: false })}
+                    onSelect={this.handleSelectRoom}
+                  />
+                  {getFieldDecorator('location', {
+                    initialValue: [],
+                    rules: [{
+                      type: 'array',
+                      required: true,
+                      message: 'Please input meeting room',
+                    }]
+                  })(
+                    <LocationRoom />
+                    )}
+                  <div className="rooms" onClick={this.openRooms.bind(this)} />
+                </div>
+              </FormItem>
+              <FormItem
+                label="Start Time"
+                {...formItemLayout}
+              >
+                {getFieldDecorator('startTime', startTimeConfig)(
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Select Date"
+                    disabledDate={disabledDate}
+                    onChange={(date) => { this.handleTime('startTime',date) }}
+                    className="my-date-picker"
+                  />
                 )}
-            </div>
-          </Form>
+                {getFieldDecorator('startTime', startTimeConfig)(
+                  <TimePicker
+                    prefixCls="ant-time-picker"
+                    placeholder="Select Time"
+                    showSecond={false}
+                    hideDisabledOptions={true}
+                    disabledHours={() => {
+                      return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
+                    }}
+                    disabledMinutes={() => {
+                      return generateOptions(60, (m) => {
+                        return m % 30 !== 0
+                      });
+                    }}
+                    onChange={(date) => { this.handleTime('startTime',date) }}
+                  />
+                )}
+                {showTimezone && <Select
+                  size="default"
+                  defaultValue={Timezone['CCT']}
+                  value={timezone}
+                  labelInValue
+                  onChange={this.handleTimezoneChange}
+                  style={{ width: 200, marginLeft: 20 }}
+                >
+                  {children}
+                </Select>}
+              </FormItem>
+              <FormItem
+                label="End Time"
+                {...formItemLayout}
+              >
+                {getFieldDecorator('endTime', endTimeConfig)(
+                  <DatePicker
+                    format="YYYY-MM-DD"
+                    placeholder="Select Date"
+                    disabledDate={disabledDate}
+                    onChange={(date) => { this.handleTime('endTime',date) }}
+                    className="my-date-picker"
+                  />
+                )}
+                {getFieldDecorator('endTime', endTimeConfig)(
+                  <TimePicker
+                    prefixCls="ant-time-picker"
+                    placeholder="Select Time"
+                    showSecond={false}
+                    hideDisabledOptions={true}
+                    disabledHours={() => {
+                      return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
+                    }}
+                    disabledMinutes={() => {
+                      return generateOptions(60, (m) => {
+                        return m % 30 !== 0
+                      });
+                    }}
+                    onChange={(date) => { this.handleTime('endTime',date) }}
+                  />
+                )}
+                {showTimezone && <Select
+                  size="default"
+                  defaultValue={Timezone['CCT']}
+                  value={timezone}
+                  labelInValue
+                  onChange={this.handleTimezoneChange}
+                  style={{ width: 200, marginLeft: 20 }}
+                >
+                  {children}
+                </Select>}
+              </FormItem>
+              <div className="item">
+                {getFieldDecorator('content', {
+                  initialValue: '',
+                  rules: [{
+                    type: 'string',
+                    required: false,
+                    message: 'Please input attendees',
+                  }]
+                })(
+                  <TextArea placeholder="Write some..." autosize={{ minRows: 6 }} onChange={this.handleContent} />
+                  )}
+              </div>
+            </Form>
+          </div>
         </div>
-      </div>
+      </Spin>
     )
   }
 }
@@ -454,7 +472,8 @@ Appointment.propTypes = {
   startTime: PropTypes.object.isRequired,
   endTime: PropTypes.object.isRequired,
   showTimezone: PropTypes.bool.isRequired,
-  form: PropTypes.object.isRequired
+  form: PropTypes.object.isRequired,
+  isEdit: PropTypes.bool
 }
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);
 

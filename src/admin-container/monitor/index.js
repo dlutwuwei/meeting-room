@@ -6,9 +6,9 @@ const RadioGroup = Radio.Group;
 
 const statusList = ['空闲', '会议在', '故障'];
 const statusMap = {
-    1: 'free',
-    2: 'busy',
-    3: 'fault'
+    '1': 'free',
+    '2': 'busy',
+    '3': 'fault'
 }
 import './index.less';
 
@@ -86,12 +86,11 @@ class Monitor extends Component {
                         </Col>
                     </Row>
                     { this.state.data.map(item => {
-                        const status = statusMap[item.state]
                         return (
                             <div className="room-list">
                                 <div className="room-list-header">{item.name}</div>
                                 <div className="room-list-body status">
-                                    {item.rooms.map(rm => <span className={status}>{rm.name}</span>)}
+                                    {item.rooms.map(rm => <span className={statusMap[rm.state]}>{rm.name}</span>)}
                                 </div>
                             </div>
                         );

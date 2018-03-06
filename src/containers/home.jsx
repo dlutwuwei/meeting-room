@@ -26,7 +26,6 @@ class Home extends Component {
     activeKey: MAP[this.props.match.params.type] || '1'
   }
   render() {
-    debugger
     return (
       <div>
         <header className="app-header">
