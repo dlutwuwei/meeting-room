@@ -13105,6 +13105,18 @@ textarea.ant-pagination-options-quick-jumper input {
   border: 1px solid #eee;
 }
 
+.my-meeting .my-table .operation {
+  color: #50bdef;
+}
+
+.my-meeting .my-table .operation span {
+  cursor: pointer;
+}
+
+.my-meeting .my-table .operation span:hover {
+  color: #eee;
+}
+
 .my-meeting .ant-spin-nested-loading > div > .ant-spin {
   left: 0;
 }
