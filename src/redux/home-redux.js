@@ -7,7 +7,7 @@ const initState = {
 
 const TOGGLE_TIMEZONE = 'TOGGLE_TIMEZONE';
 const CHANGE_PROP = 'CHANGE_PROP';
-
+const BATCH_CHANGE_PROP = 'BATCH_CHANGE_PROP';
 // ---------------- export default is reducer -------------
 // reducers
 function navReducer(state = initState, action) {
@@ -37,6 +37,11 @@ function appointmentReducer(state = appointment, action) {
         ...state,
         [action.prop]: action.data
       };
+    case BATCH_CHANGE_PROP:
+      return {
+        ...state,
+        ...action.data
+      }
     default:
       return state;
   }
@@ -67,8 +72,16 @@ const changeProp = (prop, data) => {
   }
 }
 
+const batchChangeProp = (data) => {
+  return {
+    type: BATCH_CHANGE_PROP,
+    data
+  }
+}
+
 
 export {
   toggleTimezone,
-  changeProp
+  changeProp,
+  batchChangeProp
 };

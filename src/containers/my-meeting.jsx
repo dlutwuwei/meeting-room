@@ -9,7 +9,7 @@ import Appointment from './appointment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
-    changeProp
+    batchChangeProp
 } from '../redux/home-redux';
 
 class MyMeeting extends Component {
@@ -25,7 +25,15 @@ class MyMeeting extends Component {
         this.search(1);
     }
     componentWillUnmount () {
-        
+        this.props.actions.batchChangeProp({
+            content: '',
+            endTime: moment(),
+            location: [],
+            receivers: [],
+            showTimezone: false,
+            startTime: moment(),
+            subject: ''
+        });
     }
     
     handlCancel = (i) => {
@@ -60,9 +68,7 @@ class MyMeeting extends Component {
                 startTime: moment(r.data.startTime*1000),
                 subject: r.data.subject
             }
-            Object.keys(meetingData).forEach(key => {
-                this.props.actions.changeProp(key, meetingData[key]);
-            });
+            this.props.actions.batchChangeProp(meetingData);
             this.setState({
                 visible: true,
                 selectId: this.state.data[i].id
@@ -165,7 +171,7 @@ const mapStateToProps = () => ({});
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
-            changeProp
+            batchChangeProp,
         }, dispatch)
     };
 }

@@ -38,7 +38,6 @@ fetch.get('/api/public/getCurrentUserInfo', {
         </div>
       </Router>
     </Provider>), document.getElementById('root'));
-
 });
 
 token && localStorage.setItem('__meeting_token', token)
