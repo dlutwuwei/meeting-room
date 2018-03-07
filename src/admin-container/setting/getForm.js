@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Input, Button, AutoComplete } from 'antd';
+import { Form, Modal, Button, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
 const Option = AutoComplete.Option;
 
@@ -69,25 +69,24 @@ class SearchUser extends Component {
         });
     }
     okHandle = (before, after) => {
-        const { modalVisible, form, handleModalVisible } = this.props;
+        const {form, handleModalVisible } = this.props;
         form.validateFields((err, fieldsValue) => {
             if (err) return;
-            console.log(fieldsValue);
             before && before();
             fetch.post('/api/whitelist/add', {
                 token: localStorage.getItem('__meeting_token'),
                 ...fieldsValue
-            }).then(res => {
+            }).then(() => {
                 after && after();
                 handleModalVisible(false);
-            }).catch((e) => {
+            }).catch(() => {
                 handleModalVisible(false);
             });
         });
     };
     render () {
         const { modalVisible, form, handleModalVisible } = this.props;
-        const { list, dataSource } = this.state;
+        const { dataSource } = this.state;
         const children = dataSource.map((item, i) => {
             return <Option value={'' + item.userId} key={i}>{item.name}</Option>;
           });
@@ -124,6 +123,6 @@ class SearchUser extends Component {
     }
 }
 
-export default (type, onCreated) => {
+export default (type) => {
     return Form.create()(SearchUser);
 }
