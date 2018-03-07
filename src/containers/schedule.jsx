@@ -141,6 +141,13 @@ class Schedule extends Component {
         });
     }
     onChange(checkedList) {
+        const selects = this.state.checkedList.filter(item => checkedList.includes(item));
+        if(selects.length > 0) {
+            this.props.actions.changeProp('location', this.props.location
+                .filter(item => selects.includes(item.mail)));
+            this.props.actions.changeProp('receivers', this.props.receivers
+                .filter(item => selects.includes(item.mail)));
+        }
         this.setState({
             checkedList,
             checkAll: checkedList.length === this.state.options.length,
@@ -175,14 +182,12 @@ class Schedule extends Component {
         this.setState({
             rooms
         });
-        this.props.actions.changeProp('location', this.props.location
-        .filter(item => !this.props.location.find(e => item.value === e.value))
-        .concat(rooms));
+        this.props.actions.changeProp('location', rooms);
         this.addToList(rooms);
     }
     onSelectAttendee(attendees) {
         this.props.actions.changeProp('receivers', this.props.receivers
-        .filter(item => !this.props.receivers.find(e => item.value === e.value))
+        .filter(item => !attendees.find(e => item.mail === e.mail))
         .concat(attendees));
         this.addToList(attendees)
     }
