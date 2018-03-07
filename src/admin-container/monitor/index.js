@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Icon, Divider, Radio, Row, Col} from 'antd';
+import { Breadcrumb, Radio, Row, Col, message} from 'antd';
 import fetch from 'lib/fetch';
 
 const RadioGroup = Radio.Group;
 
-const statusList = ['空闲', '会议在', '故障'];
 const statusMap = {
     '1': 'free',
     '2': 'busy',
@@ -29,8 +28,8 @@ class Monitor extends Component {
             this.setState({
                 data: r.data
             });
-        }).catch(r => {
-
+        }).catch(() => {
+            message.error('获取会议室监控');
         });
     }
     componentDidMount () {
@@ -51,8 +50,8 @@ class Monitor extends Component {
                 this.setState({
                     data: r.data
                 });
-            }).catch(r => {
-    
+            }).catch(() => {
+                message.error('获取会议室监控');
             });
         });
         
