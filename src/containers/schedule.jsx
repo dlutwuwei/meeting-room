@@ -66,7 +66,16 @@ class Schedule extends Component {
     }
     hover = false
     componentDidMount() {
-        this.search(moment(), [])
+        this.search(moment(), []);
+        const checkedList = [];
+        const { receivers, location } = this.props;
+        receivers.concat(location).forEach(i => {
+            checkedList.push(i.mail);
+        });
+        this.setState({
+            checkedList,
+            checkAll: true
+        });
     }
     searchPev = () => {
         const { attendees, date } = this.state;
@@ -92,7 +101,8 @@ class Schedule extends Component {
         const { receivers, location } = this.props;
         const options = receivers.concat(location);
         this.setState({
-            loading: true
+            loading: true,
+            options,
         });
         fetch.get('/api/schedule/getList', {
             userMails: receivers.map(item => item.mail).join(','),

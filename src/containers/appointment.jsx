@@ -198,7 +198,8 @@ class Appointment extends Component {
   handelDeselect = (val) => {
     let userList = this.props.receivers;
     const index = userList.findIndex(item => item.mail === val);
-    userList = userList.slice().splice(index, 1);
+    userList = userList.slice();
+    userList.splice(index, 1);
     this.props.form.setFieldsValue({
       receivers: userList.map(item => item.mail)
     });
