@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Exchange from './exchange';
 import Blacklist from './blacklist';
 import Whitelist from './whitelist';

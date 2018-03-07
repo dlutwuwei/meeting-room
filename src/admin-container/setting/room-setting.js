@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Checkbox, Breadcrumb, Icon, Divider, Modal, Form, Radio, Input, Button, message, Row, Col, Upload } from 'antd';
+import { Checkbox, Breadcrumb, Icon, Form, Radio, Input, Button, message, Row, Col, Upload } from 'antd';
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 import fetch from 'lib/fetch';
@@ -67,7 +67,7 @@ class RoomSettings extends Component {
             delete r.data.bgForBusy;
             delete r.data.bgForFree;
             this.props.form.setFieldsValue(r.data);
-        }).catch(r => {
+        }).catch(() => {
             message.error('获取设置失败');
         })
     }
@@ -86,9 +86,9 @@ class RoomSettings extends Component {
             }
             fetch.post('/api/meetingRoomSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
-            }).then(r => {
+            }).then(() => {
                 message.success('保存设置成功');
-            }).catch(r => {
+            }).catch(() => {
                 message.error('保存设置失败');
             });
         });
@@ -125,7 +125,7 @@ class RoomSettings extends Component {
             });
           }
           // Get this url from response in real world.
-          getBase64(info.file.originFileObj, imageUrl => this.setState({
+          getBase64(info.file.originFileObj, () => this.setState({
             // [type === 'free' ? 'imageUrl1' : 'imageUrl2' ]: imageUrl,
             loading: false,
           }));
@@ -136,13 +136,13 @@ class RoomSettings extends Component {
         const { selectFree, selectBusy, imageUrl1, imageUrl2, loading1, loading2 } = this.state;
         const uploadButton1 = (
             <div>
-                <Icon type={this.state.loading1 ? 'loading' : 'plus'} />
+                <Icon type={loading1 ? 'loading' : 'plus'} />
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
         const uploadButton2 = (
             <div>
-                <Icon type={this.state.loading2 ? 'loading' : 'plus'} />
+                <Icon type={loading2 ? 'loading' : 'plus'} />
                 <div className="ant-upload-text">Upload</div>
             </div>
         );

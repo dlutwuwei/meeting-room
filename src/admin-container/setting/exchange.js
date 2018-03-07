@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Breadcrumb } from 'antd';
+import { Form, Input, Button, Breadcrumb, message } from 'antd';
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -25,6 +25,27 @@ const formItemLayout = {
     },
   };
 class Exchange extends Component {
+    handleSubmit = () => {
+        const { form } = this.props;
+        form.validateFields((err, fieldsValue) => {
+            if (err) {
+                return;
+            }
+            const { imageUrl1, imageUrl2 } = this.state;
+            fieldsValue.bgForFree = imageUrl1;
+            fieldsValue.bgForBusy = imageUrl2;
+            if(!this.state.responseMsg) {
+                fieldsValue.responseMessage = '';
+            }
+            fetch.post('/api/systemSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
+                ...fieldsValue
+            }).then(() => {
+                message.success('保存设置成功');
+            }).catch(() => {
+                message.error('保存设置失败');
+            });
+        });
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
 
@@ -35,8 +56,8 @@ class Exchange extends Component {
                     <Breadcrumb.Item>exchange</Breadcrumb.Item>
                 </Breadcrumb>
                 <Form onSubmit={this.handleSubmit} className="login-form" style={{width: 500, marginTop: 30}}>
-                    <FormItem {...formItemLayout} label="协议">
-                        {getFieldDecorator('protocol', {
+                    <FormItem {...formItemLayout} label="协议地址">
+                        {getFieldDecorator('o365Address', {
                             rules: [{ required: true, message: 'Please input protocol!' }],
                         })(
                             <Input />
@@ -50,14 +71,14 @@ class Exchange extends Component {
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="账号">
-                        {getFieldDecorator('account', {
+                        {getFieldDecorator('oUserName', {
                             rules: [{ required: true, message: 'Please input your account name!' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="密码">
-                        {getFieldDecorator('password', {
+                        {getFieldDecorator('oPassword', {
                             rules: [{ required: true, message: 'Please input your Password!' }],
                         })(
                             <Input type="password" />
