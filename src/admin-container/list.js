@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Button, message } from 'antd';
+import { Button } from 'antd';
 import StandardTable from 'components/standard-table';
 
 export default class BasicList extends PureComponent {

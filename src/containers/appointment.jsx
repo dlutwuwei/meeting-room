@@ -467,6 +467,10 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+Appointment.defaultProps = {
+  isEdit: false
+}
+
 Appointment.propTypes = {
   actions: PropTypes.object.isRequired,
   startTime: PropTypes.object.isRequired,
