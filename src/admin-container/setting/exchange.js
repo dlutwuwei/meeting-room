@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button, Breadcrumb, message } from 'antd';
+import fetch from 'lib/fetch';
+
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -25,6 +27,16 @@ const formItemLayout = {
     },
   };
 class Exchange extends Component {
+    componentDidMount () {
+        fetch.get('/api/systemSetting/getSetting', {
+            token: localStorage.getItem('__meeting_token')
+        }).then((r) => {
+            this.props.form.setFieldsValue(r.data);
+        }).catch(() => {
+            message.error('获取设置失败 ');
+        });
+    }
+    
     handleSubmit = () => {
         const { form } = this.props;
         form.validateFields((err, fieldsValue) => {
