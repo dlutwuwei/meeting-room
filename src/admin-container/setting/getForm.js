@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Button, AutoComplete } from 'antd';
+import { Form, Modal, Button, AutoComplete, message } from 'antd';
 import fetch from 'lib/fetch';
 const Option = AutoComplete.Option;
 
@@ -81,6 +81,7 @@ class SearchUser extends Component {
                 handleModalVisible(false);
             }).catch(() => {
                 handleModalVisible(false);
+                message.error('添加失败');
             });
         });
     };
@@ -123,6 +124,6 @@ class SearchUser extends Component {
     }
 }
 
-export default (type) => {
+export default () => {
     return Form.create()(SearchUser);
 }

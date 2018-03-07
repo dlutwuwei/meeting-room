@@ -23,28 +23,47 @@ const removeCurrent = (delCurrent = () => {}) => {
 
 
 
-const columns = [
-    {
-        title: '用户',
-        dataIndex: 'mail',
-    },
-    {
-        title: '部门',
-        dataIndex: 'departmentName',
-    },
-    {
-        title: '区域',
-        dataIndex: 'area',
-    },
-    {
-        title: '操作',
-        render: (_, record, index) => (
-            <Fragment>
-                <a href="#" style={{color: '#ff680d'}} onClick={() => this.onDeleteClick(index, record.id)}><Icon type="delete"/></a>
-            </Fragment>
-        ),
-    },
-];
+const getColumns = () => {
+    const removeFromTable = (i) => {
+        this.state.data.splice(i, 1);
+        this.setState({
+            data: this.state.data.slice()
+        });
+    }
+    const onDeleteClick = (index, id) => {
+        removeCurrent(() => {
+            fetch.post(`/api/whitelist/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                id
+            }).then(() => {
+                removeFromTable(index)
+            }).catch(() => {
+                message.error('删除失败');
+            });
+        })
+    }
+    return  [
+        {
+            title: '用户',
+            dataIndex: 'mail',
+        },
+        {
+            title: '部门',
+            dataIndex: 'departmentName',
+        },
+        {
+            title: '区域',
+            dataIndex: 'area',
+        },
+        {
+            title: '操作',
+            render: (_, record, index) => (
+                <Fragment>
+                    <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                </Fragment>
+            ),
+        },
+    ];
+}
 
 class BlackList extends Component {
     state = {
@@ -70,23 +89,6 @@ class BlackList extends Component {
             })
         });
     }
-    removeFromTable = (i) => {
-        this.state.data.splice(i, 1);
-        this.setState({
-            data: this.state.data.slice()
-        });
-    }
-    onDeleteClick = (index, id) => {
-        removeCurrent(() => {
-            fetch.post(`/api/whitelist/delete?token=${localStorage.getItem('__meeting_token')}`, {
-                id
-            }).then(() => {
-                this.removeFromTable(index)
-            }).catch(() => {
-                message.error('删除失败');
-            });
-        })
-    }
     render () {
         const { data, loading, page, pageSize } = this.state;
 
@@ -97,7 +99,7 @@ class BlackList extends Component {
                     <Breadcrumb.Item>白名单</Breadcrumb.Item>
                 </Breadcrumb>
                 <List
-                    getColumns={() => columns}
+                    getColumns={getColumns}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}
