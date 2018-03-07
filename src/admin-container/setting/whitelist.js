@@ -1,5 +1,5 @@
 import React, { Component, Fragment} from 'react';
-import { Breadcrumb, Icon, Divider, Modal, message } from 'antd';
+import { Breadcrumb, Icon, Modal, message } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
 import getForm from './getForm';
@@ -17,22 +17,11 @@ const removeCurrent = (delCurrent = () => {}) => {
             delCurrent();
         },
         onCancel() {
-            console.log('Cancel');
         },
     });
 }
 
-const onDeleteClick = (index, id) => {
-    removeCurrent(() => {
-        fetch.post(`/api/whitelist/delete?token=${localStorage.getItem('__meeting_token')}`, {
-            id
-        }).then((r) => {
-            removeFromTable(index)
-        }).catch(() => {
-            message.error('删除失败');
-        });
-    })
-}
+
 
 const columns = [
     {
@@ -51,7 +40,7 @@ const columns = [
         title: '操作',
         render: (_, record, index) => (
             <Fragment>
-                <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                <a href="#" style={{color: '#ff680d'}} onClick={() => this.onDeleteClick(index, record.id)}><Icon type="delete"/></a>
             </Fragment>
         ),
     },
@@ -80,6 +69,23 @@ class BlackList extends Component {
                 data: []
             })
         });
+    }
+    removeFromTable = (i) => {
+        this.state.data.splice(i, 1);
+        this.setState({
+            data: this.state.data.slice()
+        });
+    }
+    onDeleteClick = (index, id) => {
+        removeCurrent(() => {
+            fetch.post(`/api/whitelist/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                id
+            }).then(() => {
+                this.removeFromTable(index)
+            }).catch(() => {
+                message.error('删除失败');
+            });
+        })
     }
     render () {
         const { data, loading, page, pageSize } = this.state;
