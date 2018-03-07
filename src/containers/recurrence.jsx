@@ -30,41 +30,6 @@ const eqOptions = ['星期一', '星期二', '星期三', '星期四', '星期�
 function onChange() {
     
 }
-const columns = [{
-    title: 'Room',
-    dataIndex: 'name',
-    key: 'room',
-    render: text => <a href="#">{text}</a>,
-  }, {
-    title: 'Capacity',
-    dataIndex: 'capacity',
-    key: 'capacity',
-  }, {
-    title: 'Phone',
-    dataIndex: 'hasPhone',
-    key: 'phone',
-  }, {
-    title: 'TV',
-    dataIndex: 'hasTv',
-    key: 'tv',
-  }, {
-    title: 'Whiteboard',
-    dataIndex: 'hasWhiteboard',
-    key: 'whiteboard',
-  }, {
-    title: 'Status',
-    dataIndex: 'status',
-    key: 'status',
-  }, {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-      <span>
-          <Checkbox/>
-      </span>
-    ),
-  }];
-  
 class Recurrence extends Component {
     constructor(props) {
         super(props);
@@ -171,7 +136,7 @@ class Recurrence extends Component {
         return pattern;
     }
     render () {
-        const { visible, list, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
+        const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Modal

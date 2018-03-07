@@ -42,7 +42,7 @@ class Home extends Component {
             }}
           >
             <TabPane className="pane" tab="New Meeting" key="1"><NewMeeting /></TabPane>
-            <TabPane className="pane" tab="My Meeting" key="2"><MyMeeting /></TabPane>
+            <TabPane className="pane" tab="My Meeting" key="2"><MyMeeting active={this.state.activeKey}/></TabPane>
           </Tabs>
         </div>
         <div className="app-footer">版权@2017</div>

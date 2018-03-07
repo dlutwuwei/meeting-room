@@ -25,15 +25,22 @@ class MyMeeting extends Component {
         this.search(1);
     }
     componentWillUnmount () {
-        this.props.actions.batchChangeProp({
-            content: '',
-            endTime: moment(),
-            location: [],
-            receivers: [],
-            showTimezone: false,
-            startTime: moment(),
-            subject: ''
-        });
+        
+    }
+    componentWillReceiveProps(nextProps) {
+        if(this.props.active != nextProps.active) {
+            // 切换tab时，清空会议编辑中的内容，防止出现在appointment中
+            this.props.actions.batchChangeProp({
+                content: '',
+                endTime: moment(),
+                location: [],
+                receivers: [],
+                showTimezone: false,
+                startTime: moment(),
+                subject: ''
+            });
+        }
+        
     }
     
     handlCancel = (i) => {
@@ -62,6 +69,7 @@ class MyMeeting extends Component {
             const meetingData = {
                 content: r.data.content,
                 endTime: moment(r.data.endTime*1000),
+                // 编辑展示时只需要mail
                 location: r.data.roomMails.split(',').map(mail => ({ mail })),
                 receivers: r.data.receiver.split(',').map(mail => ({ mail })),
                 showTimezone: false,
