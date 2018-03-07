@@ -78,7 +78,9 @@ class RoomSettings extends Component {
             if (err) {
                 return;
             }
-            const { imageUrl1, imageUrl2 } = this.state;
+            const { imageUrl1, imageUrl2, selectFree, selectBusy } = this.state;
+            fieldsValue.isDefaultBgForFree = selectFree;
+            fieldsValue.isDefaultBgForBusy = selectBusy;
             fieldsValue.bgForFree = imageUrl1;
             fieldsValue.bgForBusy = imageUrl2;
             if(!this.state.responseMsg) {
