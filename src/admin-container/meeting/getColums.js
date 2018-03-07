@@ -16,9 +16,6 @@ function getColumns(type, removeFromTable, showEditor) {
             onOk() {
                 delCurrent();
             },
-            onCancel() {
-                console.log('Cancel');
-            },
         });
     }
 
@@ -28,7 +25,7 @@ function getColumns(type, removeFromTable, showEditor) {
                 removeCurrent(() => {
                     fetch.post(`/api/department/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
-                    }).then((r) => {
+                    }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
                         message.error('删除失败');
@@ -66,7 +63,7 @@ function getColumns(type, removeFromTable, showEditor) {
                 removeCurrent(() => {
                     fetch.post(`/api/area/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
-                    }).then((r) => {
+                    }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
                         message.error('删除失败');
@@ -103,7 +100,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     fetch.post('/api/meetingRoom/delete', {
                         id,
                         token: localStorage.getItem('__meeting_token')
-                    }).then((r) => {
+                    }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
                         message.error('删除失败');
@@ -133,7 +130,7 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title: '设备',
                     dataIndex: 'hasProjector',
-                    render: (text, record, index ) => {
+                    render: (text, record ) => {
                         const devices = [];
                         if(record.hasProjector) {
                             devices.push(<Tag>投影仪</Tag>)
@@ -168,7 +165,7 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
                 {
                     title: '可预订',
-                    render: (text, record, index) => {
+                    render: (text, record) => {
                         return <Checkbox checked={record.isEnable}></Checkbox>
                     }
                 },

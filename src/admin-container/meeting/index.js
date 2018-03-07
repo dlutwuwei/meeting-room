@@ -1,5 +1,5 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Divider, Icon, Breadcrumb } from 'antd';
+import React, { PureComponent } from 'react';
+import { Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
 
@@ -60,7 +60,6 @@ export default class BasicList extends PureComponent {
                 }), fetch.get(this.getUrl('type'), {
                     token: localStorage.getItem('__meeting_token')
                 })]).then(([areas, departments, types]) => {
-                    console.log(areas, departments, types);
                     localStorage.setItem('__meeting_areas', JSON.stringify(areas.data.list));
                     localStorage.setItem('__meeting_department', JSON.stringify(departments.data.list));
                     localStorage.setItem('__meeting_type', JSON.stringify(types.data));

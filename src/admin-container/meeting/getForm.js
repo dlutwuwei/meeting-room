@@ -53,6 +53,7 @@ class CreateModal extends Component {
 }
 
 export default (type, onCreated) => {
+    let deviceChildren, areas, roomTypes, departments;
     switch (type) {
         case 'area':
             return Form.create()((props) => {
@@ -67,11 +68,11 @@ export default (type, onCreated) => {
                         fetch.post(`${isEdit ? '/api/area/update' : '/api/area/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
-                        }).then(res => {
+                        }).then(() => {
                             handleModalVisible(false);
                             after && after();
                             onCreated();
-                        }).catch((e) => {
+                        }).catch(() => {
                             message.error('修改失败')
                             handleModalVisible(false);
                         });
@@ -137,11 +138,11 @@ export default (type, onCreated) => {
                         }
                         fetch.post(`${isEdit ? '/api/department/update' : '/api/department/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             ...fieldsValue
-                        }).then(res => {
+                        }).then(() => {
                             handleModalVisible(false);
                             after && after();
                             onCreated();
-                        }).catch((e) => {
+                        }).catch(() => {
                             message.error('修改失败')
                             handleModalVisible(false);
                         });
@@ -184,14 +185,14 @@ export default (type, onCreated) => {
                 );
             });
         case 'rooms':
-            const deviceChildren = [];
+            deviceChildren = [];
             deviceChildren.push(<Option key={'hasTv'}>电视</Option>);
             deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
             deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
             deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
-            const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
-            const roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
-            const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
+            areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+            roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
+            departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
             
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
@@ -216,11 +217,11 @@ export default (type, onCreated) => {
                         fieldsValue.device = fieldsValue.deviceCode;
                         fetch.post(`${isEdit ? '/api/meetingRoom/update' : '/api/meetingRoom/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             ...fieldsValue
-                        }).then(res => {
+                        }).then(() => {
                             handleModalVisible(false);
                             after && after();
                             onCreated();
-                        }).catch((e) => {
+                        }).catch(() => {
                             message.error(isEdit ? '修改失败' : '创建失败')
                             handleModalVisible(false);
                         });
