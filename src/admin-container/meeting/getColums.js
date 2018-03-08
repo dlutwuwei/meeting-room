@@ -159,7 +159,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     title: '会议室类型',
                     dataIndex: 'roomType',
                     render: (text) => {
-                        return roomTypes.find(item => item.RoomType == text).name
+                        return (roomTypes.find(item => item.RoomType == text)||{}).name
                     }
                 },
                 {
