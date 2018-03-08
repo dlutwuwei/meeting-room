@@ -53,23 +53,42 @@ class RoomSettings extends Component {
         imageUrl2: '',
         selectBusy: false,
         selectFree: false,
-        responseMsg: false
+        responseMsg: false,
+        areas: [],
+        selectArea: 'SH'
     }
     componentDidMount() {
-        fetch.get('/api/meetingRoomSetting/getSetting?', {
+        fetch.get('/api/area/getList', {
             token: localStorage.getItem('__meeting_token')
         }).then(r => {
             this.setState({
-                imageUrl1: r.data.bgForFree,
-                imageUrl2: r.data.bgForBusy,
-                responseMsg: r.data.responseMessage
+                areas: r.data.list.map(item => ({
+                    name: item.name,
+                    id: item.id
+                })),
+                selectArea: r.data.list[0].shortCode
+            }, () => {
+                this.props.form.setFieldsValue({
+                    area: r.data.list[0].shortCode
+                });
             });
-            delete r.data.bgForBusy;
-            delete r.data.bgForFree;
-            this.props.form.setFieldsValue(r.data);
+            fetch.get('/api/meetingRoomSetting/getSetting?', {
+                token: localStorage.getItem('__meeting_token')
+            }).then(r => {
+                this.setState({
+                    imageUrl1: r.data.bgForFree,
+                    imageUrl2: r.data.bgForBusy,
+                    responseMsg: r.data.responseMessage
+                });
+                delete r.data.bgForBusy;
+                delete r.data.bgForFree;
+                this.props.form.setFieldsValue(r.data);
+            }).catch(() => {
+                message.error('获取设置失败');
+            })
         }).catch(() => {
-            message.error('获取设置失败');
-        })
+            message.error('获取区域失败');
+        });
     }
 
     handleSubmit = () => {
@@ -133,9 +152,18 @@ class RoomSettings extends Component {
           }));
         }
       }
+    onAreaChange = (e) => {
+        this.setState({
+            selectArea: e.target.value
+        }, () => {
+            this.props.form.setFieldsValue({
+                area: e.target.value
+            });
+        });
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { selectFree, selectBusy, imageUrl1, imageUrl2, loading1, loading2 } = this.state;
+        const { selectFree, selectBusy, imageUrl1, imageUrl2, loading1, loading2, areas, selectArea} = this.state;
         const uploadButton1 = (
             <div>
                 <Icon type={loading1 ? 'loading' : 'plus'} />
@@ -148,6 +176,7 @@ class RoomSettings extends Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+        const areasOptions = areas.map(item  => (<Radio value={item.shortCode}>{item.name}</Radio>))
         return (
             <div>
                 <Breadcrumb separator=">">
@@ -155,6 +184,16 @@ class RoomSettings extends Component {
                     <Breadcrumb.Item>会议室设置</Breadcrumb.Item>
                 </Breadcrumb>
                 <Form onSubmit={this.handleSubmit} className="login-form" style={{ marginTop: 30 }}>
+                    <FormItem {...formItemLayout} label="区域">
+                        {getFieldDecorator('area', {
+                            rules: [{ required: false, message: '' }],
+                            initialValue: selectArea
+                        })(
+                            <RadioGroup onChange={this.onAreaChange} >
+                                {areasOptions}
+                            </RadioGroup>
+                        )}
+                    </FormItem>
                     <FormItem {...formItemLayout} label="会议室预定最长不超过">
                         {getFieldDecorator('maxMeetingHour', {
                             rules: [{ required: true, message: '请输入时间' }],

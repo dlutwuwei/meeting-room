@@ -61,10 +61,10 @@ export default (type, onCreated) => {
                         fetch.post('/api/user/update', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
-                        }).then(res => {
+                        }).then(() => {
                             handleModalVisible(false);
                             after && after();
-                        }).catch((e) => {
+                        }).catch(() => {
                             handleModalVisible(false);
                             after && after();
                         });
@@ -195,11 +195,11 @@ export default (type, onCreated) => {
                         fetch.post(isEdit? '/api/role/update' : '/api/role/add', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
-                        }).then(res => {
+                        }).then(() => {
                             handleModalVisible(false);
                             onCreated();
                             after && after();
-                        }).catch((e) => {
+                        }).catch(() => {
                             handleModalVisible(false);
                         });
                     });
@@ -222,7 +222,11 @@ export default (type, onCreated) => {
                                 rules: [{ required: true, message: '"请输入名称' }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入名称" />
+                                <Select placeholder="请输入名称" style={{width: '100%'}}>
+                                    <Option value="区域管理员">区域管理员</Option>
+                                    <Option value="部门管理员">部门管理员</Option>
+                                    <Option value="普通管理员">普通管理员</Option>
+                                </Select>
                             )}
                         </FormItem>
                         <FormItem

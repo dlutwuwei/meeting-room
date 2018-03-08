@@ -3,7 +3,6 @@ import { Link, Route } from 'react-router-dom';
 import { Layout, Menu, Icon } from 'antd';
 import MeetingList from './meeting/';
 import UserList from './user';
-import List from './list';
 import Setting from './setting';
 import Charts from './charts';
 import Monitor from './monitor';
@@ -11,8 +10,6 @@ import Monitor from './monitor';
 import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
-import fetch from 'lib/fetch';
-import * as util from 'lib/util';
 
 import './admin.less';
 import './list.less';
