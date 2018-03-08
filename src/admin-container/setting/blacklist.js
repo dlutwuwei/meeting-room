@@ -19,52 +19,7 @@ const removeCurrent = (delCurrent = () => {}) => {
     });
 }
 
-const getColumns = () => {
-    const removeFromTable = (i) => {
-        this.state.data.splice(i, 1);
-        this.setState({
-            data: this.state.data.slice()
-        });
-    }
-    const onDeleteClick = (index, id) => {
-        removeCurrent(() => {
-            fetch.post(`/api/blackList/delete?token=${localStorage.getItem('__meeting_token')}`, {
-                id
-            }).then(() => {
-                removeFromTable(index)
-            }).catch(() => {
-                message.error('删除失败');
-            });
-        })
-    }
-    return [{
-            title: '用户',
-            dataIndex: 'mail',
-        },
-        {
-            title: '部门',
-            dataIndex: 'departmentName',
-        },
-        {
-            title: '区域',
-            dataIndex: 'area',
-        },
-        {
-            title: '已冻结天数',
-            render: (val, record) => (
-                <span>{parseInt((new Date().getTime() - record.frozenDate*1000)/3600000/24)}天</span>
-            )
-        },
-        {
-            title: '操作',
-            render: (_, record, index) => (
-                <Fragment>
-                    <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
-                </Fragment>
-            ),
-        },
-    ];
-}
+
 class BlackList extends Component {
     state = {
         data: [],
@@ -89,6 +44,52 @@ class BlackList extends Component {
             })
         });
     }
+    getColumns = () => {
+        const removeFromTable = (i) => {
+            this.state.data.splice(i, 1);
+            this.setState({
+                data: this.state.data.slice()
+            });
+        }
+        const onDeleteClick = (index, id) => {
+            removeCurrent(() => {
+                fetch.post(`/api/blackList/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    id
+                }).then(() => {
+                    removeFromTable(index)
+                }).catch(() => {
+                    message.error('删除失败');
+                });
+            })
+        }
+        return [{
+                title: '用户',
+                dataIndex: 'mail',
+            },
+            {
+                title: '部门',
+                dataIndex: 'departmentName',
+            },
+            {
+                title: '区域',
+                dataIndex: 'area',
+            },
+            {
+                title: '已冻结天数',
+                render: (val, record) => (
+                    <span>{parseInt((new Date().getTime() - record.frozenDate*1000)/3600000/24)}天</span>
+                )
+            },
+            {
+                title: '操作',
+                render: (_, record, index) => (
+                    <Fragment>
+                        <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                    </Fragment>
+                ),
+            },
+        ];
+    }
     render () {
         const { data, loading, page, pageSize } = this.state;
 
@@ -99,7 +100,7 @@ class BlackList extends Component {
                     <Breadcrumb.Item>黑名单</Breadcrumb.Item>
                 </Breadcrumb>
                 <List
-                    getColumns={getColumns}
+                    getColumns={this.getColumns}
                     data={data}
                     loading={loading}
                     fetchData={this.fetchData}
