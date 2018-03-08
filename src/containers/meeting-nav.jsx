@@ -6,7 +6,6 @@ import '../style/meeting-nav.less';
 import { toggleTimezone } from '../redux/home-redux';
 
 import Select from 'components/select';
-import Button from 'components/button';
 import Recurrence from './recurrence';
 const Option = Select.Option;
 
@@ -50,7 +49,7 @@ class Nav extends Component {
         localStorage.setItem('__meeting_private', !this.state._private);
     }
     render () {
-        const { current, showRecurrence, _private, important, timezone } = this.state;
+        const { current, showRecurrence, _private, important } = this.state;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
@@ -118,7 +117,7 @@ Nav.defaultProps = {
     onChange: () => {}
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = () => ({
 });
 
 function mapDispatchToProps(dispatch) {

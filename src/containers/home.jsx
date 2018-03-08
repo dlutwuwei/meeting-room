@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import logo from 'img/logo.png';
-import { Tabs } from 'antd';
 import { Link, Route } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 import '../style/home.less';
-
-const TabPane = Tabs.TabPane;
 
 import NewMeeting from './new-meeting';
 import MyMeeting from './my-meeting';
@@ -24,7 +21,6 @@ class Home extends Component {
   render() {
     const { match, location} = this.props;
     const path = location.pathname;
-    console.log(match.url)
     const type =  path === "/home/mymeeting" ? 'mymeeting' : 'newmeeting';
     return (
       <div>
