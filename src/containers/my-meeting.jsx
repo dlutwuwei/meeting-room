@@ -25,22 +25,15 @@ class MyMeeting extends Component {
         this.search(1);
     }
     componentWillUnmount () {
-        
-    }
-    componentWillReceiveProps(nextProps) {
-        if(this.props.active != nextProps.active) {
-            // 切换tab时，清空会议编辑中的内容，防止出现在appointment中
-            this.props.actions.batchChangeProp({
-                content: '',
-                endTime: moment(),
-                location: [],
-                receivers: [],
-                showTimezone: false,
-                startTime: moment(),
-                subject: ''
-            });
-        }
-        
+        this.props.actions.batchChangeProp({
+            content: '',
+            endTime: moment(),
+            location: [],
+            receivers: [],
+            showTimezone: false,
+            startTime: moment(),
+            subject: ''
+        });
     }
     
     handlCancel = (i) => {

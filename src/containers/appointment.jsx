@@ -93,7 +93,9 @@ class Appointment extends Component {
     
   componentDidMount() {
     this.handleTimezoneChange(this.state.timezone);
-    this.setValues(this.props);
+    setTimeout(() => {
+      this.setValues(this.props);
+    }, 0);
   }
 
   openRooms() {
