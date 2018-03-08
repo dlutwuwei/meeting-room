@@ -27,7 +27,9 @@ const KEY_MAP = {
   '/admin/setting/exchange': '7',
   '/admin/setting/whitelist': '9',
   '/admin/setting/blacklist': '8',
-  '/admin/setting/roomsetting': '10'
+  '/admin/setting/roomsetting': '10',
+  '/admin/charts': '13',
+  '/admin/monitor': '14'
 }
 
 const KEY_OPEN = {
