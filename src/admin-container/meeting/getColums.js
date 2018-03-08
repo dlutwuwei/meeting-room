@@ -18,7 +18,7 @@ function getColumns(type, removeFromTable, showEditor) {
             },
         });
     }
-
+    const roomTypes = JSON.parse(localStorage.getItem('__meeting_type'));
     switch (type) {
         case 'department':
             onDeleteClick = (index, id) => {
@@ -158,6 +158,9 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title: '会议室类型',
                     dataIndex: 'roomType',
+                    render: (text) => {
+                        return roomTypes.find(item => item.RoomType == text).name
+                    }
                 },
                 {
                     title: '设备码',
