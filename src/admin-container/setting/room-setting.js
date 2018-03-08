@@ -55,7 +55,6 @@ class RoomSettings extends Component {
         selectFree: false,
         responseMsg: false,
         areas: [],
-        selectArea: 'SH'
     }
     componentDidMount() {
         fetch.get('/api/area/getList', {
@@ -63,14 +62,14 @@ class RoomSettings extends Component {
         }).then(r => {
             this.setState({
                 areas: r.data.list.map(item => ({
+                    shortCode: item.shortCode,
                     name: item.name,
                     id: item.id
                 })),
                 selectArea: r.data.list[0].shortCode
-            }, () => {
-                this.props.form.setFieldsValue({
-                    area: r.data.list[0].shortCode
-                });
+            });
+            this.props.form.setFieldsValue({
+                area: r.data.list[0].shortCode
             });
             fetch.get('/api/meetingRoomSetting/getSetting?', {
                 token: localStorage.getItem('__meeting_token')
@@ -153,12 +152,8 @@ class RoomSettings extends Component {
         }
       }
     onAreaChange = (e) => {
-        this.setState({
-            selectArea: e.target.value
-        }, () => {
-            this.props.form.setFieldsValue({
-                area: e.target.value
-            });
+        this.props.form.setFieldsValue({
+            area: e.target.value
         });
     }
     render() {
@@ -176,6 +171,7 @@ class RoomSettings extends Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
+        debugger
         const areasOptions = areas.map(item  => (<Radio value={item.shortCode}>{item.name}</Radio>))
         return (
             <div>
@@ -189,7 +185,7 @@ class RoomSettings extends Component {
                             rules: [{ required: false, message: '' }],
                             initialValue: selectArea
                         })(
-                            <RadioGroup onChange={this.onAreaChange} >
+                            <RadioGroup>
                                 {areasOptions}
                             </RadioGroup>
                         )}
