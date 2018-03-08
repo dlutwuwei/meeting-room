@@ -13,7 +13,7 @@
 
 .app-main {
     background: #eee;
-    padding: 7px 30px;
+    padding:  7px 0;
     .pane {
         background-color: #fff;
     }
@@ -25,7 +25,28 @@
     line-height: 30px;
     background-color: #eee;
 }
-
+.card-container {
+    .tabs {
+        display: flex;
+        list-style: none;
+        font-size: 18px;
+        margin-bottom: 0;
+        padding-left: 30px;
+        li {
+            height: 40px;
+            line-height: 40px;
+            width: 156px;
+            text-align: center;
+            padding-bottom: 10px;
+            &.active {
+                background-color: #fff;
+            }
+        }
+    }
+    .tabpanes {
+        background-color: #fff;
+    }
+}
 .card-container > .ant-tabs-card {
 
     .ant-tabs-content {
@@ -50,10 +71,4 @@
         border-color: #fff;
         background: #fff;
     }
-}
-.ant-tabs-nav-container {
-    font-size: 18px;
-}
-.ant-tabs-nav {
-    height: 44px;
 }
