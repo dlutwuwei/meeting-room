@@ -79,6 +79,7 @@ class SearchUser extends Component {
             }).then(() => {
                 after && after();
                 handleModalVisible(false);
+                SearchUser.created();
             }).catch(() => {
                 handleModalVisible(false);
                 message.error('添加失败');
@@ -124,6 +125,7 @@ class SearchUser extends Component {
     }
 }
 
-export default () => {
+export default (_, created) => {
+    SearchUser.created = created;
     return Form.create()(SearchUser);
 }
