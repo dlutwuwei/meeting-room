@@ -12,6 +12,8 @@ import {
     batchChangeProp
 } from '../redux/home-redux';
 
+const curHour = moment().hours();
+
 class MyMeeting extends Component {
     state = {
         data: [],
@@ -27,11 +29,11 @@ class MyMeeting extends Component {
     componentWillUnmount () {
         this.props.actions.batchChangeProp({
             content: '',
-            endTime: moment(),
+            endTime: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(30),
             location: [],
             receivers: [],
             showTimezone: false,
-            startTime: moment(),
+            startTime:moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
             subject: ''
         });
     }
