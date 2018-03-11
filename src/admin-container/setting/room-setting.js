@@ -66,13 +66,14 @@ class RoomSettings extends Component {
                     name: item.name,
                     id: item.id
                 })),
-                selectArea: r.data.list[0].shortCode
+                selectArea: r.data.list[0].id
             });
             this.props.form.setFieldsValue({
                 area: r.data.list[0].shortCode
             });
             fetch.get('/api/meetingRoomSetting/getSetting?', {
-                token: localStorage.getItem('__meeting_token')
+                token: localStorage.getItem('__meeting_token'),
+                areaId: r.data.list[0].id
             }).then(r => {
                 this.setState({
                     imageUrl1: r.data.bgForFree,
@@ -126,6 +127,23 @@ class RoomSettings extends Component {
             imageUrl2: e.target.value ? '' : this.state.imageUrl1
         });
     }
+    handleAreaChange = (e) => {
+        fetch.get('/api/meetingRoomSetting/getSetting?', {
+            token: localStorage.getItem('__meeting_token'),
+            areaId: e.target.value
+        }).then(r => {
+            this.setState({
+                imageUrl1: r.data.bgForFree,
+                imageUrl2: r.data.bgForBusy,
+                responseMsg: r.data.responseMessage
+            });
+            delete r.data.bgForBusy;
+            delete r.data.bgForFree;
+            this.props.form.setFieldsValue(r.data);
+        }).catch(() => {
+            message.error('获取设置失败');
+        });
+    }
     handleChange = (type, info) => {
         if (info.file.status === 'uploading') {
           this.setState({ loading: true });
@@ -171,8 +189,7 @@ class RoomSettings extends Component {
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
-        debugger
-        const areasOptions = areas.map(item  => (<Radio value={item.shortCode}>{item.name}</Radio>))
+        const areasOptions = areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>))
         return (
             <div>
                 <Breadcrumb separator=">">
@@ -181,11 +198,11 @@ class RoomSettings extends Component {
                 </Breadcrumb>
                 <Form onSubmit={this.handleSubmit} className="login-form" style={{ marginTop: 30 }}>
                     <FormItem {...formItemLayout} label="区域">
-                        {getFieldDecorator('area', {
+                        {getFieldDecorator('areaId', {
                             rules: [{ required: false, message: '' }],
                             initialValue: selectArea
                         })(
-                            <RadioGroup>
+                            <RadioGroup onChange={this.handleAreaChange}>
                                 {areasOptions}
                             </RadioGroup>
                         )}
