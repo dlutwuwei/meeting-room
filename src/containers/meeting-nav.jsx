@@ -14,7 +14,7 @@ class Nav extends Component {
         current: 'appointment',
         showRecurrence: false,
         showTimezone: false,
-        important: 2,
+        important: 1,
         _priviate: false
     }
     handleChange(val) {
@@ -67,11 +67,11 @@ class Nav extends Component {
                                 <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
+                                    <Option key="3" value="1" className="status interim" title="Tentative">Tentative</Option>
                                     <Option key="1" value="2" className="status busy" title="Busy">Busy</Option>
                                     <Option key="2"  value="3" className="status out" title="Out of Office">Out of Office</Option>
-                                    <Option key="3" value="1" className="status interim" title="Tentative">Tentative</Option>
-                                    <Option key="3" value="5" className="status unkown" title="No Information">No Information</Option>
-                                    <Option key="3" value="4" className="status occupy" title="Working Elsewhere">Working Elsewhere</Option>
+                                    <Option key="5" value="4" className="status occupy" title="Working Elsewhere">Working Elsewhere</Option>
+                                    <Option key="4" value="5" className="status unkown" title="No Information">No Information</Option>
                                 </Select>
                             </div>
                             <div className="nav-item1">
@@ -103,8 +103,8 @@ class Nav extends Component {
                 <div className="nav-zone1">
                     <div className="zone-vertical">
                         <div className={classNames(["nav-item2 private", { "active": _private}])} onClick={this.handlePrivate}>Private</div>
-                        <div className={classNames(["nav-item2 high", { "active": important == '3' }])} onClick={this.handleImportant.bind(this, 3)}>High Important</div>
-                        <div className={classNames(["nav-item2 low", { "active": important == '1' }])} onClick={this.handleImportant.bind(this, 1)}>Low Important</div>
+                        <div className={classNames(["nav-item2 high", { "active": important == '2' }])} onClick={this.handleImportant.bind(this, 2)}>High Important</div>
+                        <div className={classNames(["nav-item2 low", { "active": important == '0' }])} onClick={this.handleImportant.bind(this, 0)}>Low Important</div>
                     </div>
                     <div className="option-title">Tag</div>
                 </div>
