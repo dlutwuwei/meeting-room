@@ -208,9 +208,8 @@ class Appointment extends Component {
     this.props.actions.changeProp('receivers', userList);
   }
   handleSelectRoom = (rooms) => {
-    const location = this.props.location.concat(rooms);
     this.props.form.setFieldsValue({
-      location
+      location: rooms
     });
     this.props.actions.changeProp('location', location);
   }
