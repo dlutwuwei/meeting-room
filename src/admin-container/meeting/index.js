@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Input, message} from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
 
 import getForm from './getForm';
 import getColumns from './getColums';
+const Search = Input.Search;
 
 function getBreadcrumb(type) {
     let breadcrumb = null;
@@ -83,6 +84,28 @@ export default class BasicList extends PureComponent {
             })
         });
     }
+    handleSearch = (type, val) => {
+        this.setState({
+            loading: true
+        });
+        fetch.get(this.getUrl(type), {
+            keyword: val,
+            token: localStorage.getItem('__meeting_token')
+        }).then((res) => {
+            this.setState({
+                data: res.data.length ? res.data: res.data.list,
+                page: res.data.page,
+                pageSize: res.data.pageSize,
+                loading: false
+            });
+        })
+        .catch(() => {
+            this.setState({
+                loading: false
+            });
+            message.error('没有结果')
+        });
+    }
     removeFromTable = (i) => {
         this.state.data.splice(i, 1);
         this.setState({
@@ -98,6 +121,12 @@ export default class BasicList extends PureComponent {
                     <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
+                { type === 'rooms' && <Search
+                    placeholder="input search text"
+                    onSearch={this.handleSearch.bind(this, type)}
+                    enterButton
+                    style={{width: 220, marginTop: 20}}
+                />}
                 <List
                     getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     // columns={getColumns(type, this.removeFromTable.bind(this))}
