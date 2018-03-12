@@ -41,6 +41,7 @@ module.exports = Object.keys(languages).map(lan => {
         proxy: {
           '/api/*': {
               target:  `${mockserver}`,
+              changeOrigin: true,
               bypass: function(req, res, proxyOptions) {
                 console.log(req.url)
                 if (req.headers.accept.indexOf('html') !== -1) {
