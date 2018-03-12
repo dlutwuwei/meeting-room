@@ -118,10 +118,10 @@ class Appointment extends Component {
         data.endTime = data.endTime.clone().utc().format('YYYY-MM-DD HH:mm');
         data.roomMails = data.location.map(item => item.mail).join(';');
         delete data.location;
-        data.showas = localStorage.getItem('__meeting_showas') || '';
+        data.showas = localStorage.getItem('__meeting_showas') || 2;
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
-        data.importance = localStorage.getItem('__meeting_private') || '';
+        data.importance = localStorage.getItem('__meeting_important') || 1;
         if(this.props.isEdit) {
           data.id = this.props.editId;
         }

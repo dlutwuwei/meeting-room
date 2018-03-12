@@ -64,7 +64,7 @@ class Nav extends Component {
                         <div className="zone-vertical">
                             <div className="nav-item1">
                                 <span className="title showas">Show As:</span>
-                                <Select defaultValue="1" style={{ width: 120 }} onChange={(val)=> {
+                                <Select defaultValue="2" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
                                     <Option key="3" value="1" className="status interim" title="Tentative">Tentative</Option>
