@@ -1,10 +1,11 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Divider, Icon, Breadcrumb } from 'antd';
+import React, { PureComponent } from 'react';
+import { Input, message, Breadcrumb } from 'antd';
 import fetch from 'lib/fetch';
 import List from '../list';
 import getForm from './getForm';
 
 import getColumns from './getColums';
+const Search = Input.Search;
 
 function getBreadcrumb(type) {
     let breadcrumb = <span/>;
@@ -46,7 +47,6 @@ export default class BasicList extends PureComponent {
                 fetch.get(this.getUrl('role'), {
                     token: localStorage.getItem('__meeting_token')
                 }).then(r => {
-                    debugger
                     localStorage.setItem('__meeting_role', JSON.stringify(r.data.list || '[]'));
                     this.setState({
                         data: res.data.list,
@@ -87,6 +87,28 @@ export default class BasicList extends PureComponent {
             data: this.state.data.slice()
         });
     }
+    handleSearch = (type, val) => {
+        this.setState({
+            loading: true
+        });
+        fetch.get(this.getUrl(type), {
+            keyword: val,
+            token: localStorage.getItem('__meeting_token')
+        }).then((res) => {
+            this.setState({
+                data: res.data.length ? res.data: res.data.list,
+                page: res.data.page,
+                pageSize: res.data.pageSize,
+                loading: false
+            });
+        })
+        .catch(() => {
+            this.setState({
+                loading: false
+            });
+            message.error('没有结果')
+        });
+    }
     render() {
         const { data, loading, page, pageSize } = this.state;
         const type = this.props.match.params.type;
@@ -96,6 +118,12 @@ export default class BasicList extends PureComponent {
                     <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
+                {type === 'list' && <Search
+                    placeholder="input search text"
+                    onSearch={this.handleSearch.bind(this, type)}
+                    enterButton
+                    style={{width: 220, marginTop: 20}}
+                />}
                 <List
                     getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     data={data}
