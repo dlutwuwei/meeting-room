@@ -45,7 +45,7 @@ class MyMeeting extends Component {
                 fetch.post(`/api/meeting/cancel?token=${localStorage.getItem('__meeting_token')}`,{
                     id: this.state.data[i].id
                 }).then(() => {
-                    this.state.split(i, 1);
+                    this.state.data.splice(i, 1);
                     this.setState({
                         data: this.state.data.slice(),
                     });
