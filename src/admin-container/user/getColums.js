@@ -17,7 +17,6 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 delCurrent();
             },
             onCancel() {
-                console.log('Cancel');
             },
         });
     }
@@ -27,7 +26,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 removeCurrent(() => {
                     fetch.post(`/api/role/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
-                    }).then((r) => {
+                    }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
                         message.error('删除失败');
@@ -64,7 +63,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 },
                 {
                     title: '是否启用',
-                    render: (text, record, index) => (
+                    render: (text, record) => (
                         <Checkbox checked={record.isEnable}></Checkbox>
                     )
                 },
@@ -72,9 +71,9 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                     title: '操作',
                     render: (text, record, index) => (
                         <Fragment>
-                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
+                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.userId)}><Icon type="form" /></a>
                             <Divider type="vertical" />
-                            <a href="#" style={{color: '#ff680d'}} onClick={removeCurrent}><Icon type="delete"/></a>
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.userId)}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },
@@ -85,7 +84,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 removeCurrent(() => {
                     fetch.post(`/api/role/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
-                    }).then((r) => {
+                    }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
                         message.error('删除失败');

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Modal, Input, Checkbox, Select, Button } from 'antd';
+import { Form, Modal, Input, Checkbox, Select, Button, message } from 'antd';
 import fetch from 'lib/fetch';
 const Option = Select.Option;
 
@@ -67,6 +67,7 @@ export default (type, onCreated) => {
                         }).catch(() => {
                             handleModalVisible(false);
                             after && after();
+                            message.error('编辑失败')
                         });
                     });
                 };
@@ -113,7 +114,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('tel', {
                                 rules: [{ required: false }],
-                                initialValue: values.contact
+                                initialValue: values.tel
                             })(
                                 <Input placeholder="请输入联系方式" />
                             )}
