@@ -304,10 +304,10 @@ class Schedule extends Component {
                             <div className="attendees">
                                 <div className="select-all">
                                     <Checkbox
-                                        onChange={this.onCheckAllChange.bind(this)}
-                                        checked={this.state.checkAll}
+                                        checked={true}
+                                        disabled
                                     >
-                                        All Attendees
+                                       {localStorage.getItem('__meeting_user_name')}
                                     </Checkbox>
                                 </div>
                                 <CheckboxGroup
