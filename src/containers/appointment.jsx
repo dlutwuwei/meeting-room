@@ -153,11 +153,15 @@ class Appointment extends Component {
       token: localStorage.getItem('__meeting_token') || ''
     }).then((r) => {
       this.setState({
-        dataSource: r.data.list.map(item => ({
+        dataSource: [{
+          mail: value,
+          id: '',
+          name: value
+        }].concat(r.data.list.map(item => ({
           name: item.name,
           id: item.userId,
           mail: item.mail
-        })),
+        }))),
         fetching: false
       });
     });
@@ -211,7 +215,7 @@ class Appointment extends Component {
     this.props.form.setFieldsValue({
       location: rooms
     });
-    this.props.actions.changeProp('location', location);
+    this.props.actions.changeProp('location', rooms);
   }
   handleTime(type, time) {
     const offsetUTC = this.state.timezone.label.split(' ')[0];
