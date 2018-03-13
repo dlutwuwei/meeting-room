@@ -217,17 +217,29 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
+                            label="角色类型"
+                        >
+                            {form.getFieldDecorator('roleType', {
+                                rules: [{ required: true, message: '"请选择类型' }],
+                                initialValue: values.roleType
+                            })(
+                                <Select placeholder="请选择类型" style={{width: '100%'}}>
+                                    <Option value="1">超级管理员</Option>
+                                    <Option value="2">区域管理员</Option>
+                                    <Option value="3">部门管理员</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
                             label="角色名称"
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '"请输入名称' }],
                                 initialValue: values.name
                             })(
-                                <Select placeholder="请输入名称" style={{width: '100%'}}>
-                                    <Option value="区域管理员">区域管理员</Option>
-                                    <Option value="部门管理员">部门管理员</Option>
-                                    <Option value="普通管理员">普通管理员</Option>
-                                </Select>
+                                <Input placeholder="请输入角色名称" style={{width: '100%'}}/>
                             )}
                         </FormItem>
                         <FormItem
