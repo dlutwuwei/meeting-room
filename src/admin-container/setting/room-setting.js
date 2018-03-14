@@ -300,7 +300,7 @@ class RoomSettings extends Component {
                                 });
                             }} checked={this.state.responseMsg}>回复会议请求时自动添加以下文本</Checkbox>
                             {getFieldDecorator('responseMessage', {
-                                rules: [{ required: true, message: '请写入消息' }],
+                                rules: [{ required: false, message: '请写入消息' }],
                             })(
                                 <Input.TextArea placeholder="" />
                             )}

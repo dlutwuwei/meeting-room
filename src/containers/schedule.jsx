@@ -26,15 +26,15 @@ function disabledDate(current) {
     return current && current < moment().endOf('day');
 }
 
-function generateOptions(length, include) {
-    const arr = [];
-    for (let value = 0; value < length; value++) {
-        if (include(value)) {
-            arr.push(value);
-        }
-    }
-    return arr;
-}
+// function generateOptions(length, include) {
+//     const arr = [];
+//     for (let value = 0; value < length; value++) {
+//         if (include(value)) {
+//             arr.push(value);
+//         }
+//     }
+//     return arr;
+// }
 
 const children = [];
 const zones = Object.keys(Timezone);
@@ -96,16 +96,22 @@ class Schedule extends Component {
             right: -1,
             bottom: -1
         });
-
+        const my = {
+            mail: localStorage.getItem('__meeting_user_email'),
+            name: localStorage.getItem('__meeting_user_name'),
+        };
         const { data } = this.state;
         const { receivers, location } = this.props;
         const options = receivers.concat(location);
+        options.unshift(my);
+        const users = receivers.slice();
+        users.unshift(my);
         this.setState({
             loading: true,
             options,
         });
         fetch.get('/api/schedule/getList', {
-            userMails: receivers.map(item => item.mail).join(','),
+            userMails: users.map(item => item.mail).join(','),
             roomMails: location.map(item => item.mail).join(','),
             startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
             endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
@@ -188,7 +194,7 @@ class Schedule extends Component {
     onSelectAttendee(attendees) {
         this.props.actions.changeProp('receivers', this.props.receivers
         .filter(item => !attendees.find(e => item.mail === e.mail))
-        .concat(attendees));
+        .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email'))));
         this.addToList(attendees)
     }
     handleSend = () => {
@@ -398,11 +404,11 @@ class Schedule extends Component {
                                 disabledHours={() => {
                                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                                 }}
-                                disabledMinutes={() => {
-                                    return generateOptions(60, (m) => {
-                                        return m % 30 !== 0
-                                    });
-                                }}
+                                // disabledMinutes={() => {
+                                //     return generateOptions(60, (m) => {
+                                //         return m % 30 !== 0
+                                //     });
+                                // }}
                             />
                             {showTimezone && <Select
                                 size="default"
@@ -441,11 +447,11 @@ class Schedule extends Component {
                                 disabledHours={() => {
                                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                                 }}
-                                disabledMinutes={() => {
-                                    return generateOptions(60, (m) => {
-                                        return m % 30 !== 0
-                                    });
-                                }}
+                                // disabledMinutes={() => {
+                                //     return generateOptions(60, (m) => {
+                                //         return m % 30 !== 0
+                                //     });
+                                // }}
                                 onChange={(date) => { this.handleTime('endTime',date) }}
                             />
                             {showTimezone && <Select
