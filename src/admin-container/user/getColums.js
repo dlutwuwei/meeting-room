@@ -101,7 +101,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                 },
                 {
                     title: '权限',
-                    dataIndex: 'actions',
+                    dataIndex: 'actionNames',
                 },
                 {
                     title: '操作',
