@@ -11597,10 +11597,13 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .monitor .room-list-body {
   padding: 5px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .monitor .room-list-body span {
-  display: inline-block;
   width: 100px;
   height: 48px;
   line-height: 48px;

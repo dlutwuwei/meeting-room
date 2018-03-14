@@ -12897,6 +12897,8 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .schedule-contianer .schedule-left .attendees {
   text-align: left;
+  padding-top: 26px;
+  overflow: hidden;
 }
 
 .schedule-contianer .schedule-left .attendees .select-all {
