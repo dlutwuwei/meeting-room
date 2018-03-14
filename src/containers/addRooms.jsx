@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Checkbox, Table, TimePicker, Icon, Button } from 'antd';
+import { Modal, DatePicker, Checkbox, Table, TimePicker, Icon, Button, Input } from 'antd';
 import Select from 'components/select';
 import moment from 'moment';
 import fetch from 'lib/fetch';
@@ -58,6 +58,11 @@ class AddRooms extends Component {
             dataIndex: 'capacity',
             key: 'capacity',
         }, {
+            title: 'Floor',
+            dataIndex: 'floor',
+            key: 'floor',
+        },
+        {
             title: 'Phone',
             dataIndex: 'hasPhone',
             key: 'phone',
@@ -238,6 +243,14 @@ class AddRooms extends Component {
                     >
                         {peopleOptions}
                     </Select>
+                </div>
+                <div className="room-item">
+                    <label htmlFor="" className="room-title">楼层:</label>
+                    <Input
+                        style={{ width: 60 }}
+                        defaultValue={''}
+                        onChange={(e) => this.handleChange('floor', e.target.value)}
+                    />
                 </div>
                 <div className="room-item">
                     <label htmlFor="" className="room-title">Equipment:</label>
