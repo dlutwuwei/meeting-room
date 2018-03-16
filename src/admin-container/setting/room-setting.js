@@ -83,6 +83,8 @@ class RoomSettings extends Component {
                 this.setState({
                     imageUrl1: r.data.bgForFree,
                     imageUrl2: r.data.bgForBusy,
+                    selectFree: r.data.isDefaultBgForFree,
+                    selectBusy: r.data.isDefaultBgForBusy,
                     responseMsg: r.data.responseMessage,
                     loading: false
                 });
@@ -139,13 +141,13 @@ class RoomSettings extends Component {
     handleFreeChange = (e) => {
         this.setState({
             selectFree: e.target.value,
-            imageUrl1: e.target.value ? '' : this.state.imageUrl1
+            // imageUrl1: e.target.value ? '' : this.state.imageUrl1
         });
     }
     handleBusyChange = (e) => {
         this.setState({
             selectBusy: e.target.value,
-            imageUrl2: e.target.value ? '' : this.state.imageUrl1
+            // imageUrl2: e.target.value ? '' : this.state.imageUrl1
         });
     }
     handleAreaChange = (e) => {
