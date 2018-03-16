@@ -124,12 +124,12 @@ export default (type, onCreated) => {
                             wrapperCol={{ span: 15 }}
                             label="角色"
                         >
-                            {form.getFieldDecorator('role', {
+                            {form.getFieldDecorator('roleId', {
                                 rules: [{ required: true, message: '请选择角色' }],
-                                initialValue: values.role
+                                initialValue: values.roleId
                             })(
                                 <Select style={{ width: 130 }} placeholder="请选择角色" >
-                                    {roles.map(item => <Option key={item.id}>{item.name}</Option>)}
+                                    {roles.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                                 </Select>
                             )}
                         </FormItem>
@@ -140,10 +140,10 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('areaId', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: values.areaId
+                                initialValue: '' + values.areaId
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
-                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                    { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
                         </FormItem>
@@ -221,7 +221,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('roleType', {
                                 rules: [{ required: true, message: '"请选择类型' }],
-                                initialValue: values.roleType
+                                initialValue: '' + values.roleType
                             })(
                                 <Select placeholder="请选择类型" style={{width: '100%'}}>
                                     <Option value="1">超级管理员</Option>
