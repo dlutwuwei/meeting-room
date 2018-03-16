@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import '../style/meeting-nav.less';
-import { toggleTimezone } from '../redux/home-redux';
+import { toggleTimezone, changeProp } from '../redux/home-redux';
 
 import Select from 'components/select';
 import Recurrence from './recurrence';
@@ -89,6 +89,8 @@ class Nav extends Component {
                         <Recurrence
                             visible={showRecurrence}
                             onClose={() => this.setState({ showRecurrence: false})}
+                            data={this.props.data}
+                            changeProp={this.props.actions.changeProp}
                         />
                         <div className="nav-item recurrence" onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
                         <div className="nav-item time-zone" onClick={() => {
@@ -117,13 +119,15 @@ Nav.defaultProps = {
     onChange: () => {}
 };
 
-const mapStateToProps = () => ({
+const mapStateToProps = (state) => ({
+    data: state.appointmentReducer
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-        toggleTimezone
+        toggleTimezone,
+        changeProp
     }, dispatch)
   };
 }

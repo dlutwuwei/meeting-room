@@ -25,7 +25,15 @@ for (let i = 0; i < zones.length; i++) {
 const durationOptions = new Array(12).fill('').map((item, i) => {
     return <Option key={i} value={i+1}>{(i+1)/2} hours</Option>
 });
-const eqOptions = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+const eqOptions = [
+    { label: '星期一', value: 1 },
+    { label: '星期二', value: 2 },
+    { label: '星期三', value: 3 },
+    { label: '星期四', value: 4 },
+    { label: '星期五', value: 5 },
+    { label: '星期六', value: 6 },
+    { label: '星期日', value: 0 },
+];
 
 function onChange() {
     
@@ -39,11 +47,32 @@ class Recurrence extends Component {
         list: [],
         openKeys: [],
         startTime: moment().hours(9).minutes(0),
-        endTime: moment().hours(9).minutes(30),
+        endTime:  moment().hours(9).minutes(30),
         recurrence_pattern: 1,
         recurrence: [],
         duration: 1,
-        timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}')
+        timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}'),
+        everyDays: 1,
+        everyWeekDay: false,
+        everyMonths: 0,
+        dayOfMonth: 0,
+        weekOfMonth: 0,
+        dayOfWeek: 0,
+        everyYear: 0,
+        month: 0,
+        everyWeeks: 0,
+        daysOfTheWeek: 0
+    }
+    componentWillReceiveProps(props) {
+        this.setState({
+            visible: props.visible
+        });
+        if(props.visible) {
+            this.setState({
+                startTime: props.data.startTime,
+                endTime: props.data.endTime
+            });
+        }
     }
     search(startTime, endTime, equipment, capacity) {
         fetch.get('/api/meetingRoom/getList', {
@@ -61,11 +90,6 @@ class Recurrence extends Component {
     componentDidMount() {
         this.search();
     }
-    componentWillReceiveProps (nextProps) {
-        this.setState({
-            visible: nextProps.visible
-        });
-    }
     closeModal() {
         this.setState({
             visible: false
@@ -81,6 +105,9 @@ class Recurrence extends Component {
         this.setState({
             duration: val,
             endTime: this.state.startTime.clone().add(val*30, 'minutes')
+        }, () => {
+            // this.props.changeProp('startTime', this.state.startTime);
+            // this.props.changeProp('endTime', this.state.endTime);
         });
     }
     handleTime = (type, time) => {
@@ -88,11 +115,13 @@ class Recurrence extends Component {
             this.setState({
                 startTime: time
             });
+            // this.props.changeProp('startTime', time);
         } else if(type === 'endTime') {
             this.setState({
                 endTime: time,
                 duration: time.diff(this.state.startTime, 'minutes')/30
             });
+            // this.props.changeProp('endTime', time);
         }
     }
     onPatternChange = (e) => {
@@ -105,16 +134,32 @@ class Recurrence extends Component {
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
-                    <RadioGroup>
-                        <Radio value={1}>Every <Input /> day(s)</Radio>
+                    <RadioGroup  defaultValue={1} onChange={e => {
+                        this.setState({
+                            everyWeekDay: e.target.value == 2
+                        });
+                    }}>
+                        <Radio value={1}>Every <Input defaultValue={1} onChange={(e) => {
+                            this.setState({
+                                everyDays: e.target.value
+                            });
+                        }}/> day(s)</Radio>
                         <Radio value={2}>Every work day</Radio>
                     </RadioGroup>
                 );
                 break;
             case 2:
                 pattern = (<div>
-                    Recurrent every <Input /> week(s) on:
-                    <CheckboxGroup options={eqOptions} defaultValue={['Apple']} onChange={onChange} />
+                    Recurrent every <Input defaultValue={1} onChange={(e) => {
+                        this.setState({
+                            everyWeeks: e.target.value
+                        });
+                    }}/> week(s) on:
+                    <CheckboxGroup options={eqOptions} defaultValue={[1]} onChange={(value) => {
+                        this.setState({
+                            daysOfTheWeek: value
+                        })
+                    }} />
                 </div>);
                 break;
             case 3:
@@ -134,6 +179,105 @@ class Recurrence extends Component {
                 break;
         }
         return pattern;
+    }
+    handleSubmit = () => {
+        const { startTime, endTime } = this.props.data;
+
+        const {
+            everyDays,
+            everyWeekDay,
+
+            everyWeeks,
+            daysOfTheWeek,
+
+            everyMonths,
+            dayOfMonth,
+            weekOfMonth,
+            dayOfWeek,
+            everyYear,
+            month,
+            
+            recurrence_pattern
+        } = this.state;
+
+        let recurrent_parma = {};
+        switch(recurrence_pattern) {
+            case 1:
+                recurrent_parma = {
+                    daily: {
+                        everyDays,
+                        everyWeekDay
+                    }
+                }
+                break;
+            case 2:
+                recurrent_parma = {
+                    weekly: {
+                        everyWeeks,
+                        daysOfTheWeek
+                    }
+                }
+                break;
+            case 3:
+                recurrent_parma = {
+                    monthly: {
+                        everyMonths,
+                        dayOfMonth,
+                        weekOfMonth,
+                        dayOfWeek,
+                    }
+                };
+                break;
+            case 4:
+                recurrent_parma = {
+                    yearly: {
+                        everyYear,
+                        month,
+                        dayOfMonth,
+                        weekOfMonth,
+                        dayOfWeek,
+                    }
+                }
+                break
+        }
+        fetch.post('/api/meeting/add?token='+ localStorage.getItem('__meeting_token'), {
+            startTime: startTime.format('HH:mm'),
+            endTime: endTime.format('HH:mm'),
+            startDate: startTime.format('YYYY-MM-DD'),
+            endDate: endTime.format('YYYY-MM-DD'),
+            numberOfOccurrences: 1,
+            length: 3,
+            timeZone: 8,
+            ...recurrent_parma
+            // daily: {
+            //     everyDays: 2,
+            //     everyWeekDay: false
+            // },
+            // weekly: {
+            //     everyWeeks: false,
+            //     daysOfTheWeek: []
+            // },
+            // monthly: {
+            //     everyMonths: 1,
+            //     dayOfMonth:	1,
+            //     weekOfMonth: 1,
+            //     dayOfWeek: 0,
+            //     isLunarCalendar: false,
+            // },
+            // yearly: {
+            //     everyYear: 1,
+            //     month: 1,
+            //     dayOfMonth: 1,
+            //     weekOfMonth: 2,
+            //     dayOfWeek: 1,
+            //     isLunarCalendar: false
+            // }
+
+        }).then(r => {
+            this.setState({
+                list: r.data.list
+            });
+        });
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
@@ -243,8 +387,8 @@ class Recurrence extends Component {
                             <DatePicker
                                 format="YYYY-MM-DD"
                                 placeholder="Select Date"
-                                onChange={() => {}}
-                                onOk={() => {}}
+                                value={startTime.zone(offsetUTC)}
+                                onChange={this.handleTime.bind(this, 'startTime')}
                                 className="my-date-picker"
                             />
                         </div>
@@ -266,7 +410,7 @@ class Recurrence extends Component {
                     </div>
                 </Card>
                 <div className="rcu-item rcu-select">
-                    <Button type="primary" size="large" style={{width: 100}}>OK</Button>
+                    <Button type="primary" size="large" style={{width: 100}} onClick={this.handleSubmit}>OK</Button>
                     <Button type="info" size="large" style={{width: 100}}>Cancel</Button>
                     <Button type="default" size="large">Remove Recurrence</Button>
                 </div>
@@ -277,6 +421,7 @@ class Recurrence extends Component {
 
 Recurrence.propTypes = {
     visible: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    changeProp: PropTypes.func.isRequired
 }
 export default Recurrence;
