@@ -96,6 +96,7 @@ class Appointment extends Component {
     setTimeout(() => {
       this.setValues(this.props);
     }, 0);
+    localStorage.setItem('__meeting_recurrenceJson', '');
   }
 
   openRooms() {
@@ -125,6 +126,10 @@ class Appointment extends Component {
         if(this.props.isEdit) {
           data.id = this.props.editId;
         }
+        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
+        if(recurrenceJson) {
+          data.recurrenceJson = recurrenceJson;
+        }
         const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
         fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
           message.success('预定成功');
@@ -134,6 +139,7 @@ class Appointment extends Component {
           this.setState({
             loading: false
           });
+          localStorage.setItem('__meeting_recurrenceJson', '');
         }).catch(() => {
           message.error('预定失败');
           this.setState({

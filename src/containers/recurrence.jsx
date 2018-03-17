@@ -77,7 +77,7 @@ class Recurrence extends Component {
         openKeys: [],
         startTime: moment().hours(9).minutes(0),
         endTime:  moment().hours(9).minutes(30),
-        recurrence_pattern: 1,
+        recurrence_pattern: 0,
         recurrence: [],
         duration: 1,
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}'),
@@ -331,31 +331,23 @@ class Recurrence extends Component {
                 }
                 break
         }
-        fetch.post('/api/meeting/add?token='+ localStorage.getItem('__meeting_token'), {
-            ...this.props.data,
-            isRecurence: true,
-            recurrenceJson: JSON.stringify({
-                startTime: startTime.format('HH:mm'),
-                endTime: endTime.format('HH:mm'),
-                startDate: startTime.format('YYYY-MM-DD'),
-                endDate: endTime.format('YYYY-MM-DD'),
-                length: duration*60,
-                timeZone,
-                ...recurrent_parma
-            })
-
-        }).then(r => {
-            this.setState({
-                list: r.data.list
-            }, () => {
-                location.href = '/home/mymeeting';
-            });
-        }).catch(() => {
-            message.error('Recurrence failed')
+        const recurrenceJson = JSON.stringify({
+            startTime: startTime.format('HH:mm'),
+            endTime: endTime.format('HH:mm'),
+            startDate: startTime.format('YYYY-MM-DD'),
+            endDate: endTime.format('YYYY-MM-DD'),
+            length: duration*60,
+            timeZone,
+            ...recurrent_parma
+        });
+        // 保存信息
+        localStorage.setItem('__meeting_recurrenceJson', recurrenceJson);
+        this.setState({
+            visible: false
         });
     }
     handleCancel = () => {
-        
+
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;

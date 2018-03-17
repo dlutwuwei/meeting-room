@@ -211,6 +211,10 @@ class Schedule extends Component {
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_important') || 1;
+        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
+        if(recurrenceJson) {
+          data.recurrenceJson = recurrenceJson;
+        }
         localStorage.setItem('__appointment_data', JSON.stringify(data));
         if (!data.receiver || !data.roomMails) {
             Modal.error({
@@ -240,6 +244,8 @@ class Schedule extends Component {
             this.setState({
                 loading: false
             });
+            // 成功后清除预定数据
+            localStorage.setItem('__meeting_recurrenceJson', '')
             setTimeout(() => {
                 location.href = '/home/mymeeting';
             });
