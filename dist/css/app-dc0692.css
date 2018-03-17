@@ -11601,6 +11601,9 @@ textarea.ant-pagination-options-quick-jumper input {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-wrap: wrap;
+      -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
 }
 
 .monitor .room-list-body span {
@@ -11610,6 +11613,9 @@ textarea.ant-pagination-options-quick-jumper input {
   text-align: center;
   margin: 10px 10px 10px 0;
   background: #f0f3f6;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
 }.admin-container .ant-layout-sider-collapsed .logo {
   background-image: none!important;
 }
