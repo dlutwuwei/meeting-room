@@ -325,11 +325,24 @@ export default (type, onCreated) => {
                                 rules: [{ required: true, message: '请输入类型' }],
                                 initialValue: values.roomType
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入类型" >
+                                <Select style={{ width: 120 }} placeholder="请输入类型">
                                     { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
                                 </Select>
                             )}
                         </FormItem>
+                        {values.roomType === 2 && <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="预留给"
+                        >
+                            {form.getFieldDecorator('onlyForUsers', {
+                                rules: [{ required: false, message: '请输入类型' }],
+                                initialValue: []
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入类型" >
+                                </Select>
+                            )}
+                        </FormItem>}
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
