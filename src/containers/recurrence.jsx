@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card } from 'antd';
+import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card, message } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -26,18 +26,47 @@ const durationOptions = new Array(12).fill('').map((item, i) => {
     return <Option key={i} value={i+1}>{(i+1)/2} hours</Option>
 });
 const eqOptions = [
-    { label: '星期一', value: 1 },
-    { label: '星期二', value: 2 },
-    { label: '星期三', value: 3 },
-    { label: '星期四', value: 4 },
-    { label: '星期五', value: 5 },
-    { label: '星期六', value: 6 },
-    { label: '星期日', value: 0 },
+    { label: 'Monday', value: 1 },
+    { label: 'Tuesday', value: 2 },
+    { label: 'Wednesday', value: 3 },
+    { label: 'Thursday', value: 4 },
+    { label: 'Friday', value: 5 },
+    { label: 'Saturday', value: 6 },
+    { label: 'Sunday', value: 0 },
 ];
 
-function onChange() {
-    
-}
+const weekOfMonth = [
+    <Option key={1} value={1}>first</Option>,
+    <Option key={2} value={2}>second</Option>,
+    <Option key={3} value={3}>third</Option>,
+    <Option key={4} value={4}>fourth</Option>,
+    <Option key={5} value={5}>fifth</Option>
+];
+
+const dayOfWeek = [
+    <Option key={1} value={1}>Monday</Option>,
+    <Option key={2} value={2}>Tuesday</Option>,
+    <Option key={3} value={3}>Wednesday</Option>,
+    <Option key={4} value={4}>Thursday</Option>,
+    <Option key={5} value={5}>Friday</Option>,
+    <Option key={6} value={6}>Saturday</Option>,
+    <Option key={0} value={0}>Sunday</Option>
+]
+const momentOfYear = [
+    <Option key={1} value={1}>January</Option>,
+    <Option key={2} value={2}>February</Option>,
+    <Option key={3} value={3}>March</Option>,
+    <Option key={4} value={4}>April</Option>,
+    <Option key={5} value={5}>May</Option>,
+    <Option key={6} value={6}>June</Option>,
+    <Option key={7} value={7}>July</Option>,
+    <Option key={8} value={8}>August</Option>,
+    <Option key={9} value={9}>September</Option>,
+    <Option key={10} value={10}>October</Option>,
+    <Option key={11} value={11}>November</Option>,
+    <Option key={12} value={12}>December</Option>
+];
+
 class Recurrence extends Component {
     constructor(props) {
         super(props);
@@ -61,7 +90,10 @@ class Recurrence extends Component {
         everyYear: 0,
         month: 0,
         everyWeeks: 0,
-        daysOfTheWeek: 0
+        daysOfTheWeek: 0,
+        yearType: 0, // 年循环选择星期还是日期，1 or 2
+        monthType: 0, // 月循环选择星期还是日期，1 or 2
+        noEnd: false // 是否无线循环
     }
     componentWillReceiveProps(props) {
         this.setState({
@@ -100,6 +132,7 @@ class Recurrence extends Component {
         this.setState({
             timezone: val
         });
+        localStorage.setItem('__meeting_timezone', JSON.stringify(val));
     }
     handleDuration = (val) => {
         this.setState({
@@ -163,17 +196,61 @@ class Recurrence extends Component {
                 </div>);
                 break;
             case 3:
-                pattern = (<RadioGroup>
-                    <Radio value={1}>Day <Input /> of every <Input /> month(s)</Radio>
-                    <Radio value={2}>The <Select /> <Select /> of every <Input /> month(s)</Radio>
+                pattern = (<RadioGroup onChange={(val) => {
+                    this.setState({
+                        monthType: val
+                    });
+                }}>
+                    <Radio value={1}>Day <Input onChange={(e) => {
+                        this.setState({
+                            dayOfMonth: e.target.value
+                        });
+                    }}/> of every <Input onChnage={(e) => {
+                        this.setState({
+                            dayOfMonth: e.target.value
+                        });
+                    }}/> month(s)</Radio>
+                    <Radio value={2}>The <Select style={{width: 100, height: 30}} onChange={(val) => {
+                        this.setState({
+                            weekOfMonth: val
+                        });
+                    }}>{weekOfMonth}</Select> <Select style={{width: 100, height: 30}}>{dayOfWeek}</Select>of every <Input /> month(s)</Radio>
                 </RadioGroup>);
                 break;
             case 4:
                 pattern = (<div>
-                    <div style={{marginBottom: 6}}>重复间隔为<Input />年</div>
-                    <RadioGroup>
-                        <Radio value={1}>时间: <Select /> <Input />日</Radio>
-                        <Radio value={2}>The <Select />的<Select /> <Select /></Radio>
+                    <div style={{marginBottom: 6}}>重复间隔为<Input onChange={(e) => {
+                        this.setState({
+                            everyYear: e.target.value
+                        });
+                    }}/>年</div>
+                    <RadioGroup onChange={(val) => {
+                        this.setState({
+                            yearType: val
+                        });
+                    }}>
+                        <Radio value={1}>时间: <Select style={{width: 110}} onChange={(val) => {
+                            this.setState({
+                                month: val
+                            });
+                        }}>{momentOfYear}</Select> <Input onChange={(e) => {
+                            this.setState({
+                                dayOfMonth: e.target.value
+                            });
+                        }}/>日</Radio>
+                        <Radio value={2}>The <Select style={{width: 90}} onChange={(val) => {
+                            this.setState({
+                                month: val
+                            });
+                        }}>{momentOfYear}</Select>的<Select style={{width: 110}} onChange={(val) => {
+                            this.setState({
+                                weekOfMonth: val
+                            });
+                        }}>{weekOfMonth}</Select> <Select style={{width: 120}} onChange={(val) => {
+                            this.setState({
+                                dayOfWeek: val
+                            });
+                        }}>{dayOfWeek}</Select></Radio>
                     </RadioGroup>
                 </div>);
                 break;
@@ -196,11 +273,23 @@ class Recurrence extends Component {
             dayOfWeek,
             everyYear,
             month,
-            
-            recurrence_pattern
+            monthType,
+            yearType,
+            endType,
+            numberOfOccurrences,
+            recurrence_pattern,
+            timeZone,
+            duration
         } = this.state;
 
         let recurrent_parma = {};
+        if(endType === 1) {
+            recurrent_parma.endDate = null;
+        } else if(endType === 2) {
+            recurrent_parma.numberOfOccurrences = numberOfOccurrences;
+        } else {
+            recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
+        }
         switch(recurrence_pattern) {
             case 1:
                 recurrent_parma = {
@@ -220,9 +309,10 @@ class Recurrence extends Component {
                 break;
             case 3:
                 recurrent_parma = {
-                    monthly: {
+                    monthly: monthType === 1 ? {
                         everyMonths,
-                        dayOfMonth,
+                        dayOfMonth
+                    } : {
                         weekOfMonth,
                         dayOfWeek,
                     }
@@ -230,10 +320,11 @@ class Recurrence extends Component {
                 break;
             case 4:
                 recurrent_parma = {
-                    yearly: {
+                    yearly: yearType === 1 ? {
                         everyYear,
+                        month
+                    } : {
                         month,
-                        dayOfMonth,
                         weekOfMonth,
                         dayOfWeek,
                     }
@@ -241,43 +332,30 @@ class Recurrence extends Component {
                 break
         }
         fetch.post('/api/meeting/add?token='+ localStorage.getItem('__meeting_token'), {
-            startTime: startTime.format('HH:mm'),
-            endTime: endTime.format('HH:mm'),
-            startDate: startTime.format('YYYY-MM-DD'),
-            endDate: endTime.format('YYYY-MM-DD'),
-            numberOfOccurrences: 1,
-            length: 3,
-            timeZone: 8,
-            ...recurrent_parma
-            // daily: {
-            //     everyDays: 2,
-            //     everyWeekDay: false
-            // },
-            // weekly: {
-            //     everyWeeks: false,
-            //     daysOfTheWeek: []
-            // },
-            // monthly: {
-            //     everyMonths: 1,
-            //     dayOfMonth:	1,
-            //     weekOfMonth: 1,
-            //     dayOfWeek: 0,
-            //     isLunarCalendar: false,
-            // },
-            // yearly: {
-            //     everyYear: 1,
-            //     month: 1,
-            //     dayOfMonth: 1,
-            //     weekOfMonth: 2,
-            //     dayOfWeek: 1,
-            //     isLunarCalendar: false
-            // }
+            ...this.props.data,
+            isRecurence: true,
+            recurrenceJson: JSON.stringify({
+                startTime: startTime.format('HH:mm'),
+                endTime: endTime.format('HH:mm'),
+                startDate: startTime.format('YYYY-MM-DD'),
+                endDate: endTime.format('YYYY-MM-DD'),
+                length: duration*60,
+                timeZone,
+                ...recurrent_parma
+            })
 
         }).then(r => {
             this.setState({
                 list: r.data.list
+            }, () => {
+                location.href = '/home/mymeeting';
             });
+        }).catch(() => {
+            message.error('Recurrence failed')
         });
+    }
+    handleCancel = () => {
+        
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
@@ -393,15 +471,22 @@ class Recurrence extends Component {
                             />
                         </div>
                         <div className="section-right">
-                            <RadioGroup className="my-radio-group">
+                            <RadioGroup className="my-radio-group" onChange={(val) => {
+                                this.setState({
+                                    endType: val
+                                });
+                            }}>
                                 <Radio value={1}>No end date</Radio>
-                                <Radio value={2}>End after: <Input/> occurrences</Radio>
+                                <Radio value={2}>End after: <Input  onChange={(val) => {
+                                    this.setState({
+                                        numberOfOccurrences: val
+                                    });
+                                }}/> occurrences</Radio>
                                 <Radio value={3}>End by:
                                     <DatePicker
                                         format="YYYY-MM-DD"
                                         placeholder="Select Date"
-                                        onChange={() => {}}
-                                        onOk={() => {}}
+                                        onChange={this.handleTime.bind(this, 'endTime')}
                                         className="my-date-picker"
                                     />
                                 </Radio>
@@ -411,8 +496,8 @@ class Recurrence extends Component {
                 </Card>
                 <div className="rcu-item rcu-select">
                     <Button type="primary" size="large" style={{width: 100}} onClick={this.handleSubmit}>OK</Button>
-                    <Button type="info" size="large" style={{width: 100}}>Cancel</Button>
-                    <Button type="default" size="large">Remove Recurrence</Button>
+                    <Button type="info" size="large" style={{width: 100}} onClick={() => { this.closeModal()}}>Cancel</Button>
+                    <Button type="default" size="large" onClick={this.handleCancel}>Remove Recurrence</Button>
                 </div>
             </Modal>
         )
