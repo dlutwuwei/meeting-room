@@ -126,10 +126,10 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('roleId', {
                                 rules: [{ required: true, message: '请选择角色' }],
-                                initialValue: values.roleId
+                                initialValue: '' + values.roleId
                             })(
                                 <Select style={{ width: 130 }} placeholder="请选择角色" >
-                                    {roles.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
+                                    {roles.map(item => <Option key={item.id} value={'' + item.id}>{item.name}</Option>)}
                                 </Select>
                             )}
                         </FormItem>
@@ -168,7 +168,8 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('isEnable', {
                                 rules: [{ required: true, message: '请输入是否启用' }],
-                                initialValue: values.isEnable
+                                initialValue: values.isEnable,
+                                valuePropName: 'checked'
                             })(
                                 <Checkbox></Checkbox>
                             )}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card, message } from 'antd';
+import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
