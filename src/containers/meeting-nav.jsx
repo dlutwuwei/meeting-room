@@ -33,7 +33,7 @@ class Nav extends Component {
     handleImportant = (type) => {
         if(type == this.state.important) {
             this.setState({
-                important: 2
+                important: 1
             });
         } else {
             this.setState({

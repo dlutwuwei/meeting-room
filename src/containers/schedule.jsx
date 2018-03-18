@@ -214,6 +214,9 @@ class Schedule extends Component {
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;
+          data.isReccurent = true;
+        } else {
+            data.isReccurent = false;
         }
         localStorage.setItem('__appointment_data', JSON.stringify(data));
         if (!data.receiver || !data.roomMails) {

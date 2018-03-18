@@ -129,6 +129,9 @@ class Appointment extends Component {
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;
+          data.isReccurent = true;
+        } else {
+          data.isReccurent = false;
         }
         const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
         fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {

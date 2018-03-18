@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card } from 'antd';
+import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card, message } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -347,7 +347,8 @@ class Recurrence extends Component {
         });
     }
     handleCancel = () => {
-
+        localStorage.setItem('__meeting_recurrenceJson', '');
+        message.info('Remove recurrence success');
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
