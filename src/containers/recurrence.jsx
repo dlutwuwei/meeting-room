@@ -101,8 +101,8 @@ class Recurrence extends Component {
         });
         if(props.visible) {
             this.setState({
-                startTime: props.data.startTime,
-                endTime: props.data.endTime
+                startTime: moment(props.data.startTime*1000),
+                endTime: moment(props.data.endTime*1000)
             });
         }
     }
@@ -349,6 +349,7 @@ class Recurrence extends Component {
     handleCancel = () => {
         localStorage.setItem('__meeting_recurrenceJson', '');
         message.info('Remove recurrence success');
+        this.closeModal();
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;

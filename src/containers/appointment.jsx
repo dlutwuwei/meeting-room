@@ -13,6 +13,7 @@ import Timezone from '../constant/timezone';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import AddAttendees from './addAttendees';
+import Recurrence from './recurrence';
 
 import {
   changeProp
@@ -82,8 +83,10 @@ for (let i = 0; i < zones.length; i++) {
 */
 class Appointment extends Component {
   state = {
+    data: {},
     showAddRooms: false,
     showAddAttendees: false,
+    showRecurrence: false,
     fetching: false,
     attendees: '',
     dataSource: [],
@@ -257,10 +260,26 @@ class Appointment extends Component {
       receivers: list.map(item => item.mail),
     });
   }
+  handleRecurrence = () => {
+    fetch.get(`/api/meeting/getItem?`, {
+      token: localStorage.getItem('__meeting_token') || '',
+      id: this.props.editId
+    }).then(r => {
+      this.setState({
+        data: r.data
+      }, () => {
+        this.setState({
+          showRecurrence: true
+        });
+      });
+    }).catch(() => {
+      message.error('获取会议预定信息失败')
+    })
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone } = this.props;
-    const { showAddRooms, showAddAttendees, dataSource, fetching, timezone } = this.state;
+    const { showTimezone, isEdit } = this.props;
+    const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
 
     return (
       <Spin spinning={this.state.loading}>
@@ -269,6 +288,7 @@ class Appointment extends Component {
             <div className="send-btn" onClick={e => {
               this.handleSubmit(e)
             }}>Send</div>
+            {isEdit && <Button style={{marginTop: 20}} onClick={this.handleRecurrence}>Recurrence</Button>}
           </div>
           <div className="appoint-main">
             <AddAttendees
@@ -458,6 +478,12 @@ class Appointment extends Component {
             </Form>
           </div>
         </div>
+        <Recurrence
+            visible={showRecurrence}
+            onClose={() => this.setState({ showRecurrence: false})}
+            data={this.state.data}
+            changeProp={this.props.actions.changeProp}
+        />
       </Spin>
     )
   }
