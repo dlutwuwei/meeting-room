@@ -28,7 +28,7 @@ class Room extends Component {
         });
     }
     handelDeselect = (val) => {
-        let userList = this.props.receivers;
+        let userList = this.props.form.getFieldValue('onlyForUsers');
         const index = userList.findIndex(item => item.mail === val);
         userList = userList.slice();
         userList.splice(index, 1);
