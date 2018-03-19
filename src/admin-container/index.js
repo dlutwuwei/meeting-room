@@ -74,7 +74,6 @@ class Admin extends React.Component {
                 <Menu.Item key="4"><Link to="/admin/meeting/type">会议室类型</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub4" title={<span><Icon type="folder" /><span>培训室管理</span></span>}>
-                <Menu.Item key="15"><Link to="/admin/classroom/list">城市管理</Link></Menu.Item>
                 <Menu.Item key="16"><Link to="/admin/classroom/role">设备管理</Link></Menu.Item>
                 <Menu.Item key="17"><Link to="/admin/classroom/role">品牌管理</Link></Menu.Item>
                 <Menu.Item key="18"><Link to="/admin/classroom/role">部门管理</Link></Menu.Item>
@@ -82,7 +81,6 @@ class Admin extends React.Component {
                 <Menu.Item key="20"><Link to="/admin/classroom/role">培训室管理</Link></Menu.Item>
                 <Menu.Item key="21"><Link to="/admin/classroom/role">培训室预订</Link></Menu.Item>
                 <Menu.Item key="22"><Link to="/admin/classroom/role">节假日管理</Link></Menu.Item>
-                <Menu.Item key="23"><Link to="/admin/classroom/role">报表管理</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
                 <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>

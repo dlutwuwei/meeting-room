@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Form, Modal, Input, Button, message, Select, Checkbox } from 'antd';
 import fetch from 'lib/fetch';
+import RoomForm from './room-form';
+
 const Option = Select.Option;
 
 const FormItem = Form.Item;
@@ -210,6 +212,7 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             fieldsValue.areaId = values.areaId;
                         }
+                        fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
                         fieldsValue.devices.forEach(item => {
                             fieldsValue[item] = true
                         });
@@ -236,152 +239,7 @@ export default (type, onCreated) => {
                         cancelText="取消"
                         onCancel={() => handleModalVisible()}
                     >
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="会议室名称"
-                        >
-                            {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '请输入会议室名称' }],
-                                initialValue: values.name
-                            })(
-                                <Input placeholder="请输入会议室名称" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="邮箱"
-                        >
-                            {form.getFieldDecorator('mail', {
-                                rules: [{ required: true, message: '请输入邮箱' }],
-                                initialValue: values.mail
-                            })(
-                                <Input placeholder="请输入邮箱" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="所属区域"
-                        >
-                            {form.getFieldDecorator('areaId', {
-                                rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: values.areaId
-                            })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
-                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-                                </Select>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="设备"
-                        >
-                            {form.getFieldDecorator('devices', {
-                                rules: [{ required: true, message: '请输入设备' }],
-                                initialValue: devices
-                            })(
-                                <Select
-                                    mode="multiple"
-                                    style={{ width: '100%' }}
-                                    placeholder="请选择设备"
-                                >
-                                    {deviceChildren}
-                                </Select>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="楼层"
-                        >
-                            {form.getFieldDecorator('floor', {
-                                rules: [{ required: true, message: '请输入设备' }],
-                                initialValue: values.floor
-                            })(
-                                <Input placeholder="请输入设备" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="大小"
-                        >
-                            {form.getFieldDecorator('capacity', {
-                                rules: [{ required: true, message: '请输入容量' }],
-                                initialValue: values.capacity
-                            })(
-                                <Input placeholder="请输入容量" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="会议室类型"
-                        >
-                            {form.getFieldDecorator('roomType', {
-                                rules: [{ required: true, message: '请输入类型' }],
-                                initialValue: values.roomType
-                            })(
-                                <Select style={{ width: 120 }} placeholder="请输入类型">
-                                    { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
-                                </Select>
-                            )}
-                        </FormItem>
-                        {values.roomType === 2 && <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="预留给"
-                        >
-                            {form.getFieldDecorator('onlyForUsers', {
-                                rules: [{ required: false, message: '请输入类型' }],
-                                initialValue: []
-                            })(
-                                <Select style={{ width: 120 }} placeholder="请输入类型" >
-                                </Select>
-                            )}
-                        </FormItem>}
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="所属部门"
-                        >
-                            {form.getFieldDecorator('departmentId', {
-                                rules: [{ required: false, message: '请输入部门' }],
-                                initialValue: values.departmentId
-                            })(
-                                <Select style={{ width: 120 }} placeholder="请输入部门" >
-                                    { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-                                </Select>
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="设备码"
-                        >
-                            {form.getFieldDecorator('deviceCode', {
-                                rules: [{ required: true, message: '请输入设备码' }],
-                                initialValue: values.deviceCode
-                            })(
-                                <Input placeholder="请输入设备码" />
-                            )}
-                        </FormItem>
-                        <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="可预订"
-                        >
-                            {form.getFieldDecorator('isEnable', {
-                                rules: [{ required: true, message: '请输入' }],
-                                initialValue: values.isEnable,
-                                valuePropName: 'checked'
-                            })(
-                                <Checkbox></Checkbox>
-                            )}
-                        </FormItem>
+                        <RoomForm {...props} />
                     </CreateModal>
                 );
             });
