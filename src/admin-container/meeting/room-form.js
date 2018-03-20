@@ -177,7 +177,7 @@ class Room extends Component {
                     label="预留给"
                 >
                     {form.getFieldDecorator('onlyForUsers', {
-                        initialValue: [],
+                        initialValue: (values.onlyForUsers || '').split(','),
                         rules: [{
                             type: 'array',
                             required: false,
