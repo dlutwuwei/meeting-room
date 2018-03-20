@@ -103,7 +103,7 @@ class Schedule extends Component {
         const { data } = this.state;
         const { receivers, location } = this.props;
         const options = receivers.concat(location);
-        options.unshift(my);
+        // options.unshift(my);
         const users = receivers.slice();
         users.unshift(my);
         this.setState({
@@ -176,7 +176,7 @@ class Schedule extends Component {
         const newOptions = options;
         this.setState({
             options: newOptions,
-            checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
+            // checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
             checkAll: true,
             // data: this.state.data.concat(options.map(() => ([])))
         }, () => {
@@ -326,7 +326,8 @@ class Schedule extends Component {
                                     </Checkbox>
                                 </div>
                                 <CheckboxGroup
-                                    options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
+                                    // options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
+                                    options={this.state.options.map(item => ({ label: item.name, value: item.mail }))}
                                     value={checkedList}
                                     onChange={this.onChange.bind(this)}
                                 />
@@ -435,6 +436,7 @@ class Schedule extends Component {
                                 visible={showAddRooms}
                                 onClose={() => this.setState({ showAddRooms: false })}
                                 onSelect={this.onSelectRoom.bind(this)}
+                                onlyone={false}
                             />
                             <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({ showAddRooms: true }) }}>Add Rooms</Button>
                             <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>End Time</div>

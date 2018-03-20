@@ -101,6 +101,7 @@ class AddRooms extends Component {
             title: 'Action',
             key: 'action',
             render: (val, record) => {
+                const onlyone = this.props.onlyone;
                 return (<span>
                     <Checkbox
                         checked={!!record.selected}
@@ -108,7 +109,7 @@ class AddRooms extends Component {
                             this.state.list.forEach(item => {
                                 if(item.id == record.id) {
                                     item.selected = e.target.checked;
-                                } else {
+                                } else if(onlyone){
                                     item.selected = false;
                                 }
                             });
@@ -271,6 +272,10 @@ class AddRooms extends Component {
             </Modal>
         )
     }
+}
+
+AddRooms.defaultProps = {
+    onlyone: true
 }
 
 export default AddRooms;
