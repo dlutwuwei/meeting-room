@@ -254,7 +254,7 @@ class Schedule extends Component {
             });
         }).catch(() => {
             this.setState({
-                loading: true
+                loading: false
             });
             message.error('预定失败');
         });
