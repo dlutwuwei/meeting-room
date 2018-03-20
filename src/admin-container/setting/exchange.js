@@ -7,11 +7,11 @@ const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
-      sm: { span: 4 },
+      sm: { span: 6 },
     },
     wrapperCol: {
       xs: { span: 24 },
-      sm: { span: 16 },
+      sm: { span: 18 },
     },
   };
   const tailFormItemLayout = {
@@ -43,12 +43,6 @@ class Exchange extends Component {
             if (err) {
                 return;
             }
-            const { imageUrl1, imageUrl2 } = this.state;
-            fieldsValue.bgForFree = imageUrl1;
-            fieldsValue.bgForBusy = imageUrl2;
-            if(!this.state.responseMsg) {
-                fieldsValue.responseMessage = '';
-            }
             fetch.post('/api/systemSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
             }).then(() => {
@@ -65,18 +59,19 @@ class Exchange extends Component {
             <div>
                 <Breadcrumb separator=">">
                     <Breadcrumb.Item>系统设置</Breadcrumb.Item>
-                    <Breadcrumb.Item>exchange</Breadcrumb.Item>
+                    <Breadcrumb.Item>系统集成</Breadcrumb.Item>
                 </Breadcrumb>
-                <Form onSubmit={this.handleSubmit} className="login-form" style={{width: 500, marginTop: 30}}>
-                    <FormItem {...formItemLayout} label="协议地址">
-                        {getFieldDecorator('o365Address', {
+                <Form className="login-form" style={{width: 500, marginTop: 30}}>
+                    <FormItem {...formItemLayout} label="exchange协议">
+                        {getFieldDecorator('o365Protocol', {
+                            initialValue: '',
                             rules: [{ required: true, message: 'Please input protocol!' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label="IP">
-                        {getFieldDecorator('ip', {
+                    <FormItem {...formItemLayout} label="AD链接">
+                        {getFieldDecorator('o365Address', {
                             rules: [{ required: true, message: 'Please input server ip!' }],
                         })(
                             <Input />
@@ -98,14 +93,14 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label="描述">
                         {getFieldDecorator('description', {
-                            rules: [{ required: true, message: 'Please input your description!' }],
+                            rules: [{ required: false, message: 'Please input your description!' }],
                         })(
                             <Input />
                         )}
                     </FormItem>
                     <FormItem {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit" style={{marginRight: 10}}>链接</Button>
-                        <Button type="primary" htmlType="submit">保存</Button>
+                        {/*<Button type="primary" htmlType="submit" style={{marginRight: 10}}>链接</Button>*/}
+                        <Button type="primary" htmlType="button" onClick={this.handleSubmit}>保存</Button>
                     </FormItem>
                 </Form>
             </div>
