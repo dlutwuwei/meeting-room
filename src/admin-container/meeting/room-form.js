@@ -117,7 +117,7 @@ class Room extends Component {
                     label="设备"
                 >
                     {form.getFieldDecorator('devices', {
-                        rules: [{ required: true, message: '请输入设备' }],
+                        rules: [{ required: false, message: '请输入设备' }],
                         initialValue: devices
                     })(
                         <Select
@@ -218,7 +218,7 @@ class Room extends Component {
                     label="设备码"
                 >
                     {form.getFieldDecorator('deviceCode', {
-                        rules: [{ required: true, message: '请输入设备码' }],
+                        rules: [{ required: false, message: '请输入设备码' }],
                         initialValue: values.deviceCode
                     })(
                         <Input placeholder="请输入设备码" />
@@ -230,7 +230,7 @@ class Room extends Component {
                     label="可预订"
                 >
                     {form.getFieldDecorator('isEnable', {
-                        rules: [{ required: true, message: '请输入' }],
+                        rules: [{ required: false, message: '请输入' }],
                         initialValue: values.isEnable,
                         valuePropName: 'checked'
                     })(
