@@ -101,8 +101,8 @@ class Recurrence extends Component {
         });
         if(props.visible) {
             this.setState({
-                startTime: moment(props.data.startTime*1000),
-                endTime: moment(props.data.endTime*1000)
+                startTime: moment(props.data.startTime),
+                endTime: moment(props.data.endTime)
             });
         }
     }
