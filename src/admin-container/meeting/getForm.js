@@ -226,7 +226,7 @@ export default (type, onCreated) => {
                             onCreated();
                         }).catch(() => {
                             message.error(isEdit ? '修改失败' : '创建失败')
-                            handleModalVisible(false);
+                            // handleModalVisible(false);
                         });
                     });
                 };
