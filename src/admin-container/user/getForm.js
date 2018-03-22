@@ -63,6 +63,7 @@ export default (type, onCreated) => {
                             ...fieldsValue
                         }).then(() => {
                             handleModalVisible(false);
+                            onCreated();
                             after && after();
                         }).catch(() => {
                             handleModalVisible(false);
