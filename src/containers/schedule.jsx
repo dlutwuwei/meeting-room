@@ -103,7 +103,7 @@ class Schedule extends Component {
         const { data } = this.state;
         const { receivers, location } = this.props;
         const options = receivers.concat(location);
-        // options.unshift(my);
+        options.unshift(my);
         const users = receivers.slice();
         users.unshift(my);
         this.setState({
@@ -326,8 +326,8 @@ class Schedule extends Component {
                                     </Checkbox>
                                 </div>
                                 <CheckboxGroup
-                                    // options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
-                                    options={this.state.options.map(item => ({ label: item.name, value: item.mail }))}
+                                    options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
+                                    // options={this.state.options.map(item => ({ label: item.name, value: item.mail }))}
                                     value={checkedList}
                                     onChange={this.onChange.bind(this)}
                                 />
