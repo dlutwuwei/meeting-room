@@ -53,7 +53,8 @@ class Schedule extends Component {
         checkAll: false,
         checkedList: [],
         // 列表选型
-        options: [],
+        roomsOptions: [],
+        attendeesOptions: [],
         showAddRooms: false,
         showAddAttendees: false,
         date: moment().minutes(0),
@@ -69,9 +70,9 @@ class Schedule extends Component {
         this.search(moment(), []);
         const checkedList = [];
         const { receivers, location } = this.props;
-        receivers.concat(location).forEach(i => {
-            checkedList.push(i.mail);
-        });
+        // receivers.concat(location).forEach(i => {
+        //     checkedList.push(i.mail);
+        // });
         this.setState({
             checkedList,
             checkAll: true
@@ -102,7 +103,7 @@ class Schedule extends Component {
         };
         const { data } = this.state;
         const { receivers, location } = this.props;
-        const options = receivers.concat(location);
+        const options = this.state.attendeesOptions.concat(this.state.roomsOptions); //receivers.concat(location);
         options.unshift(my);
         const users = receivers.slice();
         users.unshift(my);
@@ -146,13 +147,15 @@ class Schedule extends Component {
             });
         });
     }
-    onChange(checkedList) {
-        const selects = this.state.checkedList.filter(item => checkedList.includes(item));
+    onAttendeeChange = () => {
+
+    }
+    onRoomChange = (checkedList) => {
+        // 去重
+        const selects = checkedList.filter(item => !this.state.checkedList.includes(item));
         if(selects.length > 0) {
             this.props.actions.changeProp('location', this.props.location
-                .filter(item => selects.includes(item.mail)));
-            this.props.actions.changeProp('receivers', this.props.receivers
-                .filter(item => selects.includes(item.mail)));
+                .concat(this.state.roomsOptions.filter(item => checkedList.includes(item.mail))));
         }
         this.setState({
             checkedList,
@@ -166,16 +169,16 @@ class Schedule extends Component {
             checkAll: e.target.checked,
         });
     }
-    addToList(data) {
+    addToList(data, type) {
         const options = data.map(item => ({
-            label: item.name,
-            value: item.mail
+            name: item.name,
+            mail: item.mail
         })).filter(item => {
-            return !this.state.checkedList.find(ele => ele === item.value);
+            return !this.state.checkedList.find(ele => ele === item.mail);
         });
         const newOptions = options;
         this.setState({
-            options: newOptions,
+            [ type === 'room' ? 'roomsOptions' : 'attendeesOptions' ]: newOptions,
             // checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
             checkAll: true,
             // data: this.state.data.concat(options.map(() => ([])))
@@ -188,14 +191,16 @@ class Schedule extends Component {
         this.setState({
             rooms
         });
-        this.props.actions.changeProp('location', rooms);
-        this.addToList(rooms);
+        this.props.actions.changeProp('location', rooms.filter(item => {
+            return this.state.checkedList.find(ele => ele === item.mail);
+        }));
+        this.addToList(rooms, 'room');
     }
     onSelectAttendee(attendees) {
         this.props.actions.changeProp('receivers', this.props.receivers
         .filter(item => !attendees.find(e => item.mail === e.mail))
         .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email'))));
-        this.addToList(attendees)
+        this.addToList(attendees, 'attendees')
     }
     handleSend = () => {
         const { startTime, endTime, subject, receivers, content, location } = this.props;
@@ -307,7 +312,7 @@ class Schedule extends Component {
     render() {
         const { data, checkedList, date, showAddRooms,
             showAddAttendees, left, right, top,
-            timezone } = this.state;
+            timezone, roomsOptions, attendeesOptions } = this.state;
         const { startTime, endTime, showTimezone, receivers, location } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
@@ -326,11 +331,25 @@ class Schedule extends Component {
                                     </Checkbox>
                                 </div>
                                 <CheckboxGroup
-                                    options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
-                                    // options={this.state.options.map(item => ({ label: item.name, value: item.mail }))}
+                                    className="list"
                                     value={checkedList}
-                                    onChange={this.onChange.bind(this)}
-                                />
+                                    onChange={this.onAttendeeChange.bind(this)}
+                                >
+                                    {attendeesOptions.map(item => (<Checkbox
+                                            disabled={item.mail === localStorage.getItem('__meeting_user_email')}
+                                            checked={true}
+                                            value={item.mail}
+                                        >{item.name}</Checkbox>))}
+                                </CheckboxGroup>
+                                <CheckboxGroup
+                                    className="list"
+                                    value={checkedList}
+                                    onChange={this.onRoomChange.bind(this)}
+                                >
+                                    {roomsOptions.map(item => (<Checkbox
+                                            value={item.mail}
+                                        >{item.name}</Checkbox>))}
+                                </CheckboxGroup>
                             </div>
                         </div>
                         <div className="schedule-content">
