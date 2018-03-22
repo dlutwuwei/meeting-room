@@ -212,7 +212,14 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             fieldsValue.areaId = values.areaId;
                         }
-                        fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
+                        if(fieldsValue.onlyForUsers) {
+                            fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
+                        }
+                        if(fieldsValue.isEnable) {
+                            fieldsValue.isEnable = true;
+                        } else {
+                            fieldsValue.isEnable = false;
+                        }
                         fieldsValue.devices.forEach(item => {
                             fieldsValue[item] = true
                         });
