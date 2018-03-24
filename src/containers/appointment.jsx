@@ -212,6 +212,8 @@ class Appointment extends Component {
       receivers: userList.map(item => item.mail)
     });
     this.props.actions.changeProp('receivers', userList);
+    this.props.actions.changeProp('receiverOptions', userList);
+    this.props.actions.changeProp('attendeesCheckedList', userList.map(item => item.mail));
   }
   handelDeselect = (val) => {
     let userList = this.props.receivers;
@@ -228,6 +230,8 @@ class Appointment extends Component {
       location: rooms
     });
     this.props.actions.changeProp('location', rooms);
+    this.props.actions.changeProp('locationOptions', this.props.locationOptions.concat(rooms));
+    this.props.actions.changeProp('roomsCheckedList', rooms.map(item => item.mail));
   }
   handleTime(type, time) {
     const offsetUTC = this.state.timezone.label.split(' ')[0];
@@ -251,10 +255,12 @@ class Appointment extends Component {
   onSelectAttendee = (attendees) => {
     // 注意去重
     const list = this.props.receivers
-    .filter(item => !this.props.receivers.find(e => item.value === e.value))
+    .filter(item => !attendees.find(e => item.value === e.value))
     .concat(attendees);
     // 发送给全局state
     this.props.actions.changeProp('receivers', list);
+    this.props.actions.changeProp('receiverOptions', list);
+    this.props.actions.changeProp('attendeesCheckedList', list.map(item => item.mail));
     // 发送给form
     this.props.form.setFieldsValue({
       receivers: list.map(item => item.mail),
