@@ -89,7 +89,7 @@ class Recurrence extends Component {
         dayOfWeek: 0,
         everyYear: 0,
         month: 0,
-        everyWeeks: 0,
+        everyWeeks: 1,
         daysOfTheWeek: 0,
         yearType: 0, // 年循环选择星期还是日期，1 or 2
         monthType: 0, // 月循环选择星期还是日期，1 or 2
@@ -164,15 +164,16 @@ class Recurrence extends Component {
     }
     renderPattern(recurrence_pattern) {
         let pattern;
+        const { everyDays, everyMonths, dayOfMonth, everyWeekDay, everyWeeks } = this.state;
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
-                    <RadioGroup  defaultValue={1} onChange={e => {
+                    <RadioGroup  value={everyWeekDay} onChange={e => {
                         this.setState({
                             everyWeekDay: e.target.value == 2
                         });
                     }}>
-                        <Radio value={1}>Every <Input defaultValue={1} onChange={(e) => {
+                        <Radio value={1}>Every <Input value={everyDays} onChange={(e) => {
                             this.setState({
                                 everyDays: e.target.value
                             });
@@ -183,12 +184,12 @@ class Recurrence extends Component {
                 break;
             case 2:
                 pattern = (<div>
-                    Recurrent every <Input defaultValue={1} onChange={(e) => {
+                    Recurrent every <Input value={everyWeeks} onChange={(e) => {
                         this.setState({
                             everyWeeks: e.target.value
                         });
                     }}/> week(s) on:
-                    <CheckboxGroup options={eqOptions} defaultValue={[1]} onChange={(value) => {
+                    <CheckboxGroup options={eqOptions} value={[1]} onChange={(value) => {
                         this.setState({
                             daysOfTheWeek: value
                         })
@@ -201,7 +202,7 @@ class Recurrence extends Component {
                         monthType: val
                     });
                 }}>
-                    <Radio value={1}>Day <Input onChange={(e) => {
+                    <Radio value={dayOfMonth}>Day <Input onChange={(e) => {
                         this.setState({
                             dayOfMonth: e.target.value
                         });

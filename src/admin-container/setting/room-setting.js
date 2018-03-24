@@ -255,7 +255,7 @@ class RoomSettings extends Component {
                             分钟
                         </FormItem>
                         <FormItem {...formItemLayout} label="是否可循环预定">
-                            {getFieldDecorator('isRecurrence', {
+                            {getFieldDecorator('isReccurent', {
                                 rules: [{ required: true, message: '请选择是否可循环预定' }],
                             })(
                                 <RadioGroup>

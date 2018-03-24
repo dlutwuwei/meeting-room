@@ -20,10 +20,10 @@ function getColumns(type, removeFromTable, showEditor) {
     }
     const roomTypes = JSON.parse(localStorage.getItem('__meeting_type'));
     switch (type) {
-        case 'department':
+        case 'division':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post(`/api/department/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    fetch.post(`/api/division/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
                     }).then(() => {
                         removeFromTable(index)
@@ -37,12 +37,16 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '部门名称',
+                    title: '品牌ID',
+                    dataIndex: 'brandId'
+                },
+                {
+                    title: '名称',
                     dataIndex: 'name',
                 },
                 {
                     title: '简码',
-                    dataIndex: 'shortCode',
+                    dataIndex: 'remark',
                 },
                 {
                     title: '操作',
@@ -58,10 +62,10 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
             ];
             break;
-        case 'area':
+        case 'device':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post(`/api/area/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    fetch.post(`/api/device/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
                     }).then(() => {
                         removeFromTable(index)
@@ -75,12 +79,12 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '区域名称',
+                    title: '名称',
                     dataIndex: 'name',
                 },
                 {
-                    title: '简码',
-                    dataIndex: 'shortCode',
+                    title: '描述',
+                    dataIndex: 'description',
                 },
                 {
                     title: '操作',
@@ -94,10 +98,42 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
             ];
             break;
-        case 'rooms':
+        case 'brand':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post('/api/meetingRoom/delete', {
+                    fetch.post(`/api/brand/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                        id
+                    }).then(() => {
+                        removeFromTable(index)
+                    }).catch(() => {
+                        message.error('删除失败');
+                    });
+                })
+            }
+            onEditClick = (index) => {
+                showEditor(index);
+            }
+            columns = [
+                {
+                    title: '名称',
+                    dataIndex: 'name',
+                },
+                {
+                    title: '操作',
+                    render: (text, record, index) => (
+                        <Fragment>
+                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
+                            <Divider type="vertical" />
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                        </Fragment>
+                    ),
+                },
+            ];
+            break;
+        case 'room':
+            onDeleteClick = (index, id) => {
+                removeCurrent(() => {
+                    fetch.post('/api/rooms/delete', {
                         id,
                         token: localStorage.getItem('__meeting_token')
                     }).then(() => {

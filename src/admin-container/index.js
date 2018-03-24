@@ -6,7 +6,7 @@ import UserList from './user';
 import Setting from './setting';
 import Charts from './charts';
 import Monitor from './monitor';
-
+import Classroom from './classroom'
 import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -26,7 +26,9 @@ const KEY_MAP = {
   '/admin/setting/blacklist': '8',
   '/admin/setting/roomsetting': '10',
   '/admin/charts': '13',
-  '/admin/monitor': '14'
+  '/admin/monitor': '14',
+  '/admin/classroom/device': '16',
+  '/admin/classroom/brand': '17'
 }
 
 const KEY_OPEN = {
@@ -39,7 +41,9 @@ const KEY_OPEN = {
   '/admin/setting/exchange': 'sub3',
   '/admin/setting/whitelist': 'sub3',
   '/admin/setting/blacklist': 'sub3',
-  '/admin/setting/roomsetting': 'sub3'
+  '/admin/setting/roomsetting': 'sub3',
+  '/admin/classroom/device': 'sub4',
+  '/admin/classroom/brand': 'sub4'
 }
 class Admin extends React.Component {
   state = {
@@ -73,15 +77,15 @@ class Admin extends React.Component {
                 <Menu.Item key="3"><Link to="/admin/meeting/rooms">会议室</Link></Menu.Item>
                 <Menu.Item key="4"><Link to="/admin/meeting/type">会议室类型</Link></Menu.Item>
             </SubMenu>
-            {/* <SubMenu key="sub4" title={<span><Icon type="folder" /><span>培训室管理</span></span>}>
-                <Menu.Item key="16"><Link to="/admin/classroom/role">设备管理</Link></Menu.Item>
-                <Menu.Item key="17"><Link to="/admin/classroom/role">品牌管理</Link></Menu.Item>
-                <Menu.Item key="18"><Link to="/admin/classroom/role">部门管理</Link></Menu.Item>
-                <Menu.Item key="19"><Link to="/admin/classroom/role">品牌管理员管理</Link></Menu.Item>
+            <SubMenu key="sub4" title={<span><Icon type="folder" /><span>培训室管理</span></span>}>
+                <Menu.Item key="16"><Link to="/admin/classroom/device">设备管理</Link></Menu.Item>
+                <Menu.Item key="17"><Link to="/admin/classroom/brand">品牌管理</Link></Menu.Item>
+                <Menu.Item key="18"><Link to="/admin/classroom/division">部门管理</Link></Menu.Item>
+                {/* <Menu.Item key="19"><Link to="/admin/classroom/role">品牌管理员管理</Link></Menu.Item>
                 <Menu.Item key="20"><Link to="/admin/classroom/role">培训室管理</Link></Menu.Item>
                 <Menu.Item key="21"><Link to="/admin/classroom/role">培训室预订</Link></Menu.Item>
-                <Menu.Item key="22"><Link to="/admin/classroom/role">节假日管理</Link></Menu.Item>
-            </SubMenu> */}
+                <Menu.Item key="22"><Link to="/admin/classroom/role">节假日管理</Link></Menu.Item> */}
+            </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
                 <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>
                 <Menu.Item key="6"><Link to="/admin/user/role">角色管理</Link></Menu.Item>
@@ -93,7 +97,7 @@ class Admin extends React.Component {
                 <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>
             </SubMenu>
             <Menu.Item key="13"><Link to="/admin/charts"><Icon type="pie-chart" /><span>报表分析</span></Link></Menu.Item>
-            <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>数据监控</span></Link></Menu.Item>
+            <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>设备监控</span></Link></Menu.Item>
         </Menu>
         </Sider>
         <Layout>
@@ -107,7 +111,7 @@ class Admin extends React.Component {
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
             <Route path={`${match.url}/user/:type`} component={UserList}/>
-            <Route path={`${match.url}/classroom/:type`} component={() => "TODO"}/>
+            <Route path={`${match.url}/classroom/:type`} component={Classroom}/>
             <Route path={`${match.url}/setting/`} component={Setting}/>
             <Route path={`${match.url}/charts`} component={Charts}/>
             <Route path={`${match.url}/monitor`} component={Monitor}/>

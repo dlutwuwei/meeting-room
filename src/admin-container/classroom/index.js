@@ -10,17 +10,23 @@ const Search = Input.Search;
 function getBreadcrumb(type) {
     let breadcrumb = null;
     switch(type) {
-        case 'area':
-            breadcrumb = <Breadcrumb.Item>区域管理</Breadcrumb.Item>;
+        case 'device':
+            breadcrumb = <Breadcrumb.Item>设备管理</Breadcrumb.Item>;
+            break;
+        case 'brand':
+            breadcrumb = <Breadcrumb.Item>品牌管理</Breadcrumb.Item>;
             break;
         case 'department':
             breadcrumb = <Breadcrumb.Item>部门管理</Breadcrumb.Item>;
             break;
-        case 'rooms':
-            breadcrumb = <Breadcrumb.Item>会议室管理</Breadcrumb.Item>;
+        case 'admin':
+            breadcrumb = <Breadcrumb.Item>品牌管理员管理</Breadcrumb.Item>;
             break;
-        case 'type':
-            breadcrumb = <Breadcrumb.Item>会议室类型管理</Breadcrumb.Item>;
+        case 'classroom':
+            breadcrumb = <Breadcrumb.Item>培训室管理</Breadcrumb.Item>;
+            break;
+        case 'vacation':
+            breadcrumb = <Breadcrumb.Item>节假日管理</Breadcrumb.Item>;
             break;
     }
     return breadcrumb;
@@ -36,13 +42,17 @@ export default class BasicList extends PureComponent {
     }
     getUrl = (type) => {
         switch (type) {
-            case 'department':
-                return '/api/department/getList';
-            case 'area':
+            case 'device':
+                return '/api/device/getList';
+            case 'brand':
+                return '/api/brand/getList';
+            case 'division':
+                return '/api/division/getList';
+            case 'admin':
                 return '/api/area/getList';
-            case 'rooms':
+            case 'classroom':
                 return '/api/meetingRoom/getList';
-            case 'type':
+            case 'vacation':
                 return '/api/meetingRoom/getRoomTypes';
         }
     }
@@ -52,31 +62,11 @@ export default class BasicList extends PureComponent {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
             done && done();
-            if(type === 'rooms') {
-                // 会议室信息展示需要
-                Promise.all([fetch.get(this.getUrl('area'), {
-                    token: localStorage.getItem('__meeting_token')
-                }), fetch.get(this.getUrl('department'), {
-                    token: localStorage.getItem('__meeting_token')
-                }), fetch.get(this.getUrl('type'), {
-                    token: localStorage.getItem('__meeting_token')
-                })]).then(([areas, departments, types]) => {
-                    localStorage.setItem('__meeting_areas', JSON.stringify(areas.data.list));
-                    localStorage.setItem('__meeting_department', JSON.stringify(departments.data.list));
-                    localStorage.setItem('__meeting_type', JSON.stringify(types.data));
-                    this.setState({
-                        data: res.data.length ? res.data: res.data.list,
-                        page: res.data.page,
-                        pageSize: res.data.pageSize
-                    });
-                });
-            } else {
-                this.setState({
-                    data: res.data.length ? res.data: res.data.list,
-                    page: res.data.page,
-                    pageSize: res.data.pageSize
-                });
-            }
+            this.setState({
+                data: res.data.length ? res.data: res.data.list,
+                page: res.data.page,
+                pageSize: res.data.pageSize
+            });
         }).catch(() => {
             done && done();
             this.setState({
@@ -118,15 +108,15 @@ export default class BasicList extends PureComponent {
         return (
             <div className="">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
+                    <Breadcrumb.Item>培训室管理</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
-                { type === 'rooms' && <Search
+                {/* { type === 'rooms' && <Search
                     placeholder="input search text"
                     onSearch={this.handleSearch.bind(this, type)}
                     enterButton
                     style={{width: 220, marginTop: 20}}
-                />}
+                />} */}
                 <List
                     getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     // columns={getColumns(type, this.removeFromTable.bind(this))}

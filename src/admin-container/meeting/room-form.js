@@ -66,7 +66,7 @@ class Room extends Component {
         const { form, values } = this.props;
         const devices = [];
         Object.keys(values).forEach(item => {
-            if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
+            if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item) && values[item]) {
                 devices.push(item);
             }
         });

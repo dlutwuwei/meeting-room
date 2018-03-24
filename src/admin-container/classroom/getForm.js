@@ -55,7 +55,7 @@ class CreateModal extends Component {
 export default (type, onCreated) => {
     let deviceChildren, areas, roomTypes, departments;
     switch (type) {
-        case 'area':
+        case 'device':
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const okHandle = (before, after) => {
@@ -65,7 +65,7 @@ export default (type, onCreated) => {
                         if(values.id) {
                             fieldsValue.id = values.id;
                         }
-                        fetch.post(`${isEdit ? '/api/area/update' : '/api/area/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                        fetch.post(`${isEdit ? '/api/device/update' : '/api/device/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(() => {
@@ -80,7 +80,7 @@ export default (type, onCreated) => {
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? '编辑区域' : '新建区域'}
+                        title={ isEdit ? '编辑设备' : '新建设备'}
                         visible={modalVisible}
                         onOk={okHandle}
                         okText="确认"
@@ -90,42 +90,90 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="区域名称"
+                            label="设备名称"
                         >
                             {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '"请输入区域名称' }],
+                                rules: [{ required: true, message: '"请输入设备名称' }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入区域名称" />
+                                <Input placeholder="请输入设备名称" />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="简码"
+                            label="描述"
                         >
-                            {form.getFieldDecorator('shortCode', {
-                                rules: [{ required: true, message: '请输入简码' }],
-                                initialValue: values.shortCode
+                            {form.getFieldDecorator('description', {
+                                rules: [{ required: false, message: '请输入描述' }],
+                                initialValue: values.description || ''
                             })(
-                                <Input placeholder="请输入简码" />
+                                <Input placeholder="请输入描述" />
                             )}
                         </FormItem>
-                        {/* <FormItem
-                            labelCol={{ span: 5 }}
-                            wrapperCol={{ span: 15 }}
-                            label="管理员"
-                        >
-                            {form.getFieldDecorator('admin', {
-                                rules: [{ required: true, message: '请输入管理员用户名' }],
-                            })(
-                                <Input placeholder="请输入管理员用户名" />
-                            )}
-                        </FormItem> */}
                     </CreateModal>
                 );
             });
-        case 'department':
+        case 'brand':
+            return Form.create()((props) => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    before && before();
+                    form.validateFields((err, fieldsValue) => {
+                        if (err) return;
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                        }
+                        fetch.post(`${isEdit ? '/api/brand/update' : '/api/brand/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                            token: localStorage.getItem('__meeting_token'),
+                            ...fieldsValue
+                        }).then(() => {
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
+                        }).catch(() => {
+                            message.error('修改失败')
+                            handleModalVisible(false);
+                        });
+                    });
+                };
+                return (
+                    <CreateModal
+                        title={ isEdit ? '编辑品牌' : '新建品牌'}
+                        visible={modalVisible}
+                        onOk={okHandle}
+                        okText="确认"
+                        cancelText="取消"
+                        onCancel={() => handleModalVisible(false)}
+                    >
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="品牌名称"
+                        >
+                            {form.getFieldDecorator('name', {
+                                rules: [{ required: true, message: '"请输入品牌名称' }],
+                                initialValue: values.name
+                            })(
+                                <Input placeholder="请输入品牌名称" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="描述"
+                        >
+                            {form.getFieldDecorator('description', {
+                                rules: [{ required: false, message: '请输入描述' }],
+                                initialValue: values.description || ''
+                            })(
+                                <Input placeholder="请输入描述" />
+                            )}
+                        </FormItem>
+                    </CreateModal>
+                );
+            });
+        case 'division':
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const okHandle = (before, after) => {
@@ -136,7 +184,7 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             fieldsValue.areaId = values.areaId;
                         }
-                        fetch.post(`${isEdit ? '/api/department/update' : '/api/department/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                        fetch.post(`${isEdit ? '/api/division/update' : '/api/division/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             ...fieldsValue
                         }).then(() => {
                             handleModalVisible(false);
@@ -160,6 +208,18 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
+                            label="品牌ID"
+                        >
+                            {form.getFieldDecorator('brandId', {
+                                rules: [{ required: true, message: '请输入名称' }],
+                                initialValue: values.brandId
+                            })(
+                                <Input placeholder="请输入" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
                             label="部门名称"
                         >
                             {form.getFieldDecorator('name', {
@@ -172,11 +232,11 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="简码"
+                            label="描述"
                         >
-                            {form.getFieldDecorator('shortCode', {
-                                rules: [{ required: true, message: '请输入简码' }],
-                                initialValue: values.shortCode
+                            {form.getFieldDecorator('remark', {
+                                rules: [{ required: true, message: '请输入描述' }],
+                                initialValue: values.remark
                             })(
                                 <Input placeholder="请输入" />
                             )}
