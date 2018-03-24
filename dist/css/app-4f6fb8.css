@@ -5095,20 +5095,29 @@ textarea.ant-time-picker-input {
   display: block;
 }
 
+.my-card .section .section-left {
+  width: 0;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+.my-card .section .section-right {
+  width: 0;
+  -webkit-box-flex: 3;
+  -webkit-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+}
+
 .my-card .section .section-right .my-input {
   width: 40px;
-  height: 22px;
   padding: 0;
 }
 
 .my-card .section .section-right .my-select {
-  line-height: 22px;
-  height: 22px;
   vertical-align: middle;
-}
-
-.my-card .section .section-right .my-select .ant-select-selection {
-  height: 22px;
 }
 
 .my-card .section .section-right .ant-radio-wrapper {

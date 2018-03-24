@@ -356,7 +356,7 @@ class Recurrence extends Component {
             endTime: endTime.format('HH:mm'),
             startDate: startTime.format('YYYY-MM-DD'),
             endDate: endTime.format('YYYY-MM-DD'),
-            length: duration*60,
+            duration: duration*60,
             timeZone,
             ...recurrent_parma
         });
