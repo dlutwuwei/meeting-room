@@ -24,11 +24,15 @@ const curHour = moment().hours();
 
 const appointment = {
   receivers: [],
+  location: [],
   startTime: moment().hours( curHour >= 9 ? curHour + 1 : 9).minute(0),
   endTime: moment().hours(curHour >= 9 ? curHour + 1 : 9).minute(30),
   subject: '',
-  location: [],
-  content: ''
+  content: '',
+  receiverOptions: [],
+  locationOptions: [],
+  attendeesCheckedList: [],
+  roomsCheckedList: []
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {

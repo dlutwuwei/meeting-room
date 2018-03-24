@@ -51,7 +51,6 @@ class Schedule extends Component {
         // 计划表
         data: [],
         checkAll: false,
-        checkedList: [],
         // 列表选型
         roomsOptions: [],
         attendeesOptions: [],
@@ -67,27 +66,22 @@ class Schedule extends Component {
     }
     hover = false
     componentDidMount() {
-        this.search(moment(), []);
-        const checkedList = [];
-        const { receivers, location } = this.props;
-        // receivers.concat(location).forEach(i => {
-        //     checkedList.push(i.mail);
-        // });
+        this.search(moment());
         this.setState({
-            checkedList,
-            checkAll: true
+            attendeesCheckedList: this.props.attendeesCheckedList,
+            roomsCheckedList: this.props.roomsCheckedList
         });
     }
     searchPev = () => {
-        const { attendees, date } = this.state;
+        const { date } = this.state;
         if(moment().isAfter(date)) {
             return;
         }
-        this.search(date.subtract(1, 'd'), attendees);
+        this.search(date.subtract(1, 'd'));
     }
     searchNext = () => {
-        const { attendees, date } = this.state;
-        this.search(date.add(1, 'd'), attendees);
+        const { date } = this.state;
+        this.search(date.add(1, 'd'));
     }
     search(date) {
         this.setState({
@@ -102,10 +96,10 @@ class Schedule extends Component {
             name: localStorage.getItem('__meeting_user_name'),
         };
         const { data } = this.state;
-        const { receivers, location } = this.props;
-        const options = this.state.attendeesOptions.concat(this.state.roomsOptions); //receivers.concat(location);
+        const { receiverOptions, locationOptions } = this.props;
+        const options = receiverOptions.concat(locationOptions); //receivers.concat(location);
         options.unshift(my);
-        const users = receivers.slice();
+        const users = receiverOptions.slice();
         users.unshift(my);
         this.setState({
             loading: true,
@@ -113,7 +107,7 @@ class Schedule extends Component {
         });
         fetch.get('/api/schedule/getList', {
             userMails: users.map(item => item.mail).join(','),
-            roomMails: location.map(item => item.mail).join(','),
+            roomMails: locationOptions.map(item => item.mail).join(','),
             startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
             endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
             token: localStorage.getItem('__meeting_token') || ''
@@ -147,44 +141,36 @@ class Schedule extends Component {
             });
         });
     }
-    onAttendeeChange = () => {
-
+    onAttendeeChange = (checkedList) => {
+        // 可以多选
+        this.props.actions.changeProp('attendeesCheckedList', checkedList)
+        this.props.actions.changeProp('receivers', this.props.receiverOptions.filter(item => checkedList.includes(item.mail)));
     }
     onRoomChange = (checkedList) => {
-        // 去重
-        const selects = checkedList.filter(item => !this.state.checkedList.includes(item));
-        if(selects.length > 0) {
-            this.props.actions.changeProp('location', this.props.location
-                .concat(this.state.roomsOptions.filter(item => checkedList.includes(item.mail))));
+        // 清除已经选中
+        const list = checkedList.filter(item => !this.props.location.find(l => l.mail === item));
+        if(checkedList.length === 1) {
+            this.props.actions.changeProp('roomsCheckedList', checkedList);
+        } else {
+            this.props.actions.changeProp('roomsCheckedList', list);
         }
-        this.setState({
-            checkedList,
-            checkAll: checkedList.length === this.state.options.length,
-        });
-    }
-    onCheckAllChange(e) {
-        const allOptions = this.state.options.map(item => item.value);
-        this.setState({
-            checkedList: e.target.checked ? allOptions : [],
-            checkAll: e.target.checked,
-        });
+        this.props.actions.changeProp('location', this.props.locationOptions.filter(item => list.includes(item.mail)));
     }
     addToList(data, type) {
         const options = data.map(item => ({
             name: item.name,
             mail: item.mail
-        })).filter(item => {
-            return !this.state.checkedList.find(ele => ele === item.mail);
-        });
+        }));
         const newOptions = options;
+        // 保存checklist的options
+        this.props.actions.changeProp(type === 'room' ? 'locationOptions' : 'receiverOptions', newOptions)
         this.setState({
-            [ type === 'room' ? 'roomsOptions' : 'attendeesOptions' ]: newOptions,
+            // [ type === 'room' ? 'roomsOptions' : 'attendeesOptions' ]: newOptions,
             // checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
-            checkAll: true,
             // data: this.state.data.concat(options.map(() => ([])))
         }, () => {
-            // options更新之后在请求计划表
-            this.search(this.state.date, data)
+            // options更新之后, 请求计划表
+            this.search(this.state.date)
         });
     }
     onSelectRoom(rooms) {
@@ -192,14 +178,16 @@ class Schedule extends Component {
             rooms
         });
         this.props.actions.changeProp('location', rooms.filter(item => {
-            return this.state.checkedList.find(ele => ele === item.mail);
+            return this.state.roomsCheckedList.find(ele => ele === item.mail);
         }));
         this.addToList(rooms, 'room');
     }
     onSelectAttendee(attendees) {
-        this.props.actions.changeProp('receivers', this.props.receivers
+        const users = this.props.receivers
         .filter(item => !attendees.find(e => item.mail === e.mail))
-        .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email'))));
+        .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email')));
+
+        this.props.actions.changeProp('receivers', users);
         this.addToList(attendees, 'attendees')
     }
     handleSend = () => {
@@ -310,10 +298,10 @@ class Schedule extends Component {
         }
     }
     render() {
-        const { data, checkedList, date, showAddRooms,
+        const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
-            timezone, roomsOptions, attendeesOptions } = this.state;
-        const { startTime, endTime, showTimezone, receivers, location } = this.props;
+            timezone } = this.state;
+        const { startTime, endTime, showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Spin spinning={this.state.loading}>
@@ -332,10 +320,10 @@ class Schedule extends Component {
                                 </div>
                                 <CheckboxGroup
                                     className="list"
-                                    value={checkedList}
+                                    value={attendeesCheckedList}
                                     onChange={this.onAttendeeChange.bind(this)}
                                 >
-                                    {attendeesOptions.map(item => (<Checkbox
+                                    {receiverOptions.map(item => (<Checkbox
                                             disabled={item.mail === localStorage.getItem('__meeting_user_email')}
                                             checked={true}
                                             value={item.mail}
@@ -343,10 +331,10 @@ class Schedule extends Component {
                                 </CheckboxGroup>
                                 <CheckboxGroup
                                     className="list"
-                                    value={checkedList}
+                                    value={roomsCheckedList}
                                     onChange={this.onRoomChange.bind(this)}
                                 >
-                                    {roomsOptions.map(item => (<Checkbox
+                                    {locationOptions.map(item => (<Checkbox
                                             value={item.mail}
                                         >{item.name}</Checkbox>))}
                                 </CheckboxGroup>
