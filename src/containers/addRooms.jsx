@@ -236,7 +236,7 @@ class AddRooms extends Component {
                     />
                 </div>
                 <div className="room-item">
-                    <label htmlFor="" className="room-title">People:</label>
+                    <label htmlFor="" className="room-title">Attendees:</label>
                     <Select
                         style={{ width: 60 }}
                         defaultValue={1}
@@ -246,7 +246,7 @@ class AddRooms extends Component {
                     </Select>
                 </div>
                 <div className="room-item">
-                    <label htmlFor="" className="room-title">楼层:</label>
+                    <label htmlFor="" className="room-title">Floor:</label>
                     <Input
                         style={{ width: 60 }}
                         defaultValue={''}
