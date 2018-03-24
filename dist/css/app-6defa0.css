@@ -12906,6 +12906,14 @@ textarea.ant-pagination-options-quick-jumper input {
   line-height: 30px;
 }
 
+.schedule-contianer .schedule-left .attendees .list {
+  display: block;
+}
+
+.schedule-contianer .schedule-left .attendees .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  margin-left: 0;
+}
+
 .schedule-contianer .schedule-left .attendees .ant-checkbox-wrapper {
   display: block;
   width: 150px;

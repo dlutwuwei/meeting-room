@@ -182,9 +182,13 @@ export default (type, onCreated) => {
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const actions = [];
+                const ACTION_MAP = {};
+                const ACTION_NAME_MAP = {};
                 JSON.parse(localStorage.getItem('__meeting_actions') || '[]').forEach(item => {
                     item.actions.forEach(action => {
-                        actions.push(action.action)
+                        actions.push(action.name);
+                        ACTION_MAP[action.name] = action.action;
+                        ACTION_NAME_MAP[action.action] = action.name;
                     });
                 });
                 const okHandle = (before, after) => {
@@ -193,7 +197,7 @@ export default (type, onCreated) => {
                         if(values.id) {
                             fieldsValue.id = values.id;
                         }
-                        fieldsValue.actions= fieldsValue.actions.join(',');
+                        fieldsValue.actions= fieldsValue.actions.map(item => ACTION_MAP[item]).join(',');
                         before && before();
                         fetch.post(isEdit? '/api/role/update' : '/api/role/add', {
                             token: localStorage.getItem('__meeting_token'),
@@ -251,7 +255,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('actions', {
                                 rules: [{ required: true, message: '请选择权限' }],
-                                initialValue: values.actions ? values.actions.split(',') : []
+                                initialValue: values.actions ? values.actions.split(',').map(item => ACTION_NAME_MAP[item]).filter(item => !!item) : []
                             })(
                                 <Select
                                     mode="multiple"
