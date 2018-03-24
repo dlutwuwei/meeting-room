@@ -174,9 +174,6 @@ class Schedule extends Component {
         });
     }
     onSelectRoom(rooms) {
-        this.setState({
-            rooms
-        });
         this.props.actions.changeProp('location', rooms.filter(item => {
             return this.state.roomsCheckedList.find(ele => ele === item.mail);
         }));
@@ -186,9 +183,7 @@ class Schedule extends Component {
         const users = this.props.receivers
         .filter(item => !attendees.find(e => item.mail === e.mail))
         .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email')));
-
-        this.props.actions.changeProp('receivers', users);
-        this.addToList(attendees, 'attendees')
+        this.addToList(users, 'attendees')
     }
     handleSend = () => {
         const { startTime, endTime, subject, receivers, content, location } = this.props;
