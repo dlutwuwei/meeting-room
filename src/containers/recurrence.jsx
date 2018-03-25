@@ -21,6 +21,10 @@ for (let i = 0; i < zones.length; i++) {
     children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
 
+function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment().endOf('day');
+}
 
 const durationOptions = new Array(12).fill('').map((item, i) => {
     return <Option key={i} value={i+1}>{(i+1)/2} hours</Option>
@@ -165,14 +169,23 @@ class Recurrence extends Component {
     }
     handleTime = (type, time) => {
         if(type === 'startTime') {
-            this.setState({
-                startTime: time
-            });
+            const { startTime, endTime } = this.state;
+            const date = startTime.dayOfYear();
+            if(startTime.isAfter(endTime)) {
+                this.setState({
+                    startTime: time.clone(),
+                    endTime: endTime.clone().dayOfYear(date + 1)
+                });
+            } else {
+                this.setState({
+                    startTime: time.clone(),
+                });
+            }
             // this.props.changeProp('startTime', time);
         } else if(type === 'endTime') {
             const date = this.state.startTime.dayOfYear();
             this.setState({
-                endTime: time,
+                endTime: time.clone(),
                 duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             });
             // this.props.changeProp('endTime', time);
@@ -185,7 +198,7 @@ class Recurrence extends Component {
     }
     renderPattern(recurrence_pattern) {
         let pattern;
-        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, dayOfMonth, dayOfWeek, everyWeekDay, everyWeeks } = this.state;
+        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, daysOfTheWeek, dayOfMonth, dayOfWeek, everyWeekDay, everyWeeks } = this.state;
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
@@ -210,7 +223,7 @@ class Recurrence extends Component {
                             everyWeeks: e.target.value
                         });
                     }}/> week(s) on:
-                    <CheckboxGroup options={eqOptions} value={[1]} onChange={(value) => {
+                    <CheckboxGroup options={eqOptions} value={daysOfTheWeek} onChange={(value) => {
                         this.setState({
                             daysOfTheWeek: value
                         })
@@ -359,10 +372,10 @@ class Recurrence extends Component {
             recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
         }
         const recurrenceJson = JSON.stringify({
-            startTime: startTime.format('HH:mm'),
-            endTime: endTime.format('HH:mm'),
-            startDate: startTime.format('YYYY-MM-DD'),
-            endDate: endTime.format('YYYY-MM-DD'),
+            startTime: startTime.utc().format('HH:mm'),
+            endTime: endTime.utc().format('HH:mm'),
+            startDate: startTime.utc().format('YYYY-MM-DD'),
+            endDate: endTime.utc().format('YYYY-MM-DD'),
             duration: duration*60,
             timeZone,
             ...recurrent_parma
@@ -487,6 +500,7 @@ class Recurrence extends Component {
                                 format="YYYY-MM-DD"
                                 placeholder="Select Date"
                                 value={startTime.zone(offsetUTC)}
+                                disabledDate={disabledDate}
                                 onChange={this.handleTime.bind(this, 'startTime')}
                                 className="my-date-picker"
                             />
@@ -508,6 +522,7 @@ class Recurrence extends Component {
                                         format="YYYY-MM-DD"
                                         placeholder="Select Date"
                                         value={endTime}
+                                        disabledDate={disabledDate}
                                         onChange={this.handleTime.bind(this, 'endTime')}
                                         className="my-date-picker"
                                     />
