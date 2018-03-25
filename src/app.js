@@ -29,6 +29,7 @@ fetch.get('/api/public/getCurrentUserInfo', {
   localStorage.setItem('__meeting_reminder', '');
   localStorage.setItem('__meeting_showas', '');
   localStorage.setItem('__meeting_important', '');
+  localStorage.setItem('__meeting_recurrenceJson', '');
 
   ReactDOM.render((
     <Provider store={store}>
