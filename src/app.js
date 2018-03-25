@@ -26,6 +26,9 @@ fetch.get('/api/public/getCurrentUserInfo', {
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
+  localStorage.setItem('__meeting_reminder', '');
+  localStorage.setItem('__meeting_showas', '');
+  localStorage.setItem('__meeting_important', '');
 
   ReactDOM.render((
     <Provider store={store}>
