@@ -29,8 +29,10 @@ export default class BasicList extends PureComponent {
     handleSelectRows = () => {
 
     }
-    handleStandardTableChange = () => {
-
+    handleStandardTableChange = (pagination) => {
+        // eslint-disable-next-line
+        const { current, page, pageSize } = pagination;
+        // 没有做异步分页
     }
     handleModalVisible = (flag) => {
         this.setState({
@@ -69,6 +71,7 @@ export default class BasicList extends PureComponent {
                                 pageSize
                             }
                         }}
+                        pagination={true}
                         columns={columns}
                         onSelectRow={this.handleSelectRows}
                         onChange={this.handleStandardTableChange}

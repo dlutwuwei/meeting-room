@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Spin, Modal, message} from 'antd';
+import { Spin, Modal, message, Pagination} from 'antd';
 import Button from 'components/button';
 import fetch from 'lib/fetch';
 import moment from 'moment';
@@ -79,18 +79,26 @@ class MyMeeting extends Component {
         });
         
     }
-    search(type) {
+    handleChange = (page) => {
+        this.search(this.state.type, page);
+    }
+    search(type, page) {
         this.setState({
             loading: true
         })
         fetch.get('/api/meeting/getList', {
             state: type,
-            token: localStorage.getItem('__meeting_token')
+            token: localStorage.getItem('__meeting_token'),
+            page: page || 1,
+            pageSize: 10
         }).then(r => {
             this.setState({
                 data: r.data.list,
+                loading: false,
                 type,
-                loading: false
+                pageSize: r.data.pageSize,
+                page: r.data.page,
+                totalPage: r.data.totalPage
             });
         }).catch(() => {
             this.setState({
@@ -99,7 +107,7 @@ class MyMeeting extends Component {
         });
     }
     render () {
-        const { data, type, loading, visible, selectId } = this.state;
+        const { data, type, loading, visible, selectId, totalPage, page, pageSize} = this.state;
         return (
             <div className="my-meeting">
                 <div className="my-top">
@@ -152,6 +160,7 @@ class MyMeeting extends Component {
                                 }
                             </tbody>
                         </table>
+                        <Pagination key={type} style={{ margin: '16px 0', float: 'right' }} current={page} pageSize={pageSize} total={totalPage*pageSize} onChange={this.handleChange} />
                     </Spin>
                 </div>
                 <Modal
