@@ -15,6 +15,10 @@ data:text/css;base64,ZXhwb3J0cyA9IG1vZHVsZS5leHBvcnRzID0gcmVxdWlyZSgiLi4vLi4vbm9
       -ms-flex-align: center;
           align-items: center;
   padding-left: 32px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .app-header img {
@@ -196,6 +200,10 @@ data:text/css;base64,ZXhwb3J0cyA9IG1vZHVsZS5leHBvcnRzID0gcmVxdWlyZSgiLi4vLi4vbm9
   width: 76px;
   margin: 0 15px;
   cursor: pointer;
+}
+
+.nav-container .nav-zone .nav-item.recurrence.active {
+  background-color: #caedfe;
 }
 
 .nav-container .nav-zone .nav-item .appointment-icon {
