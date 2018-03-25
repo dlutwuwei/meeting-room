@@ -67,6 +67,12 @@ class Nav extends Component {
                                 <Select defaultValue="2" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
+                                    {/* Free = 0,
+                                    Tentative = 1,
+                                    Busy = 2,
+                                    OOF = 3,
+                                    WorkingElsewhere = 4,
+                                    NoData = 5, */}
                                     <Option key="3" value="1" className="status interim" title="Tentative">Tentative</Option>
                                     <Option key="1" value="2" className="status busy" title="Busy">Busy</Option>
                                     <Option key="2"  value="3" className="status out" title="Out of Office">Out of Office</Option>

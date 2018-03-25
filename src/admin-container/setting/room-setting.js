@@ -265,7 +265,7 @@ class RoomSettings extends Component {
                             )}
                         </FormItem>
                         <FormItem {...formItemLayout} label="最大预定天数">
-                            {getFieldDecorator('maxRecurrenceDays', {
+                            {getFieldDecorator('maxBookingDays', {
                                 rules: [{ required: true, message: '请输入天数' }],
                             })(
                                 <Input style={{ width: 100, marginRight: '10px' }} />
