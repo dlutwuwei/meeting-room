@@ -107,6 +107,7 @@ class Admin extends React.Component {
               type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
             />
+            <span style={{padding: '0 20px', float: 'right'}}>{localStorage.getItem('__meeting_user_name')}</span>
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
