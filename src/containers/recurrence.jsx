@@ -382,14 +382,15 @@ class Recurrence extends Component {
         });
         // 保存信息
         localStorage.setItem('__meeting_recurrenceJson', recurrenceJson);
-        this.setState({
-            visible: false
-        });
+        this.closeModal();
+        this.props.changeProp('isRecurrence', true)
+
     }
     handleCancel = () => {
         localStorage.setItem('__meeting_recurrenceJson', '');
         message.info('Remove recurrence success');
         this.closeModal();
+        this.props.changeProp('isRecurrence', false)
     }
     render () {
         const { visible, timezone, startTime, endTime, duration, recurrence_pattern, endType, numberOfOccurrences } = this.state;

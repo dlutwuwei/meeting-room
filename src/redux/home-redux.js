@@ -8,6 +8,7 @@ const initState = {
 const TOGGLE_TIMEZONE = 'TOGGLE_TIMEZONE';
 const CHANGE_PROP = 'CHANGE_PROP';
 const BATCH_CHANGE_PROP = 'BATCH_CHANGE_PROP';
+
 // ---------------- export default is reducer -------------
 // reducers
 function navReducer(state = initState, action) {
@@ -32,7 +33,8 @@ const appointment = {
   receiverOptions: [],
   locationOptions: [],
   attendeesCheckedList: [],
-  roomsCheckedList: []
+  roomsCheckedList: [],
+  isRecurrence: false
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {
@@ -45,7 +47,7 @@ function appointmentReducer(state = appointment, action) {
       return {
         ...state,
         ...action.data
-      }
+      };
     default:
       return state;
   }
