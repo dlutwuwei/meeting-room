@@ -439,6 +439,7 @@ class Schedule extends Component {
                                 onClose={() => this.setState({ showAddRooms: false })}
                                 onSelect={this.onSelectRoom.bind(this)}
                                 onlyone={false}
+                                defaultCapacity={this.props.receivers.length + 1}
                             />
                             <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({ showAddRooms: true }) }}>Add Rooms</Button>
                             <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>End Time</div>

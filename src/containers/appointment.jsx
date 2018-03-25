@@ -373,6 +373,7 @@ class Appointment extends Component {
                     visible={showAddRooms}
                     onClose={() => this.setState({ showAddRooms: false })}
                     onSelect={this.handleSelectRoom}
+                    defaultCapacity={this.props.receivers.length + 1}
                   />
                   {getFieldDecorator('location', {
                     initialValue: [],
