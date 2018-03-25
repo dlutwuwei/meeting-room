@@ -51,6 +51,7 @@ class Schedule extends Component {
         // 计划表
         data: [],
         checkAll: false,
+        floors: [],
         // 列表选型
         roomsOptions: [],
         attendeesOptions: [],
@@ -71,6 +72,7 @@ class Schedule extends Component {
             attendeesCheckedList: this.props.attendeesCheckedList,
             roomsCheckedList: this.props.roomsCheckedList
         });
+        this.searchRooms()
     }
     searchPev = () => {
         const { date } = this.state;
@@ -292,6 +294,30 @@ class Schedule extends Component {
             this.props.actions.changeProp('endTime', time.utc());
         }
     }
+    searchRooms(floor) {
+        fetch.get('/api/meeting/getRooms', {
+            token: localStorage.getItem('__meeting_token') || '',
+            floor
+        }).then(r => {
+            const data = {};
+            r.data.list.forEach(item => {
+                if(!data[item.floor]) {
+                    data[item.floor] = true;
+                }
+            })
+            this.setState({
+                floors: Object.keys(data)
+            });
+        });
+    }
+    handleSelectFloor = (floor) => {
+        fetch.get('/api/meeting/getRooms', {
+            token: localStorage.getItem('__meeting_token') || '',
+            floor
+        }).then(r => {
+            this.onSelectRoom(r.data.list)
+        });
+    }
     render() {
         const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
@@ -478,6 +504,15 @@ class Schedule extends Component {
                             >
                                 {children}
                             </Select>}
+                            <Select
+                                size="default"
+                                placeholder={'Select floor'}
+                                labelInValue
+                                onChange={this.handleSelectFloor}
+                                style={{ width: 200, marginLeft: 20 }}
+                            >
+                                {this.state.floors.map(item => <Option value={item}>{item}</Option>)}
+                            </Select>
                         </div>
                         <div className="item">
                             <div className="status busy">Busy</div>
