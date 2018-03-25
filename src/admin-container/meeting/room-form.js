@@ -13,7 +13,7 @@ deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
 
 class Room extends Component {
     state = {
-        showOnlyUsers:  this.props.values.roomType === 2,
+        showOnlyUsers:  this.props.values.roomType === 2 || this.props.values.roomType === 3,
         dataSource: [],
         fetching: false,
     }
@@ -164,7 +164,7 @@ class Room extends Component {
                     })(
                         <Select style={{ width: 120 }} placeholder="请输入类型" onChange={(val) => {
                             this.setState({
-                                showOnlyUsers: val === 2
+                                showOnlyUsers: val === 2 || val === 3
                             });
                         }}>
                             { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
