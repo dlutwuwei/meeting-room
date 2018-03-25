@@ -83,7 +83,7 @@ class Recurrence extends Component {
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}'),
         everyDays: 1,
         everyWeekDay: 1,
-        everyMonths: 0,
+        everyMonths: 1,
         dayOfMonth: 1,
         weekOfMonth: 1,
         dayOfWeek: 1,
@@ -94,7 +94,8 @@ class Recurrence extends Component {
         yearType: 1, // 年循环选择星期还是日期，1 or 2
         monthType: 1, // 月循环选择星期还是日期，1 or 2
         noEnd: false, // 是否无线循环
-        endType: 1
+        endType: 1,
+        numberOfOccurrences: 1
     }
     componentWillReceiveProps(props) {
         this.setState({
@@ -169,9 +170,10 @@ class Recurrence extends Component {
             });
             // this.props.changeProp('startTime', time);
         } else if(type === 'endTime') {
+            const date = this.state.startTime.dayOfYear();
             this.setState({
                 endTime: time,
-                duration: time.diff(this.state.startTime, 'minutes')/30
+                duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             });
             // this.props.changeProp('endTime', time);
         }
@@ -183,7 +185,7 @@ class Recurrence extends Component {
     }
     renderPattern(recurrence_pattern) {
         let pattern;
-        const { month, monthType, everyYear, yearType, everyDays, weekOfMonth, dayOfMonth, dayOfWeek, everyWeekDay, everyWeeks } = this.state;
+        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, dayOfMonth, dayOfWeek, everyWeekDay, everyWeeks } = this.state;
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
@@ -216,25 +218,30 @@ class Recurrence extends Component {
                 </div>);
                 break;
             case 3:
-                pattern = (<RadioGroup value={monthType} onChange={(val) => {
+                pattern = (<RadioGroup value={monthType} onChange={(e) => {
                     this.setState({
-                        monthType: val
+                        monthType: e.target.value
                     });
                 }}>
                     <Radio value={1}>Day <Input value={dayOfMonth} onChange={(e) => {
                         this.setState({
                             dayOfMonth: e.target.value
                         });
-                    }}/> of every <Input onChnage={(e) => {
+                    }}/> of every <Input value={everyMonths} onChange={(e) => {
                         this.setState({
-                            dayOfMonth: e.target.value
+                            everyMonths: e.target.value
                         });
                     }}/> month(s)</Radio>
                     <Radio value={2}>The <Select value={weekOfMonth} style={{width: 100, height: 30}} onChange={(val) => {
                         this.setState({
                             weekOfMonth: val
                         });
-                    }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 100, height: 30}}>{dayOfWeekOptions}</Select>of every <Input /> month(s)</Radio>
+                    }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 100, height: 30}}>{dayOfWeekOptions}</Select>
+                     of every <Input value={everyMonths} onChange={(e) => {
+                        this.setState({
+                            everyMonths: e.target.value
+                        })
+                     }}/> month(s)</Radio>
                 </RadioGroup>);
                 break;
             case 4:
@@ -244,9 +251,9 @@ class Recurrence extends Component {
                             everyYear: e.target.value
                         });
                     }}/> year(s)</div>
-                    <RadioGroup value={yearType} onChange={(val) => {
+                    <RadioGroup value={yearType} onChange={(e) => {
                         this.setState({
-                            yearType: val
+                            yearType: e.target.value
                         });
                     }}>
                         <Radio value={1}>On: <Select value={month} style={{width: 110}} onChange={(val) => {
@@ -485,9 +492,9 @@ class Recurrence extends Component {
                             />
                         </div>
                         <div className="section-right">
-                            <RadioGroup className="my-radio-group" value={endType} onChange={(val) => {
+                            <RadioGroup className="my-radio-group" value={endType} onChange={(e) => {
                                 this.setState({
-                                    endType: val
+                                    endType: e.target.value
                                 });
                             }}>
                                 <Radio value={1}>No end date</Radio>
@@ -500,6 +507,7 @@ class Recurrence extends Component {
                                     <DatePicker
                                         format="YYYY-MM-DD"
                                         placeholder="Select Date"
+                                        value={endTime}
                                         onChange={this.handleTime.bind(this, 'endTime')}
                                         className="my-date-picker"
                                     />

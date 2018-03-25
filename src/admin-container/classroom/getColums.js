@@ -45,7 +45,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'name',
                 },
                 {
-                    title: '简码',
+                    title: '描述',
                     dataIndex: 'remark',
                 },
                 {
