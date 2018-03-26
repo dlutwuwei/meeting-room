@@ -16,7 +16,7 @@ function getBreadcrumb(type) {
         case 'brand':
             breadcrumb = <Breadcrumb.Item>品牌管理</Breadcrumb.Item>;
             break;
-        case 'department':
+        case 'division':
             breadcrumb = <Breadcrumb.Item>部门管理</Breadcrumb.Item>;
             break;
         case 'admin':
@@ -49,9 +49,9 @@ export default class BasicList extends PureComponent {
             case 'division':
                 return '/api/division/getList';
             case 'admin':
-                return '/api/area/getList';
-            case 'classroom':
-                return '/api/meetingRoom/getList';
+                return '/api/brandAdmin/getList';
+            case 'room':
+                return '/api/trainingRoom/getList';
             case 'vacation':
                 return '/api/meetingRoom/getRoomTypes';
         }

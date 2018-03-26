@@ -130,6 +130,62 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
             ];
             break;
+        case 'admin':
+            onDeleteClick = (index, id) => {
+                removeCurrent(() => {
+                    fetch.post(`/api/brandAdmin/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                        id
+                    }).then(() => {
+                        removeFromTable(index)
+                    }).catch(() => {
+                        message.error('删除失败');
+                    });
+                })
+            }
+            onEditClick = (index) => {
+                showEditor(index);
+            }
+            columns = [
+                {
+                    title: '品牌名称',
+                    dataIndex: 'brandName',
+                },
+                {
+                    title: '姓名',
+                    dataIndex: 'name',
+                },
+                {
+                    title: '城市',
+                    dataIndex: 'cityNames',
+                },
+                {
+                    title: '邮箱',
+                    dataIndex: 'mail',
+                },
+                {
+                    title: '电话',
+                    dataIndex: 'tel',
+                },
+                {
+                    title: '职位',
+                    dataIndex: 'jobPosition',
+                },
+                {
+                    title: '角色',
+                    dataIndex: 'roleName',
+                },
+                {
+                    title: '操作',
+                    render: (text, record, index) => (
+                        <Fragment>
+                            <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
+                            <Divider type="vertical" />
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
+                        </Fragment>
+                    ),
+                },
+            ];
+            break;
         case 'room':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
@@ -148,39 +204,26 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '会议室名称',
+                    title: '品牌',
+                    dataIndex: 'brandName',
+                },
+                {
+                    title: '培训室名称',
                     dataIndex: 'name',
                 },
                 {
-                    title: '邮箱',
-                    dataIndex: 'mail',
-                },
-                {
                     title: '区域',
-                    dataIndex: 'areaName',
+                    dataIndex: 'area',
                 },
                 {
                     title: '部门',
-                    dataIndex: 'departmentName',
+                    dataIndex: 'divisionName',
                 },
                 {
                     title: '设备',
-                    dataIndex: 'hasProjector',
-                    render: (text, record ) => {
-                        const devices = [];
-                        if(record.hasProjector) {
-                            devices.push(<Tag>投影仪</Tag>)
-                        }
-                        if(record.hasTv) {
-                            devices.push(<Tag>电视</Tag>)
-                        }
-                        if(record.hasPhone) {
-                            devices.push(<Tag>电话</Tag>)
-                        }
-                        if(record.hasWhiteBoard) {
-                            devices.push(<Tag>白板</Tag>)
-                        }
-                        return devices;
+                    dataIndex: 'deviceNames',
+                    render: (item) => {
+                        return item.split(',');
                     }
                 },
                 {
@@ -192,21 +235,8 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'capacity',
                 },
                 {
-                    title: '会议室类型',
-                    dataIndex: 'roomType',
-                    render: (text) => {
-                        return (roomTypes.find(item => item.RoomType == text)||{}).name
-                    }
-                },
-                {
-                    title: '设备码',
-                    dataIndex: 'deviceCode',
-                },
-                {
-                    title: '可预订',
-                    render: (text, record) => {
-                        return <Checkbox checked={record.isEnable}></Checkbox>
-                    }
+                    title: '状态',
+                    dataIndex: 'state',
                 },
                 {
                     title: '操作',
