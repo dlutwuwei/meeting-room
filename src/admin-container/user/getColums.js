@@ -24,7 +24,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
         case 'list':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post(`/api/role/delete?token=${localStorage.getItem('__meeting_token')}`, {
+                    fetch.post(`/api/user/delete?token=${localStorage.getItem('__meeting_token')}`, {
                         id
                     }).then(() => {
                         removeFromTable(index)
@@ -72,8 +72,8 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.userId)}><Icon type="form" /></a>
-                            {/* <Divider type="vertical" /> */}
-                            {/* <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.userId)}><Icon type="delete"/></a> */}
+                            <Divider type="vertical" />
+                            <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.userId)}><Icon type="delete"/></a>
                         </Fragment>
                     ),
                 },

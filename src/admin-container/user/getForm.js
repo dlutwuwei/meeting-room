@@ -49,7 +49,7 @@ export default (type, onCreated) => {
     switch(type) {
         case 'list':
             return Form.create()((props) => {
-                const { modalVisible, form, handleModalVisible, values } = props;
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
@@ -58,7 +58,7 @@ export default (type, onCreated) => {
                             fieldsValue.userName = values.userName;
                         }
                         before && before();
-                        fetch.post('/api/user/update', {
+                        fetch.post(isEdit ? '/api/user/update' : '/api/user/add', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(() => {
@@ -99,6 +99,18 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
+                            label="域用户名"
+                        >
+                            {form.getFieldDecorator('userName', {
+                                rules: [{ required: true, message: '请输入域用户名' }],
+                                initialValue: values.userName
+                            })(
+                                <Input placeholder="请输入域用户名" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
                             label="邮箱"
                         >
                             {form.getFieldDecorator('mail', {
@@ -127,7 +139,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('roleId', {
                                 rules: [{ required: true, message: '请选择角色' }],
-                                initialValue: '' + values.roleId
+                                initialValue: '' + (values.roleId || '')
                             })(
                                 <Select style={{ width: 130 }} placeholder="请选择角色" >
                                     {roles.map(item => <Option key={item.id} value={'' + item.id}>{item.name}</Option>)}
@@ -141,7 +153,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('areaId', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: '' + values.areaId
+                                initialValue: '' + (values.areaId || '')
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
