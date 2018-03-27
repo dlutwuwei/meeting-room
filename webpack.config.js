@@ -33,7 +33,7 @@ module.exports = Object.keys(languages).map(lan => {
     output: {
         publicPath: isDev ? '/' : '/static/',
         path: path.join(__dirname, 'dist'),
-        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}-[hash:6].js`
+        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}.js`
     },
     devServer: {
         hot: false,
@@ -168,7 +168,8 @@ module.exports = Object.keys(languages).map(lan => {
             chunks: ['lib', 'app', 'config'],
             title: '会议室预定',
             chunksSortMode,
-            inject: true
+            inject: true,
+            hash: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
@@ -176,7 +177,8 @@ module.exports = Object.keys(languages).map(lan => {
           chunks: ['lib', 'board', 'config'],
           title: '会议室看板',
           chunksSortMode,
-          inject: true
+          inject: true,
+          hash: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
@@ -184,7 +186,8 @@ module.exports = Object.keys(languages).map(lan => {
           title: '会议室管理',
           chunks: ['lib', 'admin', 'config'],
           chunksSortMode,
-          inject: true
+          inject: true,
+          hash: true
         }),
         new ExtractTextPlugin({
             filename: 'css/app-[contenthash:6].css',
