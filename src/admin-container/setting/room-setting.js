@@ -116,9 +116,9 @@ class RoomSettings extends Component {
             fieldsValue.isDefaultBgForBusy = selectBusy;
             fieldsValue.bgForFree = imageUrl1;
             fieldsValue.bgForBusy = imageUrl2;
-            if(!this.state.responseMsg) {
-                fieldsValue.responseMessage = '';
-            }
+            // if(!this.state.responseMsg) {
+            //     fieldsValue.responseMessage = '';
+            // }
             this.setState({
                 loading: true
             });

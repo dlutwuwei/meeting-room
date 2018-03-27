@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Form, Spin, message } from 'antd';
+import { DatePicker, Form, Spin, message, Modal } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import AddAttendees from './addAttendees';
 import Recurrence from './recurrence';
+const confirm = Modal.confirm;
 
 import {
   changeProp
@@ -116,10 +117,20 @@ class Appointment extends Component {
           loading: true
         });
 
-        const setting = JSON.parse(localStorage.setItem('__meeting_setting') || '{}');
-        const duration = data.endTime.duration().subtract(data.startTime.duration).minutes();
-        if(duration < setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
+        const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
+        const duration = data.endTime.diff(data.startTime, 'minutes');
+        if(duration > setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
           message.error('预定时长超出限制');
+          this.setState({
+            loading: false
+          });
+          return;
+        }
+        if(setting.maxBookingDays < data.startTime.diff(new moment(), 'days')){
+          message.error(`超出可预订时间范围，只允许预定${setting.maxBookingDays}天内的会议`);
+          this.setState({
+            loading: false
+          });
           return;
         }
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
@@ -143,24 +154,42 @@ class Appointment extends Component {
         if(this.props.isEdit) {
           data.id = this.props.editId;
         }
-        const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
-        fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
-          message.success('预定成功');
-          setTimeout(() => {
-            location.href = '/home/mymeeting';
-          });
-          this.setState({
-            loading: false
-          });
-          localStorage.setItem('__meeting_recurrenceJson', '');
-        }).catch(() => {
-          message.error('预定失败');
-          this.setState({
-            loading: false
-          });
+        confirm({
+          title: '预定须知',
+          content: setting.responseMessage || '',
+          onOk: () => {
+            this.sendAppointment(data)
+          },
+          onCancel: () => {
+            this.setState({
+              loading: false
+            });
+          }
         });
+
       }
 
+    });
+  }
+  sendAppointment(data) {
+    this.setState({
+        loading: true
+    })
+    const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
+    fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
+      message.success('预定成功');
+      setTimeout(() => {
+        location.href = '/home/mymeeting';
+      });
+      this.setState({
+        loading: false
+      });
+      localStorage.setItem('__meeting_recurrenceJson', '');
+    }).catch(() => {
+      message.error('预定失败');
+      this.setState({
+        loading: false
+      });
     });
   }
   handleSearch = (value) => {
