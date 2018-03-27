@@ -201,6 +201,13 @@ class Schedule extends Component {
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_important') || 1;
+        const duration = data.endTime.duration().subtract(data.startTime.duration).minutes();
+
+        const setting = JSON.parse(localStorage.setItem('__meeting_setting') || '{}');
+        if(duration < setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
+          message.error('预定时长超出限制');
+          return;
+        }
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;

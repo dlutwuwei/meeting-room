@@ -115,6 +115,20 @@ class Appointment extends Component {
         this.setState({
           loading: true
         });
+
+        const setting = JSON.parse(localStorage.setItem('__meeting_setting') || '{}');
+        const duration = data.endTime.duration().subtract(data.startTime.duration).minutes();
+        if(duration < setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
+          message.error('预定时长超出限制');
+          return;
+        }
+        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
+        if(recurrenceJson) {
+          data.recurrenceJson = recurrenceJson;
+          data.isRecurrence = true;
+        } else {
+          data.isRecurrence = false;
+        }
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
@@ -128,13 +142,6 @@ class Appointment extends Component {
         data.importance = localStorage.getItem('__meeting_important') || 1;
         if(this.props.isEdit) {
           data.id = this.props.editId;
-        }
-        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
-        if(recurrenceJson) {
-          data.recurrenceJson = recurrenceJson;
-          data.isRecurrence = true;
-        } else {
-          data.isRecurrence = false;
         }
         const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
         fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
