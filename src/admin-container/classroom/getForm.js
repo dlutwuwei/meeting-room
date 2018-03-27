@@ -270,7 +270,16 @@ export default (type, onCreated) => {
                     });
                 };
                 const roles = JSON.parse(localStorage.getItem('__meeting_role')|| '[]');
-                const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+                const areas = [
+                    {
+                        id: 1,
+                        name: '北京'
+                    },
+                    {
+                        id: 2,
+                        name: '上海'
+                    }
+                ];
                 const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
                 return (
                     <CreateModal
@@ -358,13 +367,13 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="所属区域"
+                            label="城市"
                         >
-                            {form.getFieldDecorator('areaId', {
+                            {form.getFieldDecorator('cityIds', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: '' + (values.areaId || '')
+                                initialValue: (values.cityIds || '').split(',')
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select mode="multiple"  style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
@@ -464,13 +473,13 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="所属区域"
+                            label="城市"
                         >
-                            {form.getFieldDecorator('areaId', {
+                            {form.getFieldDecorator('cityIds', {
                                 rules: [{ required: true, message: '请输入区域' }],
                                 initialValue: values.areaId
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select mode="multiple" style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
