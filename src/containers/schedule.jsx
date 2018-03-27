@@ -195,15 +195,14 @@ class Schedule extends Component {
         data.from = localStorage.getItem('__meeting_user_email') || '';
         data.receiver = receivers.map(item => item.mail).join(';');
         data.roomMails = location.map(item => item.mail).join(';');
-        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
-        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
+
         data.showas = localStorage.getItem('__meeting_showas') || 2;
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_important') || 1;
 
         const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
-        const duration = data.endTime.diff(data.startTime, 'minutes');
+        const duration = endTime.diff(startTime, 'minutes');
         if(duration > setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
           message.error('预定时长超出限制');
           this.setState({
@@ -211,13 +210,17 @@ class Schedule extends Component {
           });
           return;
         }
-        if(setting.maxBookingDays < data.startTime.diff(new moment(), 'days')){
+        if(setting.maxBookingDays < startTime.diff(new moment(), 'days')){
           message.error(`超出可预订时间范围，只允许预定${setting.maxBookingDays}天内的会议`);
           this.setState({
             loading: false
           });
           return;
         }
+
+        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
+
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;
