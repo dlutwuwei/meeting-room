@@ -385,7 +385,7 @@ export default (type, onCreated) => {
                     </CreateModal>
                 );
             });
-        case 'rooms':
+        case 'room':
             deviceChildren = [];
             deviceChildren.push(<Option key={'hasTv'}>电视</Option>);
             deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
