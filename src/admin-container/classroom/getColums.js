@@ -222,8 +222,8 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title: '设备',
                     dataIndex: 'deviceNames',
-                    render: (item) => {
-                        return item.split(',');
+                    render: (item, record) => {
+                        return item && item.split(',');
                     }
                 },
                 {
