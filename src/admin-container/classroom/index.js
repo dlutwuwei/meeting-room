@@ -25,7 +25,7 @@ function getBreadcrumb(type) {
         case 'classroom':
             breadcrumb = <Breadcrumb.Item>培训室管理</Breadcrumb.Item>;
             break;
-        case 'vacation':
+        case 'festival':
             breadcrumb = <Breadcrumb.Item>节假日管理</Breadcrumb.Item>;
             break;
     }
@@ -52,8 +52,8 @@ export default class BasicList extends PureComponent {
                 return '/api/brandAdmin/getList';
             case 'room':
                 return '/api/trainingRoom/getList';
-            case 'vacation':
-                return '/api/meetingRoom/getRoomTypes';
+            case 'festival':
+                return '/api/festival/getList';
         }
     }
     fetchData = (done) => {

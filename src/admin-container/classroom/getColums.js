@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import  { Icon, Divider, Modal, message, Checkbox, Tag } from 'antd';
 import fetch from 'lib/fetch';
+import moment from 'moment';
 
 const confirm = Modal.confirm;
 
@@ -250,15 +251,21 @@ function getColumns(type, removeFromTable, showEditor) {
                 },
             ];
             break;
-        case 'type':
+        case 'festival':
             columns = [
                 {
-                    title: '会议室类型名称',
-                    dataIndex: 'name',
+                    title: '时间',
+                    dataIndex: 'theDate',
+                    render: (item) => {
+                        return item && new moment(item).local();
+                    }
                 },
                 {
-                    title: '描述',
-                    dataIndex: 'description',
+                    title: '是否节假日',
+                    dataIndex: 'isFestival',
+                    render: (item) => {
+                        return item ? '是' : '否';
+                    }
                 }
             ];
             break;

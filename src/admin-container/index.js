@@ -31,7 +31,8 @@ const KEY_MAP = {
   '/admin/classroom/division': '18',
   '/admin/classroom/brand': '17',
   '/admin/classroom/admin': '19',
-  '/admin/classroom/room': '20'
+  '/admin/classroom/room': '20',
+  '/admin/classroom/festival': '21'
 }
 
 const KEY_OPEN = {
@@ -49,8 +50,8 @@ const KEY_OPEN = {
   '/admin/classroom/division': 'sub4',
   '/admin/classroom/brand': 'sub4',
   '/admin/classroom/admin': 'sub4',
-  '/admin/classroom/room': 'sub4'
-
+  '/admin/classroom/room': 'sub4',
+  '/admin/classroom/festival': 'sub4'
 }
 class Admin extends React.Component {
   state = {
@@ -90,8 +91,7 @@ class Admin extends React.Component {
                 <Menu.Item key="18"><Link to="/admin/classroom/division">部门管理</Link></Menu.Item>
                 <Menu.Item key="19"><Link to="/admin/classroom/admin">品牌管理员管理</Link></Menu.Item>
                 <Menu.Item key="20"><Link to="/admin/classroom/room">培训室管理</Link></Menu.Item>
-                {/* <Menu.Item key="21"><Link to="/admin/classroom/role">培训室预订</Link></Menu.Item>
-                <Menu.Item key="22"><Link to="/admin/classroom/role">节假日管理</Link></Menu.Item> */}
+                <Menu.Item key="21"><Link to="/admin/classroom/festival">节假日管理</Link></Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
                 <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>
