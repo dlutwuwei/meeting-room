@@ -61,7 +61,7 @@ class Monitor extends Component {
         return (
             <div className="monitor">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>数据监控</Breadcrumb.Item>
+                    <Breadcrumb.Item>设备监控</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="monitor-body">
                     <Row style={{marginTop: 20}}>
