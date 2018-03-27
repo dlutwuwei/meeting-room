@@ -87,7 +87,7 @@ function request(method, url, data, opts) {
                         okText: '确认',
                         cancelText: '取消',
                         onOk() {
-                            location.href='http://mt.auth.ig66.com?callback=' + encodeURIComponent(`${location.protocol}//${location.host}${location.pathname}`);
+                            location.href=`${window.auth_url}?callback=` + encodeURIComponent(`${location.protocol}//${location.host}${location.pathname}`);
                         },
                         onCancel() {
                         },

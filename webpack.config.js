@@ -13,10 +13,18 @@ var languages = {
 	"cn": require("./src/locale/cn.json")
 };
 
+function chunksSortMode(c1, c2) {
+  let orders = ['config', 'lib', 'app', 'board', 'admin'];
+  let o1 = orders.indexOf(c1.names[0]);
+  let o2 = orders.indexOf(c2.names[0]);
+  return o1 - o2;
+}
+
 const mockserver = "http://mt.ig66.com"
 module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
+        config: ['./src/config.js'],
         lib: [ 'react', 'react-dom', 'babel-polyfill' ],
         app: ['./src/app.js'],
         board: ['./src/board.js'],
@@ -157,22 +165,25 @@ module.exports = Object.keys(languages).map(lan => {
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             filename: 'index.html',
-            chunks: ['lib', 'app'],
+            chunks: ['lib', 'app', 'config'],
             title: '会议室预定',
+            chunksSortMode,
             inject: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-board.html',
-          chunks: [ 'lib', 'board'],
+          chunks: ['lib', 'board', 'config'],
           title: '会议室看板',
+          chunksSortMode,
           inject: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-admin.html',
           title: '会议室管理',
-          chunks: [ 'lib', 'admin'],
+          chunks: ['lib', 'admin', 'config'],
+          chunksSortMode,
           inject: true
         }),
         new ExtractTextPlugin({
