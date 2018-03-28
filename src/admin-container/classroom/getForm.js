@@ -492,7 +492,7 @@ export default (type, onCreated) => {
                                 </Select>
                             )}
                         </FormItem>
-                        <FormItem
+                        {/* <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
                             label="邮箱"
@@ -503,7 +503,7 @@ export default (type, onCreated) => {
                             })(
                                 <Input placeholder="请输入邮箱" />
                             )}
-                        </FormItem>
+                        </FormItem> */}
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
@@ -511,7 +511,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('cityId', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: values.areaId
+                                initialValue: '' + values.cityId
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
@@ -525,14 +525,14 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('deviceIds', {
                                 rules: [{ required: true, message: '请输入设备' }],
-                                initialValue: []
+                                initialValue: values.deviceIds ? values.deviceIds.split(',') : []
                             })(
                                 <Select
                                     mode="multiple"
                                     style={{ width: '100%' }}
                                     placeholder="请选择设备"
                                 >
-                                    {devices.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))}
+                                    {devices.map(item => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>))}
                                 </Select>
                             )}
                         </FormItem>

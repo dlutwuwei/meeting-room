@@ -191,7 +191,7 @@ function getColumns(type, removeFromTable, showEditor) {
         case 'room':
             onDeleteClick = (index, id) => {
                 removeCurrent(() => {
-                    fetch.post('/api/rooms/delete', {
+                    fetch.post('/api/trainingRoom/delete', {
                         id,
                         token: localStorage.getItem('__meeting_token')
                     }).then(() => {
@@ -236,6 +236,9 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title: '状态',
                     dataIndex: 'state',
+                    render: (item, record) => {
+                        return ['未锁定', '锁定'][record.state];
+                    }
                 },
                 {
                     title: '操作',
