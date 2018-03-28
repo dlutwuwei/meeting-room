@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Input } from 'antd';
+import { Table, DatePicker, Input, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
-
+const Option = AutoComplete.Option;
 const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
 
 const columns = [{
@@ -42,6 +42,8 @@ class Charts extends Component {
     state = {
         loading: false,
         data: [],
+        attendees: '',
+        userList: [],
         startDate: '',
         endDate: '',
         roomName: '',
@@ -108,8 +110,36 @@ class Charts extends Component {
             });
         })
     }
+    handleSelect = (val) => {
+        this.setState({
+            attendees: val
+        });
+        this.load(1, {
+            from: val,
+        });
+    }
+    handleSearch = (value) => {
+        this.setState({
+            fetching: true
+        });
+        fetch.get('/api/meeting/getAttenders', {
+            keyword: value,
+            token: localStorage.getItem('__meeting_token') || ''
+        }).then((r) => {
+            this.setState({
+                userList: r.data.list.map(item => ({
+                    name: item.userName,
+                    mail: item.mail
+                })),
+                fetching: false
+            });
+        });
+    }
     render() {
-        const { data, pagination, loading } = this.state;
+        const { data, pagination, loading, userList } = this.state;
+        const children = userList.map((item, i) => {
+            return <Option value={item.mail} key={i}>{item.name}</Option>;
+          });
         return (
             <div>
                 <div className="filter-list">
@@ -123,6 +153,17 @@ class Charts extends Component {
                             endDate: val.format('YYYY-MM-DD')
                         });
                     }}/>
+                </div>
+                <div className="filter-list">
+                    <AutoComplete
+                        dataSource={userList}
+                        style={{ width: 200 }}
+                        onSelect={this.handleSelect}
+                        onSearch={this.handleSearch}
+                        placeholder="发起人搜索"
+                    >
+                        {children}
+                    </AutoComplete>
                     <Input placeholder="输入房间名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
