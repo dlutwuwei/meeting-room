@@ -89,9 +89,9 @@ class Admin extends React.Component {
                 <Menu.Item key="16"><Link to="/admin/classroom/device">设备管理</Link></Menu.Item>
                 <Menu.Item key="17"><Link to="/admin/classroom/brand">品牌管理</Link></Menu.Item>
                 <Menu.Item key="18"><Link to="/admin/classroom/division">部门管理</Link></Menu.Item>
-                <Menu.Item key="19"><Link to="/admin/classroom/admin">品牌管理员管理</Link></Menu.Item>
+                {/* <Menu.Item key="19"><Link to="/admin/classroom/admin">品牌管理员管理</Link></Menu.Item>
                 <Menu.Item key="20"><Link to="/admin/classroom/room">培训室管理</Link></Menu.Item>
-                <Menu.Item key="21"><Link to="/admin/classroom/festival">节假日管理</Link></Menu.Item>
+                <Menu.Item key="21"><Link to="/admin/classroom/festival">节假日管理</Link></Menu.Item> */}
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
                 <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>
