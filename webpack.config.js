@@ -14,7 +14,7 @@ var languages = {
 };
 
 function chunksSortMode(c1, c2) {
-  let orders = ['config', 'lib', 'app', 'board', 'admin'];
+  let orders = ['lib', 'config', 'app', 'board', 'admin'];
   let o1 = orders.indexOf(c1.names[0]);
   let o2 = orders.indexOf(c2.names[0]);
   return o1 - o2;

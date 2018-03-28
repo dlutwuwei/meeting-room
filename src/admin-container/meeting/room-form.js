@@ -135,10 +135,10 @@ class Room extends Component {
                     label="楼层"
                 >
                     {form.getFieldDecorator('floor', {
-                        rules: [{ required: true, message: '请输入设备' }],
+                        rules: [{ required: true, message: '请输入楼层' }],
                         initialValue: values.floor
                     })(
-                        <Input placeholder="请输入设备" />
+                        <Input placeholder="请输入楼层" />
                     )}
                 </FormItem>
                 <FormItem
