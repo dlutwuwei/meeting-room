@@ -53,7 +53,6 @@ class CreateModal extends Component {
 }
 
 export default (type, onCreated) => {
-    let deviceChildren, roomTypes, departments;
     const brands = JSON.parse(localStorage.getItem('__meeting_brand')|| '[]');
     const divisions = JSON.parse(localStorage.getItem('__meeting_division'));
     const devices = JSON.parse(localStorage.getItem('__meeting_device'));

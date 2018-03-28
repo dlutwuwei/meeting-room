@@ -225,7 +225,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     title: '设备',
                     dataIndex: 'deviceNames',
                     render: (item, record) => {
-                        const ids = record.deviceIds.split(',');
+                        const ids = record.deviceIds ? record.deviceIds.split(',') : [];
                         return devices.filter(item => ids.includes(''+item.id)).map(item => (<Tag>{item.name}</Tag>));
                     }
                 },
