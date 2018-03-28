@@ -53,7 +53,31 @@ class CreateModal extends Component {
 }
 
 export default (type, onCreated) => {
-    let deviceChildren, areas, roomTypes, departments;
+    let deviceChildren, roomTypes, departments;
+    const brands = JSON.parse(localStorage.getItem('__meeting_brand')|| '[]');
+    const divisions = JSON.parse(localStorage.getItem('__meeting_division'));
+    const devices = JSON.parse(localStorage.getItem('__meeting_device'));
+
+    let areas = [
+        {
+            id: '1',
+            name: '北京'
+        },
+        {
+            id: '2',
+            name: '上海'
+        }
+    ];
+    const brandAdminRoles = [
+        {
+            id: '2',
+            name: '超级管理员'
+        },
+        {
+            id: '1',
+            name: '普通管理员'
+        }
+    ];
     switch (type) {
         case 'device':
             return Form.create()((props) => {
@@ -250,13 +274,12 @@ export default (type, onCreated) => {
                 const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
-                        if(values.userId){
-                            fieldsValue.id = values.userId;
-                            fieldsValue.userName = values.userName;
+                        if(values.id){
+                            fieldsValue.id = values.id;
                         }
+                        fieldsValue.cityIds =fieldsValue.cityIds.join(',');
                         before && before();
-                        fetch.post(isEdit ? '/api/user/update' : '/api/user/add', {
-                            token: localStorage.getItem('__meeting_token'),
+                        fetch.post(`${isEdit ? '/api/brandAdmin/update' : '/api/brandAdmin/add'}?token=${localStorage.getItem('__meeting_token')}`, {
                             ...fieldsValue
                         }).then(() => {
                             handleModalVisible(false);
@@ -269,18 +292,6 @@ export default (type, onCreated) => {
                         });
                     });
                 };
-                const roles = JSON.parse(localStorage.getItem('__meeting_role')|| '[]');
-                const areas = [
-                    {
-                        id: '1',
-                        name: '北京'
-                    },
-                    {
-                        id: '2',
-                        name: '上海'
-                    }
-                ];
-                debugger
                 return (
                     <CreateModal
                         title="编辑用户"
@@ -293,13 +304,15 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="品牌ID"
+                            label="品牌"
                         >
                             {form.getFieldDecorator('brandId', {
                                 rules: [{ required: true, message: '请输入品牌ID' }],
-                                initialValue: values.name
+                                initialValue: values.brandId
                             })(
-                                <Input placeholder="请输入品牌ID" />
+                                <Select style={{ width: 120 }}>
+                                    {brands.map(item => <Option value={item.id}>{item.name}</Option>)}
+                                </Select>
                             )}
                         </FormItem>
                         <FormItem
@@ -350,308 +363,292 @@ export default (type, onCreated) => {
                                 <Input placeholder="请输入联系方式" />
                             )}
                         </FormItem>
-                        {/* <FormItem
+                        <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
                             label="角色"
                         >
-                            {form.getFieldDecorator('roleId', {
+                            {form.getFieldDecorator('brandAdminRoleId', {
                                 rules: [{ required: true, message: '请选择角色' }],
-                                initialValue: '' + (values.roleId || '')
+                                initialValue: '' + (values.brandAdminRoleId || '')
                             })(
                                 <Select style={{ width: 130 }} placeholder="请选择角色" >
-                                    {roles.map(item => <Option key={item.id} value={'' + item.id}>{item.name}</Option>)}
+                                    {brandAdminRoles.map(item => <Option key={item.id} value={item.id}>{item.name}</Option>)}
                                 </Select>
                             )}
-                        </FormItem> */}
-                        {/* <FormItem
+                        </FormItem>
+                        <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="所属区域"
+                            label="所属城市"
                         >
-                            {form.getFieldDecorator('areaId', {
+                            {form.getFieldDecorator('cityIds', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: '' + (values.areaId || '')
+                                initialValue: values.cityIds ? values.cityIds.split(',') : []
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
-                                    { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
+                                <Select mode="multiple" style={{ width: 120 }} placeholder="请输入区域" >
+                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
-                        </FormItem> */}
+                        </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
                             label="职位"
                         >
                             {form.getFieldDecorator('jobPosition', {
-                                rules: [{ required: false, message: '请输入职位' }],
+                                rules: [{ required: true, message: '请输入职位' }],
                                 initialValue: values.jobPosition
                             })(
                                 <Input style={{ width: 120 }} placeholder="请输入职位" />
 
                             )}
                         </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="账号状态"
+                        >
+                            {form.getFieldDecorator('state', {
+                                rules: [{ required: true, message: '请输入' }],
+                                initialValue: '' + values.state || '1',
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                    <Option key="1" value="1">正常</Option>
+                                    <Option key="2" value="2">禁用</Option>
+                                </Select>
+                            )}
+                        </FormItem>
                     </CreateModal>
                 );
             });
-        // case 'room':
-        //     deviceChildren = [];
-        //     deviceChildren.push(<Option key={'hasTv'}>电视</Option>);
-        //     deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
-        //     deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
-        //     deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
-        //     areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
-        //     roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
-        //     departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
-            
-        //     return Form.create()((props) => {
-        //         const { modalVisible, form, handleModalVisible, values, isEdit } = props;
-        //         const devices = [];
-        //         Object.keys(values).forEach(item => {
-        //             if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
-        //                 devices.push(item);
-        //             }
-        //         });
-        //         const okHandle = (before, after) => {
-        //             form.validateFields((err, fieldsValue) => {
-        //                 if (err) return;
-        //                 before && before();
-        //                 if(values.id) {
-        //                     fieldsValue.id = values.id;
-        //                     fieldsValue.areaId = values.areaId;
-        //                 }
-        //                 fieldsValue.devices.forEach(item => {
-        //                     fieldsValue[item] = true
-        //                 });
-        //                 delete fieldsValue.devices;
-        //                 fieldsValue.device = fieldsValue.deviceCode;
-        //                 fetch.post(`${isEdit ? '/api/meetingRoom/update' : '/api/meetingRoom/add'}?token=${localStorage.getItem('__meeting_token')}`, {
-        //                     ...fieldsValue
-        //                 }).then(() => {
-        //                     handleModalVisible(false);
-        //                     after && after();
-        //                     onCreated();
-        //                 }).catch(() => {
-        //                     message.error(isEdit ? '修改失败' : '创建失败')
-        //                     handleModalVisible(false);
-        //                 });
-        //             });
-        //         };
-        //         return (
-        //             <CreateModal
-        //                 title={ isEdit ? '编辑会议室' : '新建会议室'}
-        //                 visible={modalVisible}
-        //                 onOk={okHandle}
-        //                 okText="确定"
-        //                 cancelText="取消"
-        //                 onCancel={() => handleModalVisible()}
-        //             >
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="会议室名称"
-        //                 >
-        //                     {form.getFieldDecorator('name', {
-        //                         rules: [{ required: true, message: '请输入会议室名称' }],
-        //                         initialValue: values.name
-        //                     })(
-        //                         <Input placeholder="请输入会议室名称" />
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="邮箱"
-        //                 >
-        //                     {form.getFieldDecorator('mail', {
-        //                         rules: [{ required: true, message: '请输入邮箱' }],
-        //                         initialValue: values.mail
-        //                     })(
-        //                         <Input placeholder="请输入邮箱" />
-        //                     )}
-        //                 </FormItem>
-        //                 {/* <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="城市"
-        //                 >
-        //                     {form.getFieldDecorator('cityIds', {
-        //                         rules: [{ required: true, message: '请输入区域' }],
-        //                         initialValue: values.areaId
-        //                     })(
-        //                         <Select mode="multiple" style={{ width: 120 }} placeholder="请输入区域" >
-        //                             { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-        //                         </Select>
-        //                     )}
-        //                 </FormItem> */}
-        //                 {/* <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="设备"
-        //                 >
-        //                     {form.getFieldDecorator('devices', {
-        //                         rules: [{ required: true, message: '请输入设备' }],
-        //                         initialValue: []
-        //                     })(
-        //                         <Select
-        //                             mode="multiple"
-        //                             style={{ width: '100%' }}
-        //                             placeholder="请选择设备"
-        //                         >
-        //                             {deviceChildren}
-        //                         </Select>
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="楼层"
-        //                 >
-        //                     {form.getFieldDecorator('floor', {
-        //                         rules: [{ required: true, message: '请输入设备' }],
-        //                         initialValue: ''
-        //                     })(
-        //                         <Input placeholder="请输入设备" />
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="大小"
-        //                 >
-        //                     {form.getFieldDecorator('capacity', {
-        //                         rules: [{ required: true, message: '请输入容量' }],
-        //                         initialValue: values.capacity
-        //                     })(
-        //                         <Input placeholder="请输入容量" />
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="会议室类型"
-        //                 >
-        //                     {form.getFieldDecorator('roomType', {
-        //                         rules: [{ required: true, message: '请输入类型' }],
-        //                         initialValue: values.roomType
-        //                     })(
-        //                         <Select style={{ width: 120 }} placeholder="请输入类型">
-        //                             { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
-        //                         </Select>
-        //                     )}
-        //                 </FormItem>
-        //                 {values.roomType === 2 && <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="预留给"
-        //                 >
-        //                     {form.getFieldDecorator('onlyForUsers', {
-        //                         rules: [{ required: false, message: '请输入类型' }],
-        //                         initialValue: []
-        //                     })(
-        //                         <Select style={{ width: 120 }} placeholder="请输入类型" >
-        //                         </Select>
-        //                     )}
-        //                 </FormItem>}
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="所属部门"
-        //                 >
-        //                     {form.getFieldDecorator('departmentId', {
-        //                         rules: [{ required: false, message: '请输入部门' }],
-        //                         initialValue: values.departmentId
-        //                     })(
-        //                         <Select style={{ width: 120 }} placeholder="请输入部门" >
-        //                             { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-        //                         </Select>
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="设备码"
-        //                 >
-        //                     {form.getFieldDecorator('deviceCode', {
-        //                         rules: [{ required: true, message: '请输入设备码' }],
-        //                         initialValue: values.deviceCode
-        //                     })(
-        //                         <Input placeholder="请输入设备码" />
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="可预订"
-        //                 >
-        //                     {form.getFieldDecorator('isEnable', {
-        //                         rules: [{ required: true, message: '请输入' }],
-        //                         initialValue: values.isEnable,
-        //                         valuePropName: 'checked'
-        //                     })(
-        //                         <Checkbox></Checkbox>
-        //                     )}
-        //                 </FormItem> */}
-        //             </CreateModal>
-        //         );
-        //     });
-        // case 'festival':
-        //     return Form.create()((props) => {
-        //         const { modalVisible, form, handleModalVisible, values, isEdit } = props;
-        //         const okHandle = (before, after) => {
-        //             before && before();
-        //             form.validateFields((err, fieldsValue) => {
-        //                 if (err) return;
-        //                 if(values.id) {
-        //                     fieldsValue.id = values.id;
-        //                 }
-        //                 fetch.post(`${'/api/festival/toggleFestival'}?token=${localStorage.getItem('__meeting_token')}`, {
-        //                     ...fieldsValue
-        //                 }).then(() => {
-        //                     handleModalVisible(false);
-        //                     after && after();
-        //                     onCreated();
-        //                 }).catch(() => {
-        //                     message.error('修改失败')
-        //                     handleModalVisible(false);
-        //                 });
-        //             });
-        //         };
-        //         return (
-        //             <CreateModal
-        //                 title={ isEdit ? '编辑品牌' : '新建品牌'}
-        //                 visible={modalVisible}
-        //                 onOk={okHandle}
-        //                 okText="确认"
-        //                 cancelText="取消"
-        //                 onCancel={() => handleModalVisible(false)}
-        //             >
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="日期"
-        //                 >
-        //                     {form.getFieldDecorator('theDate', {
-        //                         rules: [{ required: true, message: '"请输入品牌名称' }],
-        //                         initialValue: values.theDate
-        //                     })(
-        //                         <DatePicker placeholder="请输入日期" />
-        //                     )}
-        //                 </FormItem>
-        //                 <FormItem
-        //                     labelCol={{ span: 5 }}
-        //                     wrapperCol={{ span: 15 }}
-        //                     label="描述"
-        //                 >
-        //                     {form.getFieldDecorator('description', {
-        //                         rules: [{ required: false, message: '请输入描述' }],
-        //                         initialValue: values.description || ''
-        //                     })(
-        //                         <Input placeholder="请输入描述" />
-        //                     )}
-        //                 </FormItem>
-        //             </CreateModal>
-        //         );
-        //     });
+        case 'room':
+            return Form.create()((props) => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    form.validateFields((err, fieldsValue) => {
+                        if (err) return;
+                        before && before();
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                        }
+                        fieldsValue.deviceIds = fieldsValue.deviceIds.join(',');
+                        fetch.post(`${isEdit ? '/api/trainingRoom/update' : '/api/trainingRoom/add'}?token=${localStorage.getItem('__meeting_token')}`, {
+                            ...fieldsValue
+                        }).then(() => {
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
+                        }).catch(() => {
+                            message.error(isEdit ? '修改失败' : '创建失败')
+                            handleModalVisible(false);
+                        });
+                    });
+                };
+                return (
+                    <CreateModal
+                        title={ isEdit ? '编辑会议室' : '新建会议室'}
+                        visible={modalVisible}
+                        onOk={okHandle}
+                        okText="确定"
+                        cancelText="取消"
+                        onCancel={() => handleModalVisible()}
+                    >
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="会议室名称"
+                        >
+                            {form.getFieldDecorator('name', {
+                                rules: [{ required: true, message: '请输入会议室名称' }],
+                                initialValue: values.name
+                            })(
+                                <Input placeholder="请输入会议室名称" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="英文名称"
+                        >
+                            {form.getFieldDecorator('enName', {
+                                rules: [{ required: true, message: '请输入会议室名称' }],
+                                initialValue: values.enName
+                            })(
+                                <Input placeholder="请输入会议室名称" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="品牌"
+                        >
+                            {form.getFieldDecorator('brandId', {
+                                rules: [{ required: true, message: '请输入品牌ID' }],
+                                initialValue: values.brandId
+                            })(
+                                <Select placeholder="选择品牌" style={{ width: 120 }}>
+                                    {brands.map(item => <Option value={item.id}>{item.name}</Option>)}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="邮箱"
+                        >
+                            {form.getFieldDecorator('mail', {
+                                rules: [{ required: true, message: '请输入邮箱' }],
+                                initialValue: values.mail
+                            })(
+                                <Input placeholder="请输入邮箱" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="城市"
+                        >
+                            {form.getFieldDecorator('cityId', {
+                                rules: [{ required: true, message: '请输入区域' }],
+                                initialValue: values.areaId
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="设备"
+                        >
+                            {form.getFieldDecorator('deviceIds', {
+                                rules: [{ required: true, message: '请输入设备' }],
+                                initialValue: []
+                            })(
+                                <Select
+                                    mode="multiple"
+                                    style={{ width: '100%' }}
+                                    placeholder="请选择设备"
+                                >
+                                    {devices.map(item => (<Option key={item.id} value={item.id}>{item.name}</Option>))}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="容量"
+                        >
+                            {form.getFieldDecorator('capacity', {
+                                rules: [{ required: true, message: '请输入容量' }],
+                                initialValue: values.capacity
+                            })(
+                                <Input placeholder="请输入容量" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="所属部门"
+                        >
+                            {form.getFieldDecorator('divisionId', {
+                                rules: [{ required: true, message: '请输入部门' }],
+                                initialValue: values.divisionId
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入部门" >
+                                    { divisions.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="账号状态"
+                        >
+                            {form.getFieldDecorator('lockState', {
+                                rules: [{ required: true, message: '请输入' }],
+                                initialValue: values.lockState && '' + values.lockState || '0',
+                            })(
+                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                    <Option key="0" value="1">未锁定</Option>
+                                    <Option key="1" value="2">已锁定</Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="备注"
+                        >
+                            {form.getFieldDecorator('remark', {
+                                rules: [{ required: false, message: '请输入备注' }],
+                                initialValue: values.remark
+                            })(
+                                <Input placeholder="请输入备注" />
+                            )}
+                        </FormItem>
+                    </CreateModal>
+                );
+            });
+        case 'festival':
+            return Form.create()((props) => {
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
+                const okHandle = (before, after) => {
+                    before && before();
+                    form.validateFields((err, fieldsValue) => {
+                        if (err) return;
+                        if(values.id) {
+                            fieldsValue.id = values.id;
+                        }
+                        fetch.post(`${'/api/festival/toggleFestival'}?token=${localStorage.getItem('__meeting_token')}`, {
+                            ...fieldsValue
+                        }).then(() => {
+                            handleModalVisible(false);
+                            after && after();
+                            onCreated();
+                        }).catch(() => {
+                            message.error('修改失败')
+                            handleModalVisible(false);
+                        });
+                    });
+                };
+                return (
+                    <CreateModal
+                        title={ isEdit ? '编辑品牌' : '新建品牌'}
+                        visible={modalVisible}
+                        onOk={okHandle}
+                        okText="确认"
+                        cancelText="取消"
+                        onCancel={() => handleModalVisible(false)}
+                    >
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="日期"
+                        >
+                            {form.getFieldDecorator('theDate', {
+                                rules: [{ required: true, message: '"请输入品牌名称' }],
+                                initialValue: values.theDate
+                            })(
+                                <DatePicker placeholder="请输入日期" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="描述"
+                        >
+                            {form.getFieldDecorator('description', {
+                                rules: [{ required: false, message: '请输入描述' }],
+                                initialValue: values.description || ''
+                            })(
+                                <Input placeholder="请输入描述" />
+                            )}
+                        </FormItem>
+                    </CreateModal>
+                );
+            });
     }
 }

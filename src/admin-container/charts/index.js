@@ -1,22 +1,9 @@
 import React, { Component } from 'react'
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { Table, DatePicker, Input, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = AutoComplete.Option;
-=======
-import { Table, DatePicker, Input } from 'antd';
-import fetch from 'lib/fetch';
-import moment from 'moment';
 
->>>>>>> add filter for charts
-=======
-import { Table, DatePicker, Input, AutoComplete } from 'antd';
-import fetch from 'lib/fetch';
-import moment from 'moment';
-const Option = AutoComplete.Option;
->>>>>>> fix filter
 const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
 
 const columns = [{
@@ -56,16 +43,8 @@ class Charts extends Component {
     state = {
         loading: false,
         data: [],
-<<<<<<< HEAD
-<<<<<<< HEAD
         attendees: '',
         userList: [],
-=======
->>>>>>> add filter for charts
-=======
-        attendees: '',
-        userList: [],
->>>>>>> fix filter
         startDate: '',
         endDate: '',
         roomName: '',
@@ -158,20 +137,10 @@ class Charts extends Component {
         });
     }
     render() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fix filter
         const { data, pagination, loading, userList } = this.state;
         const children = userList.map((item, i) => {
             return <Option value={item.mail} key={i}>{item.name}</Option>;
           });
-<<<<<<< HEAD
-=======
-        const { data, pagination, loading } = this.state;
->>>>>>> add filter for charts
-=======
->>>>>>> fix filter
         return (
             <div>
                 <div className="filter-list">
@@ -185,10 +154,6 @@ class Charts extends Component {
                             endDate: val.format('YYYY-MM-DD')
                         });
                     }}/>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fix filter
                 </div>
                 <div className="filter-list">
                     <AutoComplete
@@ -200,11 +165,6 @@ class Charts extends Component {
                     >
                         {children}
                     </AutoComplete>
-<<<<<<< HEAD
-=======
->>>>>>> add filter for charts
-=======
->>>>>>> fix filter
                     <Input placeholder="输入房间名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value

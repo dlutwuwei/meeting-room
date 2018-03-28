@@ -62,11 +62,33 @@ export default class BasicList extends PureComponent {
             token: localStorage.getItem('__meeting_token')
         }).then(res => {
             done && done();
-            this.setState({
-                data: res.data.length ? res.data: res.data.list,
-                page: res.data.page,
-                pageSize: res.data.pageSize
-            });
+            if(type === 'admin' || type == "room") {
+                Promise.all([fetch.get(this.getUrl('brand'), {
+                    token: localStorage.getItem('__meeting_token')
+                }), fetch.get(this.getUrl('division'), {
+                    token: localStorage.getItem('__meeting_token')
+                }), fetch.get(this.getUrl('device'), {
+                    token: localStorage.getItem('__meeting_token')
+                })]).then(([brand, division, device ]) => {
+                    localStorage.setItem('__meeting_brand', JSON.stringify(brand.data.list));
+                    localStorage.setItem('__meeting_division', JSON.stringify(division.data.list));
+                    localStorage.setItem('__meeting_device', JSON.stringify(device.data.list));
+
+                    this.setState({
+                        data: res.data.length ? res.data: res.data.list,
+                        page: res.data.page,
+                        pageSize: res.data.pageSize,
+                        loading: false
+                    });
+                });
+            } else {
+                this.setState({
+                    data: res.data.length ? res.data: res.data.list,
+                    page: res.data.page,
+                    pageSize: res.data.pageSize,
+                    loading: false
+                });
+            }
         }).catch(() => {
             done && done();
             this.setState({

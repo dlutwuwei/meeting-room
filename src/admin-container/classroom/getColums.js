@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import  { Icon, Divider, Modal, message, Checkbox, Tag } from 'antd';
+import  { Icon, Divider, Modal, message, Tag } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 
@@ -19,7 +19,8 @@ function getColumns(type, removeFromTable, showEditor) {
             },
         });
     }
-    const roomTypes = JSON.parse(localStorage.getItem('__meeting_type'));
+    const devices = JSON.parse(localStorage.getItem('__meeting_device'));
+
     switch (type) {
         case 'division':
             onDeleteClick = (index, id) => {
@@ -213,8 +214,8 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'name',
                 },
                 {
-                    title: '区域',
-                    dataIndex: 'area',
+                    title: '城市',
+                    dataIndex: 'cityName'
                 },
                 {
                     title: '部门',
@@ -224,12 +225,9 @@ function getColumns(type, removeFromTable, showEditor) {
                     title: '设备',
                     dataIndex: 'deviceNames',
                     render: (item, record) => {
-                        return item && item.split(',');
+                        const ids = record.deviceIds.split(',');
+                        return devices.filter(item => ids.includes(''+item.id)).map(item => (<Tag>{item.name}</Tag>));
                     }
-                },
-                {
-                    title: '楼层',
-                    dataIndex: 'floor',
                 },
                 {
                     title: '大小',
