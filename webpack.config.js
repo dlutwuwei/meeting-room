@@ -28,7 +28,8 @@ module.exports = Object.keys(languages).map(lan => {
         lib: [ 'react', 'react-dom', 'babel-polyfill' ],
         app: ['./src/app.js'],
         board: ['./src/board.js'],
-        admin: ['./src/admin.js']
+        admin: ['./src/admin.js'],
+        train: ['./src/train.js']
     },
     output: {
         publicPath: isDev ? '/' : '/static/',
@@ -47,6 +48,12 @@ module.exports = Object.keys(languages).map(lan => {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
+          '/api/trainingRoom/*': {
+            target: 'http://47.95.238.222:9001/mock/11/mt'
+          },
+          '/api/training/*': {
+            target: 'http://47.95.238.222:9001/mock/11/mt'
+          },
           '/api/*': {
               target:  `${mockserver}`,
               changeOrigin: true,
@@ -57,6 +64,8 @@ module.exports = Object.keys(languages).map(lan => {
                     return '/index-board.html';
                   } else if (req.url.startsWith('/admin')) {
                     return '/index-admin.html';
+                  } else if(req.url.startsWith('/train')){
+                    return '/index-train.html';
                   }
                   console.log('Skipping proxy for browser request.');
                   return '/index.html';
@@ -188,6 +197,13 @@ module.exports = Object.keys(languages).map(lan => {
           chunksSortMode,
           inject: true,
           hash: true
+        }),
+        new HtmlWebpackPlugin({
+          template: 'public/index.html',
+          filename: 'index-train.html',
+          title: '培训室管理',
+          chunks: ['lib', 'train'],
+          inject: true
         }),
         new ExtractTextPlugin({
             filename: 'css/app-[contenthash:6].css',
