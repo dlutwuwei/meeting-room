@@ -19,7 +19,7 @@ const columns = [{
     title: '结束时间',
     dataIndex: 'endTime',
     render: (text, record) => {
-        return moment(record.startTime*1000).format('YYYY-MM-DD HH:mm');
+        return moment(record.endTime*1000).format('YYYY-MM-DD HH:mm');
     }
 }, {
     title: '楼层',

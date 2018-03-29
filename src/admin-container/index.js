@@ -106,7 +106,7 @@ class Admin extends React.Component {
             </SubMenu>
             <SubMenu key="sub5" title={<span><Icon type="setting" /><span>报表分析</span></span>}>
               <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="pie-chart" /><span>会议室报表</span></Link></Menu.Item>
-              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="pie-chart" /><span>会议室报表</span></Link></Menu.Item>
+              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="pie-chart" /><span>使用率报表</span></Link></Menu.Item>
             </SubMenu>
             <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>设备监控</span></Link></Menu.Item>
         </Menu>
@@ -126,7 +126,7 @@ class Admin extends React.Component {
             <Route path={`${match.url}/classroom/:type`} component={Classroom}/>
             <Route path={`${match.url}/setting/`} component={Setting}/>
             <Route path={`${match.url}/charts/usage`} component={Usage}/>
-            <Route path={`${match.url}/charts`} component={Charts}/>
+            <Route path={`${match.url}/charts/rooms`} component={Charts}/>
             <Route path={`${match.url}/monitor`} component={Monitor}/>
           </Content>
         </Layout>

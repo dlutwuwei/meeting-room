@@ -9,27 +9,28 @@ const columns = [{
     title: '会议室名称',
     dataIndex: 'roomName'
 }, {
-    title: '英文名称',
-    dataIndex: 'enName'
+    title: '区域',
+    dataIndex: 'areaName',
 }, {
     title: '总预订次数',
     dataIndex: 'meetingTimes'
 },  {
-    title: '总预订时长',
+    title: '总预订时长(分钟)',
     dataIndex: 'meetingTimeLength'
 }, {
     title: '楼层',
-    dataIndex: 'roomFloor'
-}, {
-    title: '发起人',
-    dataIndex: 'userName'
+    dataIndex: 'floor'
 }, {
     title: '使用率',
-    key: 'usedRate'
+    key: 'usedRate',
+    render: (text, record) => {
+        return record.usedRate + '%'
+    }
 }];
+
 import './charts.less';
 
-class Charts extends Component {
+class Usage extends Component {
     state = {
         loading: false,
         data: [],
@@ -149,7 +150,7 @@ class Charts extends Component {
                     }}/>
                 </div>
                 <div className="filter-list">
-                    <AutoComplete
+                    {/* <AutoComplete
                         dataSource={userList}
                         style={{ width: 200 }}
                         onSelect={this.handleSelect}
@@ -162,8 +163,8 @@ class Charts extends Component {
                         }}
                     >
                         {children}
-                    </AutoComplete>
-                    <Input placeholder="输入房间名称" onChange={(e) => {
+                    </AutoComplete> */}
+                    <Input placeholder="输入会议室名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
@@ -185,4 +186,4 @@ class Charts extends Component {
     }
 }
 
-export default Charts
+export default Usage;
