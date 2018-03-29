@@ -175,7 +175,7 @@ export default class Train extends React.Component {
   }
   fetchData() {
     const { range } = this.state;
-    Fetch.get(URL.train_query, {
+    Fetch.get(`${URL.train_query}?token=${localStorage.getItem('__meeting_token')}`, {
       range
     }).then(result => {
       const data = result.data;

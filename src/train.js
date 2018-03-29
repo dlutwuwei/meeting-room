@@ -12,13 +12,12 @@ import Train from './train-container';
 
 import * as util from 'lib/util';
 const token = util.getQuery('token');
-ReactDOM.render((
-    <Router>
-        <Route path="/train" component={Train}/>
-    </Router>
-  ), document.getElementById('root'));
+// ReactDOM.render((
+//     <Router>
+//         <Route path="/train" component={Train}/>
+//     </Router>
+//   ), document.getElementById('root'));
 
-/*
 
 fetch.get('/api/public/getCurrentUserInfo', {
   token: token || localStorage.getItem('__meeting_token')
@@ -34,5 +33,5 @@ fetch.get('/api/public/getCurrentUserInfo', {
 });
 
 token && localStorage.setItem('__meeting_token', token)
-*/
+
 

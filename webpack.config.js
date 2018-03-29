@@ -14,7 +14,7 @@ var languages = {
 };
 
 function chunksSortMode(c1, c2) {
-  let orders = ['lib', 'config', 'app', 'board', 'admin'];
+  let orders = ['lib', 'config', 'app', 'board', 'admin', 'train'];
   let o1 = orders.indexOf(c1.names[0]);
   let o2 = orders.indexOf(c2.names[0]);
   return o1 - o2;
@@ -202,7 +202,7 @@ module.exports = Object.keys(languages).map(lan => {
           template: 'public/index.html',
           filename: 'index-train.html',
           title: '培训室管理',
-          chunks: ['lib', 'train'],
+          chunks: ['lib', 'train', 'config'],
           inject: true
         }),
         new ExtractTextPlugin({
