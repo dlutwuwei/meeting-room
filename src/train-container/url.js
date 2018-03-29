@@ -4,6 +4,6 @@ export const train_create = '/api/trainingRoom/add';
 export const train_delete = '/api/trainingRoom/delete';
 export const train_item = '/api/trainingRoom/item';
 
-export const train_query = '/api/trainingRoom/query';
+export const train_query = '/api/trainingRoom/getList';
 
 export const train_book_list = '/api/training/getRoomScheduleList';
