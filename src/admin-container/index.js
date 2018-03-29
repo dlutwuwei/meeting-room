@@ -26,14 +26,15 @@ const KEY_MAP = {
   '/admin/setting/whitelist': '9',
   '/admin/setting/blacklist': '8',
   '/admin/setting/roomsetting': '10',
-  '/admin/charts': '13',
   '/admin/monitor': '14',
   '/admin/classroom/device': '16',
   '/admin/classroom/division': '18',
   '/admin/classroom/brand': '17',
   '/admin/classroom/admin': '19',
   '/admin/classroom/room': '20',
-  '/admin/classroom/festival': '21'
+  '/admin/classroom/festival': '21',
+  '/admin/charts/rooms': '13',
+  '/admin/charts/usage': '15'
 }
 
 const KEY_OPEN = {
@@ -52,7 +53,9 @@ const KEY_OPEN = {
   '/admin/classroom/brand': 'sub4',
   '/admin/classroom/admin': 'sub4',
   '/admin/classroom/room': 'sub4',
-  '/admin/classroom/festival': 'sub4'
+  '/admin/classroom/festival': 'sub4',
+  '/admin/charts/rooms': 'sub5',
+  '/admin/charts/usage': 'sub5'
 }
 class Admin extends React.Component {
   state = {
@@ -104,9 +107,9 @@ class Admin extends React.Component {
                 <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>
                 <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>
             </SubMenu>
-            <SubMenu key="sub5" title={<span><Icon type="setting" /><span>报表分析</span></span>}>
-              <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="pie-chart" /><span>会议室报表</span></Link></Menu.Item>
-              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="pie-chart" /><span>使用率报表</span></Link></Menu.Item>
+            <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>报表分析</span></span>}>
+              <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>会议室报表</span></Link></Menu.Item>
+              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>使用率报表</span></Link></Menu.Item>
             </SubMenu>
             <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>设备监控</span></Link></Menu.Item>
         </Menu>
