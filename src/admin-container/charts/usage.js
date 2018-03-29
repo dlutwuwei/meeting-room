@@ -4,38 +4,28 @@ import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = AutoComplete.Option;
 
-const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
 
 const columns = [{
-    title: '主题',
-    dataIndex: 'subject'
+    title: '会议室名称',
+    dataIndex: 'roomName'
 }, {
-    title: '开始时间',
-    dataIndex: 'startTime',
-    render: (text, record) => {
-        return moment(record.startTime*1000).format('YYYY-MM-DD HH:mm');
-    }
+    title: '英文名称',
+    dataIndex: 'enName'
+}, {
+    title: '总预订次数',
+    dataIndex: 'meetingTimes'
 },  {
-    title: '结束时间',
-    dataIndex: 'endTime',
-    render: (text, record) => {
-        return moment(record.startTime*1000).format('YYYY-MM-DD HH:mm');
-    }
+    title: '总预订时长',
+    dataIndex: 'meetingTimeLength'
 }, {
     title: '楼层',
     dataIndex: 'roomFloor'
 }, {
-    title: '房间',
-    dataIndex: 'roomNames'
-}, {
     title: '发起人',
     dataIndex: 'userName'
 }, {
-    title: '状态',
-    key: 'state',
-    render: (text, record) => {
-        return statusMap[record.state]
-    },
+    title: '使用率',
+    key: 'usedRate'
 }];
 import './charts.less';
 
@@ -69,24 +59,24 @@ class Charts extends Component {
             startDate = '',
             endDate='',
             roomName='',
-            roomMail='',
-            from='',
-            floor=''
+            areaId,
+            areaName,
+            floor
         } = this.state;
         this.setState({
             loading: true,
             data: [],
             ...params
         });
-        fetch.get('/api/report/getMeetingList', {
+        fetch.get('/api/report/getRoomUseRateList', {
             token: localStorage.getItem('__meeting_token'),
             page: page,
             pageSize: 10,
             startDate,
             endDate,
             roomName,
-            roomMail,
-            from,
+            areaId,
+            areaName,
             floor,
             ...params
         }).then(r => {

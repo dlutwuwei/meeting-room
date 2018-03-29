@@ -5,6 +5,7 @@ import MeetingList from './meeting/';
 import UserList from './user';
 import Setting from './setting';
 import Charts from './charts';
+import Usage from './charts/Usage'
 import Monitor from './monitor';
 import Classroom from './classroom'
 import PropTypes from 'prop-types';
@@ -103,7 +104,10 @@ class Admin extends React.Component {
                 <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>
                 <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>
             </SubMenu>
-            <Menu.Item key="13"><Link to="/admin/charts"><Icon type="pie-chart" /><span>报表分析</span></Link></Menu.Item>
+            <SubMenu key="sub5" title={<span><Icon type="setting" /><span>报表分析</span></span>}>
+              <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="pie-chart" /><span>会议室报表</span></Link></Menu.Item>
+              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="pie-chart" /><span>会议室报表</span></Link></Menu.Item>
+            </SubMenu>
             <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>设备监控</span></Link></Menu.Item>
         </Menu>
         </Sider>
@@ -121,6 +125,7 @@ class Admin extends React.Component {
             <Route path={`${match.url}/user/:type`} component={UserList}/>
             <Route path={`${match.url}/classroom/:type`} component={Classroom}/>
             <Route path={`${match.url}/setting/`} component={Setting}/>
+            <Route path={`${match.url}/charts/usage`} component={Usage}/>
             <Route path={`${match.url}/charts`} component={Charts}/>
             <Route path={`${match.url}/monitor`} component={Monitor}/>
           </Content>
