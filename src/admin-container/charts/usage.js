@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Input, AutoComplete } from 'antd';
+import { Table, DatePicker, Input, Select } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
-const Option = AutoComplete.Option;
+const Option = Select.Option;
 
 
 const columns = [{
@@ -29,15 +29,16 @@ const columns = [{
 }];
 
 import './charts.less';
-
+const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+const today = new moment();
 class Usage extends Component {
     state = {
         loading: false,
         data: [],
         attendees: '',
         userList: [],
-        startDate: '',
-        endDate: '',
+        startDate: null,
+        endDate: null,
         roomName: '',
         roomMail: '',
         from: '',
@@ -56,14 +57,16 @@ class Usage extends Component {
         this.load(1, {});
     }
     load(page, params) {
-        const {
-            startDate = '',
-            endDate='',
+        let {
+            startDate,
+            endDate,
             roomName='',
             areaId,
-            areaName,
             floor
         } = this.state;
+        startDate = startDate || today.format('YYYY-MM-DD');
+        endDate = endDate || today.format('YYYY-MM-DD');
+        areaId = areaId || areas[0].id;
         this.setState({
             loading: true,
             data: [],
@@ -76,9 +79,8 @@ class Usage extends Component {
             startDate,
             endDate,
             roomName,
-            areaId,
-            areaName,
             floor,
+            areaId,
             ...params
         }).then(r => {
             this.setState({
@@ -131,39 +133,35 @@ class Usage extends Component {
         });
     }
     render() {
-        const { data, pagination, loading, userList } = this.state;
-        const children = userList.map((item, i) => {
-            return <Option value={item.mail} key={i}>{item.name}</Option>;
-          });
+        const { data, pagination, loading } = this.state;
+        const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
         return (
             <div>
                 <div className="filter-list">
-                    <DatePicker placeholder="输入开始日期" onChange={(val) => {
+                    <DatePicker placeholder="输入开始日期" defaultValue={today} onChange={(val) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
                         });
                     }}/>
-                    <DatePicker placeholder="输入结束日期" onChange={(val) => {
+                    <DatePicker placeholder="输入结束日期" defaultValue={today} onChange={(val) => {
                         this.load(1, {
                             endDate: val.format('YYYY-MM-DD')
                         });
                     }}/>
                 </div>
                 <div className="filter-list">
-                    {/* <AutoComplete
-                        dataSource={userList}
-                        style={{ width: 200 }}
-                        onSelect={this.handleSelect}
-                        onSearch={this.handleSearch}
-                        placeholder="发起人搜索"
+                    <Select
+                        style={{ width: 120 }}
+                        placeholder="请输入区域"
+                        defaultValue={areas[0].id}
                         onChange={(val) => {
                             this.load(1, {
-                                from: val
+                                areaId: val
                             });
                         }}
                     >
-                        {children}
-                    </AutoComplete> */}
+                        { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                    </Select>`
                     <Input placeholder="输入会议室名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
