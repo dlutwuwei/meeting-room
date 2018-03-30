@@ -167,7 +167,7 @@ export default class BasicList extends PureComponent {
                         // 创建完成之后
                         this.fetchData();
                     })}
-                    showAdd={type !== 'type'}
+                    showAdd={type !== 'type' && type !== 'festival'}
                 />
             </div>
         );
