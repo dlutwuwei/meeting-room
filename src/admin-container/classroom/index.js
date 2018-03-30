@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import { Breadcrumb, Input, message} from 'antd';
+import { Breadcrumb, Input, message, DatePicker } from 'antd';
+import moment from 'moment';
+const { RangePicker } = DatePicker;
 import fetch from 'lib/fetch';
 import List from '../list';
 
@@ -36,7 +38,9 @@ export default class BasicList extends PureComponent {
         data: [],
         selectedRows: [],
         loading: false,
-        modalVisible: false
+        modalVisible: false,
+        startDate: new moment().format('YYYY-MM-DD'),
+        stopDate: new moment().format('YYYY-MM-DD')
     }
     componentDidMount() {
     }
@@ -58,8 +62,10 @@ export default class BasicList extends PureComponent {
     }
     fetchData = (done) => {
         const type = this.props.match.params.type;
+        const { startDate, stopDate } = this.state;
         fetch.get(this.getUrl(type), {
-            token: localStorage.getItem('__meeting_token')
+            token: localStorage.getItem('__meeting_token'),
+            ...( type === 'festival' ? { startDate, stopDate } : {})
         }).then(res => {
             done && done();
             if(type === 'admin' || type == "room") {
@@ -124,6 +130,14 @@ export default class BasicList extends PureComponent {
             data: this.state.data.slice()
         });
     }
+    handleRange = (dates) => {
+        this.setState({
+            startDate: dates[0].format('YYYY-MM-DD'),
+            stopDate: dates[1].format('YYYY-MM-DD')
+        }, () => {
+            this.fetchData();
+        });
+    }
     render() {
         const { data, loading, page, pageSize } = this.state;
         const type = this.props.match.params.type;
@@ -133,12 +147,13 @@ export default class BasicList extends PureComponent {
                     <Breadcrumb.Item>培训室管理</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
-                {/* { type === 'rooms' && <Search
-                    placeholder="input search text"
-                    onSearch={this.handleSearch.bind(this, type)}
-                    enterButton
-                    style={{width: 220, marginTop: 20}}
-                />} */}
+                { type === 'festival' && <RangePicker
+                    className=""
+                    onChange={this.handleRange}
+                    disabledDate={(currentDate) => {
+                        return currentDate.isBefore(new moment()) || currentDate.isAfter(new moment().add(1, 'months'))
+                    }}
+                /> }
                 <List
                     getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     // columns={getColumns(type, this.removeFromTable.bind(this))}

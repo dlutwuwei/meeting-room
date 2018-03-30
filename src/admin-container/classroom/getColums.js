@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import  { Icon, Divider, Modal, message, Tag } from 'antd';
+import  { Icon, Divider, Modal, message, Tag, Select } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 
@@ -258,14 +258,27 @@ function getColumns(type, removeFromTable, showEditor) {
                     title: '时间',
                     dataIndex: 'theDate',
                     render: (item) => {
-                        return item && new moment(item).local();
+                        return item && new moment(item*1000).format('YYYY-MM-DD');
                     }
                 },
                 {
                     title: '是否节假日',
                     dataIndex: 'isFestival',
-                    render: (item) => {
-                        return item ? '是' : '否';
+                    render: (item, record) => {
+                        // return item ? '是' : '否';
+                        return (<Select defaultValue={''+item} onChange={() => {
+                            fetch.post(`/api/festival/toggleFestival`, {
+                                token: localStorage.getItem('__meeting_token'),
+                                theDate: new moment(record.theDate*1000).format('YYYY-MM-DD')
+                            }).then(() => {
+                                message.info('修改节假日成功')
+                            }).catch(() => {
+                                message.error('修改节假日失败');
+                            });
+                        }}>
+                            <Option value="true">是</Option>
+                            <Option value="false">否</Option>
+                        </Select>)
                     }
                 }
             ];

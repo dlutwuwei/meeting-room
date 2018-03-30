@@ -410,7 +410,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('state', {
                                 rules: [{ required: true, message: '请输入' }],
-                                initialValue: '' + values.state || '1',
+                                initialValue: values.state || '1',
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     <Option key="1" value="1">正常</Option>
