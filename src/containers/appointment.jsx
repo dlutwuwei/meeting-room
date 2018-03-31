@@ -266,7 +266,9 @@ class Appointment extends Component {
       location: rooms
     });
     this.props.actions.changeProp('location', rooms);
-    this.props.actions.changeProp('locationOptions', this.props.locationOptions.concat(rooms));
+    this.props.actions.changeProp('locationOptions', this.props.locationOptions.filter(item => {
+      return item.mail !== rooms[0].mail; //去重
+    }).concat(rooms));
     this.props.actions.changeProp('roomsCheckedList', rooms.map(item => item.mail));
   }
   handleTime(type, time) {

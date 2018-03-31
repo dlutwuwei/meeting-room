@@ -97,7 +97,6 @@ class Schedule extends Component {
             mail: localStorage.getItem('__meeting_user_email'),
             name: localStorage.getItem('__meeting_user_name'),
         };
-        const { data } = this.state;
         const { receiverOptions, locationOptions } = this.props;
         const options = receiverOptions.concat(locationOptions); //receivers.concat(location);
         options.unshift(my);
@@ -106,42 +105,47 @@ class Schedule extends Component {
         this.setState({
             loading: true,
             options,
+            data: []
+        }, () => {
+            // 清空数据后加载
+            const { data } = this.state;
+            fetch.get('/api/schedule/getList', {
+                userMails: users.map(item => item.mail).join(','),
+                roomMails: locationOptions.map(item => item.mail).join(','),
+                startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                token: localStorage.getItem('__meeting_token') || ''
+            }).then(r => {
+                const list = r.data;
+                options.forEach((user, i) => {
+                    const user_data = list.filter(t => t.mail == user.mail);
+                    let user_list = [];
+                    if(user_data.length) {
+                        user_list = user_data.map(item => {
+                            const startTime = moment(item.startTime*1000);
+                            const endTime = moment(item.endTime*1000);
+                            const start = startTime.hours()*2 + parseInt(startTime.minutes()/30);
+                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30);
+                            return ({
+                                status: item.showAs,
+                                start,
+                                end
+                            })
+                        });
+                    }
+                    data[i] = user_list;
+                });
+                this.setState({
+                    data,
+                    loading: false
+                });
+            }).catch(() => {
+                this.setState({
+                    loading: false
+                });
+            });
         });
-        fetch.get('/api/schedule/getList', {
-            userMails: users.map(item => item.mail).join(','),
-            roomMails: locationOptions.map(item => item.mail).join(','),
-            startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
-            endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
-            token: localStorage.getItem('__meeting_token') || ''
-        }).then(r => {
-            const list = r.data;
-            options.forEach((user, i) => {
-                const user_data = list.filter(t => t.mail == user.mail);
-                let user_list = [];
-                if(user_data.length) {
-                    user_list = user_data.map(item => {
-                        const startTime = moment(item.startTime*1000);
-                        const endTime = moment(item.endTime*1000);
-                        const start = startTime.hours()*2 + startTime.minutes()/30;
-                        const end = endTime.hours()*2 + endTime.minutes()/30;
-                        return ({
-                            status: item.showAs,
-                            start,
-                            end
-                        })
-                    });
-                }
-                data[i] = user_list;
-            });
-            this.setState({
-                data,
-                loading: false
-            });
-        }).catch(() => {
-            this.setState({
-                loading: false
-            });
-        });
+        
     }
     onAttendeeChange = (checkedList) => {
         // 可以多选
@@ -538,7 +542,6 @@ class Schedule extends Component {
                             <Select
                                 size="default"
                                 placeholder={'Select floor'}
-                                labelInValue
                                 onChange={this.handleSelectFloor}
                                 style={{ width: 200, marginLeft: 20 }}
                             >
