@@ -241,7 +241,7 @@ class AddRooms extends Component {
                     <Input
                         style={{ width: 60 }}
                         defaultValue={this.props.defaultCapacity}
-                        onChange={this.handleChange.bind(this, 'capacity')}
+                        onChange={(e) => { this.handleChange('capacity', e.target.value)}}
                     >
                     </Input>
                 </div>
