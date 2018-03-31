@@ -81,7 +81,7 @@ function request(method, url, data, opts) {
             if(data.code === 0) {
                 return Promise.resolve(data);
             } else {
-                if(data.code ===  404 || data.code === 505) {
+                if(data.code ===  404) {
                     Modal.confirm({
                         title: 'Token过期，重新授权?',
                         okText: '确认',
@@ -92,6 +92,11 @@ function request(method, url, data, opts) {
                         onCancel() {
                         },
                     })
+                } else if (data.code === 505) {
+                    Modal.info({
+                        title: '没有权限使用这个功能, 请联系管理员',
+                        okText: '确认'
+                    });
                 }
                 return Promise.reject({ code: data.code, msg: `错误码${data.code}` })
             }
