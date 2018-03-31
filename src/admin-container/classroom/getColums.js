@@ -266,7 +266,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'isFestival',
                     render: (item, record) => {
                         // return item ? '是' : '否';
-                        return (<Select defaultValue={''+item} onChange={() => {
+                        return (<Select defaultValue={''+ (item || false)} onChange={() => {
                             fetch.post(`/api/festival/toggleFestival`, {
                                 token: localStorage.getItem('__meeting_token'),
                                 theDate: new moment(record.theDate*1000).format('YYYY-MM-DD')
