@@ -20,7 +20,8 @@ module.exports = Object.keys(languages).map(lan => {
         lib: [ 'react', 'react-dom', 'babel-polyfill' ],
         app: ['./src/app.js'],
         board: ['./src/board.js'],
-        admin: ['./src/admin.js']
+        admin: ['./src/admin.js'],
+        train: ['./src/train.js']
     },
     output: {
         publicPath: isDev ? '/' : '/static/',
@@ -49,6 +50,8 @@ module.exports = Object.keys(languages).map(lan => {
                     return '/index-board.html';
                   } else if (req.url.startsWith('/admin')) {
                     return '/index-admin.html';
+                  } else if(req.url.startsWith('/train')){
+                    return '/index-train.html';
                   }
                   console.log('Skipping proxy for browser request.');
                   return '/index.html';
@@ -173,6 +176,13 @@ module.exports = Object.keys(languages).map(lan => {
           filename: 'index-admin.html',
           title: '会议室管理',
           chunks: [ 'lib', 'admin'],
+          inject: true
+        }),
+        new HtmlWebpackPlugin({
+          template: 'public/index.html',
+          filename: 'index-train.html',
+          title: '培训室管理',
+          chunks: ['lib', 'train'],
           inject: true
         }),
         new ExtractTextPlugin({
