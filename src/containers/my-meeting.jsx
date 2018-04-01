@@ -21,7 +21,8 @@ class MyMeeting extends Component {
         loading: false,
         visible: false,
         meeting: {},
-        selectId: 0
+        selectId: 0,
+        isRecurrence: false
     }
     componentDidMount() {
         this.search(1);
@@ -39,7 +40,8 @@ class MyMeeting extends Component {
                 attendeesCheckedList: [],
                 showTimezone: false,
                 startTime:moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
-                subject: ''
+                subject: '',
+                recurrenceJson: ''
             });
         }
     }
@@ -75,12 +77,14 @@ class MyMeeting extends Component {
                 receivers: r.data.receiver.split(';').map(mail => ({ mail })),
                 showTimezone: false,
                 startTime: moment(r.data.startTime*1000),
-                subject: r.data.subject
+                subject: r.data.subject,
+                recurrenceJson: r.data.recurrenceJson
             }
             this.props.actions.batchChangeProp(meetingData);
             this.setState({
                 visible: true,
-                selectId: this.state.data[i].id
+                selectId: this.state.data[i].id,
+                isRecurrence: r.data.isRecurrence
             });
         });
         
@@ -113,7 +117,7 @@ class MyMeeting extends Component {
         });
     }
     render () {
-        const { data, type, loading, visible, selectId, totalPage, page, pageSize} = this.state;
+        const { data, type, loading, visible, selectId, totalPage, page, pageSize, isRecurrence} = this.state;
         return (
             <div className="my-meeting">
                 <div className="my-top">
@@ -177,7 +181,7 @@ class MyMeeting extends Component {
                     footer={null}
                     destroyOnClose
                 >
-                    <Appointment isEdit editId={selectId}/>
+                    <Appointment isEdit isRecurrence={isRecurrence} editId={selectId}/>
                 </Modal>
             </div>
         )

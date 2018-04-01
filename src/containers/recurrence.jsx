@@ -99,7 +99,7 @@ class Recurrence extends Component {
         monthType: 1, // 月循环选择星期还是日期，1 or 2
         noEnd: false, // 是否无线循环
         endType: 1,
-        numberOfOccurrences: 1
+        numberOfOccurrences: 1,
     }
     componentWillReceiveProps(props) {
         this.setState({
@@ -109,7 +109,7 @@ class Recurrence extends Component {
             let initState = {};
 
             // 显示保存的值
-            const recurrenceJson = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
+            const recurrenceJson = props.data.recurrenceJson || JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
             if(recurrenceJson.daily) {
                 initState = recurrenceJson.daily;
                 initState.recurrence_pattern = 1;
@@ -123,9 +123,10 @@ class Recurrence extends Component {
                 initState = recurrenceJson.yearly;
                 initState.recurrence_pattern = 4;
             }
+            const { startTime, endTime } = props.data;
             this.setState({
-                startTime: moment(props.data.startTime),
-                endTime: moment(props.data.endTime),
+                startTime: startTime ? moment(startTime) : new moment(),
+                endTime: endTime ? moment(endTime): new moment(),
                 ...initState
             });
         }

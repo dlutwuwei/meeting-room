@@ -133,7 +133,7 @@ class Appointment extends Component {
           });
           return;
         }
-        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
+        const recurrenceJson =  localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;
           data.isRecurrence = true;
@@ -309,20 +309,22 @@ class Appointment extends Component {
       token: localStorage.getItem('__meeting_token') || '',
       id: this.props.editId
     }).then(r => {
-      this.setState({
-        data: r.data
-      }, () => {
+      if(r.data.isRecurrence) {
         this.setState({
-          showRecurrence: true
+          data: r.data
+        }, () => {
+          this.setState({
+            showRecurrence: true
+          });
         });
-      });
+      }
     }).catch(() => {
       message.error('获取会议预定信息失败')
     })
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone, isEdit } = this.props;
+    const { showTimezone, isEdit, isRecurrence } = this.props;
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
 
     return (
@@ -332,7 +334,7 @@ class Appointment extends Component {
             <div className="send-btn" onClick={e => {
               this.handleSubmit(e)
             }}>Send</div>
-            {isEdit && <Button style={{marginTop: 20}} onClick={this.handleRecurrence}>Recurrence</Button>}
+            {isEdit && isRecurrence && <Button style={{marginTop: 20}} onClick={this.handleRecurrence}>Recurrence</Button>}
           </div>
           <div className="appoint-main">
             <AddAttendees
