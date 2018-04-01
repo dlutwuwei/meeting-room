@@ -64,7 +64,7 @@ class Usage extends Component {
             areaId,
             floor
         } = this.state;
-        startDate = startDate || today.format('YYYY-MM-DD');
+        startDate = startDate || today.clone().subtract(1, 'months').format('YYYY-MM-DD');
         endDate = endDate || today.format('YYYY-MM-DD');
         areaId = areaId || areas[0].id;
         this.setState({
@@ -138,7 +138,7 @@ class Usage extends Component {
         return (
             <div>
                 <div className="filter-list">
-                    <DatePicker placeholder="输入开始日期" defaultValue={today} onChange={(val) => {
+                    <DatePicker placeholder="输入开始日期" defaultValue={today.clone().subtract(1, 'months')} onChange={(val) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
                         });
