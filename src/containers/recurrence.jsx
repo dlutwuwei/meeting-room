@@ -86,7 +86,7 @@ class Recurrence extends Component {
         duration: 1,
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}'),
         everyDays: 1,
-        everyWeekDay: 1,
+        everyWorkDay: false,
         everyMonths: 1,
         dayOfMonth: 1,
         weekOfMonth: 1,
@@ -198,13 +198,13 @@ class Recurrence extends Component {
     }
     renderPattern(recurrence_pattern) {
         let pattern;
-        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, daysOfTheWeek, dayOfMonth, dayOfWeek, everyWeekDay, everyWeeks } = this.state;
+        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, daysOfTheWeek, dayOfMonth, dayOfWeek, everyWorkDay, everyWeeks } = this.state;
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
-                    <RadioGroup value={everyWeekDay} onChange={e => {
+                    <RadioGroup value={everyWorkDay ? 2 : 1} onChange={e => {
                         this.setState({
-                            everyWeekDay: e.target.value == 2
+                            everyWorkDay: e.target.value == 2
                         });
                     }}>
                         <Radio value={1}>Every <Input value={everyDays} onChange={(e) => {
@@ -302,7 +302,7 @@ class Recurrence extends Component {
 
         const {
             everyDays,
-            everyWeekDay,
+            everyWorkDay,
 
             everyWeeks,
             daysOfTheWeek,
@@ -328,7 +328,7 @@ class Recurrence extends Component {
                 recurrent_parma = {
                     daily: {
                         everyDays,
-                        everyWeekDay
+                        everyWorkDay
                     }
                 }
                 break;

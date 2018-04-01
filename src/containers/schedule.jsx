@@ -239,7 +239,7 @@ class Schedule extends Component {
             });
         } else if (!data.content || !data.subject) {
             confirm({
-                title: '没有填写标题和内容，确认发送？',
+                title: '没有填写标题或内容，确认发送？',
                 onOk: () => {
                     this.sendAppointment(data)
                 },
