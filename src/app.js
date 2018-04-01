@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route
 } from 'react-router-dom';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux'
 import logger from 'redux-logger'
 import thunkMiddleware from 'redux-thunk';
@@ -17,7 +17,8 @@ import Topics from './containers/topics';
 import About from './containers/about';
 import * as util from 'lib/util';
 
-const store = createStore(homeReducer, {}, applyMiddleware(thunkMiddleware, logger));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(homeReducer,{}, composeEnhancers((applyMiddleware(thunkMiddleware, logger))));
 
 const token = util.getQuery('token');
 

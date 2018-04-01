@@ -27,15 +27,21 @@ class MyMeeting extends Component {
         this.search(1);
     }
     componentWillUnmount () {
-        this.props.actions.batchChangeProp({
-            content: '',
-            endTime: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(30),
-            location: [],
-            receivers: [],
-            showTimezone: false,
-            startTime:moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
-            subject: ''
-        });
+        if(this.state.selectId) {
+            this.props.actions.batchChangeProp({
+                content: '',
+                endTime: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(30),
+                location: [],
+                receivers: [],
+                receiverOptions: [],
+                locationOptions: [],
+                roomsCheckedList: [],
+                attendeesCheckedList: [],
+                showTimezone: false,
+                startTime:moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
+                subject: ''
+            });
+        }
     }
     
     handlCancel = (i) => {
