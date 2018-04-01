@@ -156,6 +156,7 @@ class Appointment extends Component {
         }
         confirm({
           title: '预定须知',
+          width: 600,
           content: setting.responseMessage || '',
           onOk: () => {
             this.sendAppointment(data)
