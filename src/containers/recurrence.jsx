@@ -375,11 +375,13 @@ class Recurrence extends Component {
         } else {
             recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
         }
+        const start =  moment(startTime * 1000);
+        const end =  moment(endTime * 1000);
         const recurrenceJson = JSON.stringify({
-            startTime: startTime.clone().utc().format('HH:mm'),
-            endTime: endTime.clone().utc().format('HH:mm'),
-            startDate: startTime.clone().utc().format('YYYY-MM-DD'),
-            endDate: endTime.clone().utc().format('YYYY-MM-DD'),
+            startTime: start.clone().utc().format('HH:mm'),
+            endTime: end.clone().utc().format('HH:mm'),
+            startDate: start.clone().utc().format('YYYY-MM-DD'),
+            endDate: end.clone().utc().format('YYYY-MM-DD'),
             duration: duration*60,
             timeZone,
             ...recurrent_parma
