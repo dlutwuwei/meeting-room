@@ -357,8 +357,10 @@ class Recurrence extends Component {
                 recurrent_parma = {
                     yearly: yearType === 1 ? {
                         everyYear,
-                        month
+                        month,
+                        dayOfMonth
                     } : {
+                        everyYear,
                         month,
                         weekOfMonth,
                         dayOfWeek,
