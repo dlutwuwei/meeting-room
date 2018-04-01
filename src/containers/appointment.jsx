@@ -309,15 +309,13 @@ class Appointment extends Component {
       token: localStorage.getItem('__meeting_token') || '',
       id: this.props.editId
     }).then(r => {
-      if(r.data.isRecurrence) {
+      this.setState({
+        data: r.data
+      }, () => {
         this.setState({
-          data: r.data
-        }, () => {
-          this.setState({
-            showRecurrence: true
-          });
+          showRecurrence: true
         });
-      }
+      });
     }).catch(() => {
       message.error('获取会议预定信息失败')
     })
@@ -334,7 +332,7 @@ class Appointment extends Component {
             <div className="send-btn" onClick={e => {
               this.handleSubmit(e)
             }}>Send</div>
-            {isEdit && isRecurrence && <Button style={{marginTop: 20}} onClick={this.handleRecurrence}>Recurrence</Button>}
+            {isEdit && <Button style={{marginTop: 20}} onClick={this.handleRecurrence}>Recurrence</Button>}
           </div>
           <div className="appoint-main">
             <AddAttendees
