@@ -347,6 +347,7 @@ class Recurrence extends Component {
                         everyMonths,
                         dayOfMonth
                     } : {
+                        everyMonths,
                         weekOfMonth,
                         dayOfWeek,
                     }
