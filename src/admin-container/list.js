@@ -11,7 +11,14 @@ export default class BasicList extends PureComponent {
         isEdit: false
     }
     componentDidMount() {
-        this.props.fetchData();
+        this.setState({
+            loading: true
+        });
+        this.props.fetchData(() => {
+            this.setState({
+                loading: false
+            });
+        });
     }
     componentWillReceiveProps(nextProps) {
         if(this.props.type !== nextProps.type) {

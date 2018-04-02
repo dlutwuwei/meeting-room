@@ -63,6 +63,9 @@ export default class BasicList extends PureComponent {
     fetchData = (done) => {
         const type = this.props.match.params.type;
         const { startDate, stopDate } = this.state;
+        this.setState({
+            data: []
+        });
         fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token'),
             ...( type === 'festival' ? { startDate, stopDate } : {})

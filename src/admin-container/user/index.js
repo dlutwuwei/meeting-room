@@ -38,6 +38,9 @@ export default class BasicList extends PureComponent {
     }
     fetchData = (done, page = 1, pageSize = 10) => {
         const type = this.props.match.params.type;
+        this.setState({
+            data: []
+        });
         fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token'),
             page,
