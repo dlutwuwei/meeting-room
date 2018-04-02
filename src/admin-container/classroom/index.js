@@ -39,8 +39,8 @@ export default class BasicList extends PureComponent {
         selectedRows: [],
         loading: false,
         modalVisible: false,
-        startDate: new moment().format('YYYY-MM-DD'),
-        stopDate: new moment().format('YYYY-MM-DD')
+        startDate: moment().format('YYYY-MM-DD'),
+        stopDate: moment().add(1, 'months').format('YYYY-MM-DD')
     }
     componentDidMount() {
     }
@@ -151,7 +151,8 @@ export default class BasicList extends PureComponent {
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 { type === 'festival' && <RangePicker
-                    className=""
+                    className="festival-range"
+                    defaultValue={[moment(), moment().add(1, 'months')]}
                     onChange={this.handleRange}
                     disabledDate={(currentDate) => {
                         return currentDate.isBefore(new moment()) || currentDate.isAfter(new moment().add(1, 'months'))

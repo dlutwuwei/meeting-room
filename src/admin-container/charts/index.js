@@ -3,6 +3,7 @@ import { Table, DatePicker, Input, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = AutoComplete.Option;
+const { RangePicker } = DatePicker;
 
 const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
 
@@ -25,7 +26,7 @@ const columns = [{
     title: '楼层',
     dataIndex: 'roomFloor'
 }, {
-    title: '房间',
+    title: '会议室',
     dataIndex: 'roomNames'
 }, {
     title: '发起人',
@@ -147,18 +148,12 @@ class Charts extends Component {
         return (
             <div>
                 <div className="filter-list">
-                    <DatePicker placeholder="输入开始日期" onChange={(val) => {
+                    <RangePicker onChange={([val, val1]) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
+                            endDate: val1.format('YYYY-MM-DD')
                         });
                     }}/>
-                    <DatePicker placeholder="输入结束日期" onChange={(val) => {
-                        this.load(1, {
-                            endDate: val.format('YYYY-MM-DD')
-                        });
-                    }}/>
-                </div>
-                <div className="filter-list">
                     <AutoComplete
                         dataSource={userList}
                         style={{ width: 200 }}
@@ -178,11 +173,20 @@ class Charts extends Component {
                             roomName: e.target.value
                         });
                     }}/>
+                    {/* <DatePicker placeholder="输入结束日期" onChange={(val) => {
+                        this.load(1, {
+                            endDate: val.format('YYYY-MM-DD')
+                        });
+                    }}/> */}
+                </div>
+                <div className="filter-list">
                     <Input placeholder="输入楼层" onChange={(e) => {
                         this.load(1, {
                             floor: e.target.value
                         });
                     }}/>
+                    <div></div>
+                    <div></div>
                 </div>
                 <Table
                     loading={loading}

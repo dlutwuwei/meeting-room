@@ -510,9 +510,9 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('cityId', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: '' + values.cityId
+                                initialValue: values.cityId
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select style={{ width: 120 }} placeholder="请输入城市" >
                                     { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
@@ -568,9 +568,9 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('lockState', {
                                 rules: [{ required: true, message: '请输入' }],
-                                initialValue: values.lockState && '' + values.lockState || '0',
+                                initialValue: values.lockState,
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select style={{ width: 120 }} placeholder="请输入账号状态" >
                                     <Option key="0" value="1">未锁定</Option>
                                     <Option key="1" value="2">已锁定</Option>
                                 </Select>

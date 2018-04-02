@@ -3,7 +3,7 @@ import { Table, DatePicker, Input, Select } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = Select.Option;
-
+const { RangePicker } = DatePicker;
 
 const columns = [{
     title: '会议室名称',
@@ -138,18 +138,12 @@ class Usage extends Component {
         return (
             <div>
                 <div className="filter-list">
-                    <DatePicker placeholder="输入开始日期" defaultValue={today.clone().subtract(1, 'months')} onChange={(val) => {
+                    <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today]} onChange={([val, val1]) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
+                            endDate: val1.format('YYYY-MM-DD')
                         });
                     }}/>
-                    <DatePicker placeholder="输入结束日期" defaultValue={today} onChange={(val) => {
-                        this.load(1, {
-                            endDate: val.format('YYYY-MM-DD')
-                        });
-                    }}/>
-                </div>
-                <div className="filter-list">
                     <Select
                         style={{ width: 120 }}
                         placeholder="请输入区域"
@@ -161,17 +155,26 @@ class Usage extends Component {
                         }}
                     >
                         { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-                    </Select>`
+                    </Select>
                     <Input placeholder="输入会议室名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
                     }}/>
+                    {/* <DatePicker placeholder="输入结束日期" defaultValue={today} onChange={(val) => {
+                        this.load(1, {
+                            endDate: val.format('YYYY-MM-DD')
+                        });
+                    }}/> */}
+                </div>
+                <div className="filter-list">
                     <Input placeholder="输入楼层" onChange={(e) => {
                         this.load(1, {
                             floor: e.target.value
                         });
                     }}/>
+                    <div />
+                    <div />
                 </div>
                 <Table
                     loading={loading}
