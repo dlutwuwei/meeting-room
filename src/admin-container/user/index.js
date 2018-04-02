@@ -36,10 +36,12 @@ export default class BasicList extends PureComponent {
                 return '/api/role/getList';
         }
     }
-    fetchData = (done) => {
+    fetchData = (done, page = 1, pageSize = 10) => {
         const type = this.props.match.params.type;
         fetch.get(this.getUrl(type), {
-            token: localStorage.getItem('__meeting_token')
+            token: localStorage.getItem('__meeting_token'),
+            page,
+            pageSize
         }).then(res => {
             done && done();
             if(type === 'list') {
