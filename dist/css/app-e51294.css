@@ -17910,6 +17910,7 @@ textarea.ant-pagination-options-quick-jumper input {
       -ms-flex: 1;
           flex: 1;
   margin: 0 10px;
+  width: 0;
 }.monitor {
   font-size: 16px;
 }
@@ -18041,4 +18042,8 @@ textarea.ant-pagination-options-quick-jumper input {
   height: 28px;
   line-height: 28px;
   font-size: 14px;
+}
+
+.festival-range {
+  margin-top: 10px;
 }
