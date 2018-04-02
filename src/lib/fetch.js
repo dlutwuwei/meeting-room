@@ -39,6 +39,9 @@ function request(method, url, data, opts) {
 
     const finalData = Object.assign(
         isGet ? { _: Date.now() } : {},
+        {
+            pageSize: 9999
+        },
         data
     );
 
