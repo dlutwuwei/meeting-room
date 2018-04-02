@@ -31,13 +31,15 @@ export default class BasicList extends PureComponent {
     }
     handleStandardTableChange = (pagination) => {
         // eslint-disable-next-line
-        const { current, page, pageSize } = pagination;
-        // 没有做异步分页
+        const { current, pageSize } = pagination;
+        this.setState({
+            loading: true
+        });
         this.props.fetchData(() => {
             this.setState({
                 loading: false
             });
-        }, page, pageSize);
+        }, current, pageSize);
     }
     handleModalVisible = (flag) => {
         this.setState({
@@ -48,7 +50,7 @@ export default class BasicList extends PureComponent {
     }
     render() {
         const { selectedRows, loading, modalVisible, record, isEdit } = this.state;
-        const { data, breadcrumb, getColumns, page, pageSize, createForm, showAdd } = this.props;
+        const { data, breadcrumb, getColumns, page, pageSize, totalPage, createForm, showAdd } = this.props;
         const CreateForm = createForm;
         const parentMethods = {
             handleModalVisible: this.handleModalVisible.bind(this),
@@ -72,8 +74,9 @@ export default class BasicList extends PureComponent {
                         data={{
                             list: data,
                             pagination: {
-                                page,
-                                pageSize
+                                current: page,
+                                pageSize,
+                                total: totalPage * pageSize
                             }
                         }}
                         pagination={true}

@@ -84,6 +84,7 @@ export default class BasicList extends PureComponent {
                         data: res.data.length ? res.data: res.data.list,
                         page: res.data.page,
                         pageSize: res.data.pageSize,
+                        totalPage: res.data.totalPage,
                         loading: false
                     });
                 });
@@ -92,6 +93,7 @@ export default class BasicList extends PureComponent {
                     data: res.data.length ? res.data: res.data.list,
                     page: res.data.page,
                     pageSize: res.data.pageSize,
+                    totalPage: res.data.totalPage,
                     loading: false
                 });
             }
@@ -114,6 +116,7 @@ export default class BasicList extends PureComponent {
                 data: res.data.length ? res.data: res.data.list,
                 page: res.data.page,
                 pageSize: res.data.pageSize,
+                totalPage: res.data.totalPage,
                 loading: false
             });
         })
@@ -139,7 +142,7 @@ export default class BasicList extends PureComponent {
         });
     }
     render() {
-        const { data, loading, page, pageSize } = this.state;
+        const { data, loading, page, pageSize, totalPage } = this.state;
         const type = this.props.match.params.type;
         return (
             <div className="">
@@ -163,6 +166,7 @@ export default class BasicList extends PureComponent {
                     type={type}
                     page={page}
                     pageSize={pageSize}
+                    totalPage={totalPage}
                     createForm={getForm(type, () => {
                         // 创建完成之后
                         this.fetchData();
