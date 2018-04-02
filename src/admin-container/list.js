@@ -80,13 +80,12 @@ export default class BasicList extends PureComponent {
                         loading={loading}
                         data={{
                             list: data,
-                            pagination: {
+                            pagination: pagination ? {
                                 current: page,
                                 pageSize,
                                 total: totalPage * pageSize
-                            }
+                            } : false
                         }}
-                        pagination={pagination}
                         columns={columns}
                         onSelectRow={this.handleSelectRows}
                         onChange={this.handleStandardTableChange}

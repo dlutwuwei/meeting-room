@@ -65,11 +65,11 @@ class StandardTable extends PureComponent {
     const { selectedRowKeys, needTotalList } = this.state;
     const { data: { list, pagination }, loading, columns } = this.props;
 
-    const paginationProps = {
+    const paginationProps = pagination ? {
       showSizeChanger: true,
       showQuickJumper: true,
       ...pagination,
-    };
+    } : false;
 
     return (
       <div className={styles.standardTable}>
