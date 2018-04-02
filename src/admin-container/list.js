@@ -57,7 +57,7 @@ export default class BasicList extends PureComponent {
     }
     render() {
         const { selectedRows, loading, modalVisible, record, isEdit } = this.state;
-        const { data, breadcrumb, getColumns, page, pageSize, totalPage, createForm, showAdd } = this.props;
+        const { data, breadcrumb, getColumns, page, pageSize, totalPage, createForm, showAdd, pagination } = this.props;
         const CreateForm = createForm;
         const parentMethods = {
             handleModalVisible: this.handleModalVisible.bind(this),
@@ -86,7 +86,7 @@ export default class BasicList extends PureComponent {
                                 total: totalPage * pageSize
                             }
                         }}
-                        pagination={true}
+                        pagination={pagination}
                         columns={columns}
                         onSelectRow={this.handleSelectRows}
                         onChange={this.handleStandardTableChange}
@@ -105,7 +105,6 @@ export default class BasicList extends PureComponent {
 
 BasicList.defaultProps = {
     showAdd: true,
-    fetchData: () => {
-
-    }
+    fetchData: () => {},
+    pagination: true
 };

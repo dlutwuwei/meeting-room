@@ -60,7 +60,7 @@ export default class BasicList extends PureComponent {
                 return '/api/festival/getList';
         }
     }
-    fetchData = (done) => {
+    fetchData = (done, page=1, pageSize=10) => {
         const type = this.props.match.params.type;
         const { startDate, stopDate } = this.state;
         this.setState({
@@ -68,6 +68,8 @@ export default class BasicList extends PureComponent {
         });
         fetch.get(this.getUrl(type), {
             token: localStorage.getItem('__meeting_token'),
+            page,
+            pageSize,
             ...( type === 'festival' ? { startDate, stopDate } : {})
         }).then(res => {
             done && done();
@@ -175,6 +177,7 @@ export default class BasicList extends PureComponent {
                         // 创建完成之后
                         this.fetchData();
                     })}
+                    pagination={type!== 'festival'}
                     showAdd={type !== 'type' && type !== 'festival'}
                 />
             </div>
