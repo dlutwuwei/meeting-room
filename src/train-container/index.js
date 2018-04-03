@@ -1,9 +1,20 @@
 import React, { Fragment } from "react";
-import { Menu, Icon, DatePicker, Table, Modal, message } from "antd";
+import {
+  Menu,
+  Icon,
+  DatePicker,
+  Table,
+  Modal,
+  message,
+  Radio,
+  Select
+} from "antd";
 const { RangePicker } = DatePicker;
+const Option = Select.Option;
 import Fetch from "../lib/fetch";
 import classnames from "classnames";
 import Moment from "moment";
+const RadioGroup = Radio.Group;
 import { extendMoment } from "moment-range";
 const moment = extendMoment(Moment);
 import * as URL from "./url";
@@ -23,114 +34,313 @@ const colorMap = {
 };
 
 import "./index.less";
-const dateFormat = "YYYY/MM/DD";
+const dateFormat = "YYYY-MM-DD";
+class FormItem extends React.Component {
+  render() {
+    const {
+      type = "value",
+      label,
+      value,
+      readOnly = false,
+      options,
+      name,
+      ref,
+      onChange
+    } = this.props;
+    console.log("options:", options);
+    let inputDom = (
+      <input
+        name={name}
+        type={type}
+        value={value}
+        readOnly={readOnly}
+        onChange={value => onChange(name, value)}
+        className="right"
+        ref={ref}
+      />
+    );
+    if (type === "radio") {
+      inputDom = (
+        <RadioGroup
+          options={options}
+          defaultValue={value}
+          name={name}
+          ref={ref}
+          onChange={onChange}
+        />
+      );
+    } else if (type === "select") {
+      inputDom = (
+        <Select defaultValue={value} style={{ width: 120 }} onChange={onChange}>
+          {options.map(({ label, value }) => (
+            <Option value={value}>{label}</Option>
+          ))}
+        </Select>
+      );
+    }
+    return (
+      <div className="form-item">
+        <label className="left">{label}</label>
+        {inputDom}
+      </div>
+    );
+  }
+}
 function EditCell(props) {
-  const { text, onClick } = props;
-  const style = {
-    backgroundColor: colorMap[text]
+  const { text, onClick, record } = props;
+  if (text == null) {
+    return null;
+  }
+  const {
+    afternoonReservationName,
+    afternoonId,
+    morningReservationName,
+    morningId,
+    isFestival,
+    theDate
+  } = text;
+  const { lockState, isAllowMeBooking } = record;
+  let am_status = AVALIABLE;
+  let pm_status = AVALIABLE;
+  if (morningId) {
+    am_status = BOOKED;
+  }
+  if (afternoonId) {
+    pm_status = BOOKED;
+  }
+  if (lockState) {
+    am_status = LOCKED;
+    pm_status = LOCKED;
+  }
+  if (isFestival) {
+    am_status = HOLIDAY;
+    pm_status = HOLIDAY;
+  }
+  const am_style = {
+    backgroundColor: colorMap[am_status]
   };
-  return <span style={style} onClick={onClick} />;
+  const pm_style = {
+    backgroundColor: colorMap[pm_status]
+  };
+  return (
+    <div className="book-day">
+      <span
+        style={am_style}
+        onClick={() =>
+          onClick({
+            date: moment(1000 * theDate).format(dateFormat),
+            period: 1
+          })
+        }
+        className="book-am"
+      >
+        {morningReservationName}
+      </span>
+      <div className="divider" />
+      <span
+        style={pm_style}
+        onClick={() =>
+          onClick({
+            date: moment(1000 * theDate).format(dateFormat),
+            period: 2
+          })
+        }
+        className="book-pm"
+      >
+        {afternoonReservationName}
+      </span>
+    </div>
+  );
 }
 export default class Train extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      range: [moment(), moment().add(7, "days")],
+      range: [moment(), moment().add(2, "days")],
       train_list: [],
       selected_train: {},
+      selected_day: {
+        date: "",
+        period: ""
+      },
+      brand_info: [],
+      brandMap: {},
+      divisionMap: {},
       showModal: false,
       form_info: {}
     };
+    Fetch.get(URL.train_brand_list, {
+      token: localStorage.getItem("__meeting_token")
+    }).then(result => {
+      const data = result.data;
+      const brand_info = {};
+      const brandMap = {};
+      const divisionMap = {};
+      for (const item of data.list) {
+        const brand_id = item.id;
+        const brand_name = item.name;
+        brandMap[brand_name] = brand_id;
+        brand_info[brand_name] = [];
+        for (const division of item.BrandDivisions) {
+          brand_info[brand_name].push(division.name);
+          divisionMap[division.name] = division.id;
+        }
+      }
+      this.setState({
+        brand_info: brand_info,
+        brandMap,
+        divisionMap
+      });
+    });
   }
-  get formInfo() {
+  updateForm = (name, e) => {
+    /*
     const { selected_train } = this.state;
-    const { name: train_name, floor, capacity, deviceNames } = selected_train;
-    const { name, email, phone, department } = this.props;
+    selected_train[name] = e.target.value;
+    this.setState({
+      selected_train
+    });
+    */
+  };
+  formatTrainData(train_list) {}
+  get formInfo() {
+    const { selected_train, selected_day } = this.state;
+    const { roomName, floor, capacity, deviceNames } = selected_train;
+    const { name, mail, tel, department } = window.userInfo || {};
     const room_info = [
       {
+        name: "roomName",
         label: "培训教室名称",
-        value: train_name
+        value: roomName,
+        readOnly: true
       },
       {
+        name: "floor",
         label: "培训教室位置",
-        value: floor
+        value: floor,
+        readOnly: true
       },
       {
+        name: "capacity",
         label: "可容纳人数",
-        value: capacity
+        value: capacity,
+        readOnly: true
       },
       {
+        name: "deviceNames",
         label: "培训教室设备",
-        value: deviceNames
+        value: deviceNames,
+        readOnly: true
       }
     ];
     const user_info = [
       {
+        name: "name",
         label: "预订人姓名",
-        value: name
+        value: name,
+        readOnly: true
       },
       {
+        name: "email",
         label: "预订人邮件",
-        value: email
+        value: mail,
+        readOnly: true
       },
       {
+        name: "phone",
         label: "预订人联系电话",
-        value: phone
+        value: tel,
+        readOnly: true
       },
       {
+        name: "department",
         label: "预订人部门",
-        value: department
+        value: department,
+        readOnly: true
       }
     ];
     const {
       brandName,
       divisionName,
       subject,
-      date,
       time,
       people,
       tea_break,
       lunch,
       memo
     } = selected_train;
+    const { date } = selected_day;
+    const { brandMap, divisionMap } = this.state;
+    const brand_options = Object.keys(brandMap).map(x => ({
+      label: x,
+      value: x
+    }));
+    const division_options = Object.keys(divisionMap).map(x => ({
+      label: x,
+      value: x
+    }));
+    console.log("brand_options:", brand_options, division_options);
     const train_info = [
       {
-        label: "使用部门",
-        value: divisionName
-      },
-      {
+        name: "brandName",
         label: "使用品牌",
+        type: "select",
+        options: brand_options,
         value: brandName
       },
       {
-        key: "subject",
+        name: "divisionName",
+        label: "使用部门",
+        type: "select",
+        options: division_options,
+        value: divisionName,
+        readOnly: true
+      },
+      {
+        name: "subject",
         label: "培训主题",
         value: subject
       },
       {
+        name: "date",
         label: "培训日期",
         value: date
       },
       {
+        name: "time",
         label: "培训时间",
-        value: time
+        value: time,
+        type: "radio",
+        options: [
+          {
+            label: "上半天(8:30-12:30)",
+            value: 1
+          },
+          {
+            label: "下半天(12:30-18:30)",
+            value: 2
+          }
+        ]
       },
       {
+        name: "people",
         label: "培训人数",
         value: people
       },
       {
-        key: "teaBreaak",
-        label: "茶歇时间",
-        value: tea_break
+        name: "teaBreaak",
+        label: "需要茶歇时间",
+        value: tea_break,
+        type: "checkbox"
       },
       {
-        key: "outLunch",
-        label: "外出午餐需求",
-        value: lunch
+        name: "outLunch",
+        label: "需要外出午餐",
+        value: lunch,
+        type: "checkbox"
       },
       {
-        key: "remark",
+        name: "remark",
         label: "备注",
         value: memo
       }
@@ -143,7 +353,15 @@ export default class Train extends React.Component {
   }
   getFormData() {
     const form = document.querySelector(".form-container");
+    const { roomId, brandId } = this.state.selected_train;
+    const { date, period } = this.state.selected_day;
     const formData = new FormData(form);
+    formData.append("trainingRoomId", roomId);
+    formData.append("brandId", brandId);
+    formData.append("trainingDate", date);
+    formData.append("trainingDate", date);
+    formData.append("periodOfDay", period);
+    formData.append("divisionId", 1);
     const obj = {};
     for (const [key, value] of formData.entries()) {
       obj[key] = value;
@@ -161,7 +379,7 @@ export default class Train extends React.Component {
   }
   updateRange = (date, dateString) => {
     this.setState({
-      range: dateString
+      range: date
     });
     this.getRange(date[0], date[1]);
   };
@@ -175,13 +393,14 @@ export default class Train extends React.Component {
   }
   fetchData() {
     const { range } = this.state;
-    Fetch.get(`${URL.train_query}`, {
-      token: localStorage.getItem('__meeting_token'),
-      range,
+    Fetch.get(URL.train_book_list, {
+      token: localStorage.getItem("__meeting_token"),
+      startDate: range[0].format(dateFormat),
+      endDate: range[1].format(dateFormat)
     }).then(result => {
       const data = result.data;
       this.setState({
-        train_list: data.list
+        train_list: [...data.mine, ...data.others]
       });
     });
   }
@@ -269,8 +488,9 @@ export default class Train extends React.Component {
       </div>
     );
   }
-  showBookModal = record => {
+  showBookModal = (selected_day, record) => {
     this.setState({
+      selected_day,
       showModal: true,
       selected_train: record
     });
@@ -279,38 +499,46 @@ export default class Train extends React.Component {
     const range = this.getRange().map((x, idx) => {
       return {
         title: x,
-        dataIndex: `state_list.${idx}`,
-        className: "book-day",
+        dataIndex: `scheduleList.${idx}`,
+        className: "book-day-container",
+        colSpan: 1,
         width: 100,
-        render: (text, record) => (
-          <EditCell
-            text={text}
-            record={record}
-            onClick={() => this.showBookModal(record)}
-          />
-        )
+        render: (text, record) => {
+          return (
+            <EditCell
+              text={text}
+              record={record}
+              onClick={pick_day => this.showBookModal(pick_day, record)}
+            />
+          );
+        }
       };
     });
     const columns = [
       {
         title: "品牌",
         dataIndex: "brandName",
-        width: 100
+        width: 50
       },
       {
         title: "楼层",
         dataIndex: "floor",
-        width: 100
+        width: 50
       },
       {
         title: "培训室（容纳人数)",
         dataIndex: "capacity",
-        width: 100
+        width: 50
       },
       ...range
     ];
     return (
-      <Table dataSource={this.state.train_list} columns={columns} rowKey="id" />
+      <Table
+        dataSource={this.state.train_list}
+        columns={columns}
+        rowKey="roomId"
+        bordered
+      />
     );
   }
   renderStage() {
@@ -327,51 +555,24 @@ export default class Train extends React.Component {
     const room_dom = (
       <div className="room-container">
         <div>培训室信息</div>
-        {room_info.map(({ label, value, key }) => (
-          <div className="form-item" key={key}>
-            <label className="left">{label}</label>
-            <input
-              name={key}
-              type="value"
-              defaultValue={value}
-              ref={el => (this[key] = el)}
-              className="right"
-            />
-          </div>
+        {room_info.map(config => (
+          <FormItem {...config} onChange={this.updateForm} />
         ))}
       </div>
     );
     const user_dom = (
       <div className="user-container">
         <div>预订人信息</div>
-        {user_info.map(({ label, value, key }) => (
-          <div className="form-item" key={key}>
-            <label className="left">{label}</label>
-            <input
-              name={key}
-              type="value"
-              defaultValue={value}
-              ref={el => (this[key] = el)}
-              className="right"
-            />
-          </div>
+        {user_info.map(config => (
+          <FormItem {...config} onChange={this.updateForm} />
         ))}
       </div>
     );
     const train_dom = (
       <div className="train-contaienr">
         <div>培训信息</div>
-        {train_info.map(({ label, value, key }) => (
-          <div className="form-item" key={key}>
-            <label className="left">{label}</label>
-            <input
-              name={key}
-              type="value"
-              defaultValue={value}
-              ref={el => (this[key] = el)}
-              className="right"
-            />
-          </div>
+        {train_info.map(config => (
+          <FormItem {...config} onChange={this.updateForm} />
         ))}
       </div>
     );
@@ -399,8 +600,8 @@ export default class Train extends React.Component {
   };
   submit_book = () => {
     const data = this.getFormData();
-    console.log("data:", data);
     Fetch.post(URL.train_create, {
+      token: localStorage.getItem("__meeting_token"),
       ...data
     }).then(
       () => {
