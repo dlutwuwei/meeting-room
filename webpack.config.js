@@ -205,6 +205,13 @@ module.exports = Object.keys(languages).map(lan => {
           chunks: ['lib', 'train', 'config'],
           inject: true
         }),
+        new HtmlWebpackPlugin({
+          template: 'public/index.html',
+          filename: 'index-train.html',
+          title: '培训室管理',
+          chunks: ['lib', 'train'],
+          inject: true
+        }),
         new ExtractTextPlugin({
             filename: 'css/app-[contenthash:6].css',
             allChunks: true

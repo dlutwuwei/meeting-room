@@ -12,16 +12,17 @@ import Train from './train-container';
 
 import * as util from 'lib/util';
 const token = util.getQuery('token');
-// ReactDOM.render((
-//     <Router>
-//         <Route path="/train" component={Train}/>
-//     </Router>
-//   ), document.getElementById('root'));
+ReactDOM.render((
+    <Router>
+        <Route path="/train" component={Train}/>
+    </Router>
+  ), document.getElementById('root'));
 
 
-fetch.get('/api/public/getCurrentUserInfo', {
+fetch.get('/api/public/getCurrentTrainUserInfo', {
   token: token || localStorage.getItem('__meeting_token')
 }).then(r => {
+  window.userInfo = r.data;
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
 
@@ -33,5 +34,4 @@ fetch.get('/api/public/getCurrentUserInfo', {
 });
 
 token && localStorage.setItem('__meeting_token', token)
-
 
