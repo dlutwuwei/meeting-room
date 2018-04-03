@@ -19,9 +19,10 @@ ReactDOM.render((
   ), document.getElementById('root'));
 
 
-fetch.get('/api/public/getCurrentUserInfo', {
+fetch.get('/api/public/getCurrentTrainUserInfo', {
   token: token || localStorage.getItem('__meeting_token')
 }).then(r => {
+  window.userInfo = r.data;
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
 
