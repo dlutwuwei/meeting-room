@@ -17911,6 +17911,10 @@ textarea.ant-pagination-options-quick-jumper input {
           flex: 1;
   margin: 0 10px;
   width: 0;
+}
+
+.download-link {
+  line-height: 32px;
 }.monitor {
   font-size: 16px;
 }
