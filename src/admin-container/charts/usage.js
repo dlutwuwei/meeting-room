@@ -37,12 +37,13 @@ class Usage extends Component {
         data: [],
         attendees: '',
         userList: [],
-        startDate: null,
-        endDate: null,
+        startDate: today.clone().subtract(1, 'months').format('YYYY-MM-DD'),
+        endDate: today.format('YYYY-MM-DD'),
         roomName: '',
         roomMail: '',
         from: '',
         floor: '',
+        areaId: areas[0].id,
         pagination:{
             position: 'bottom',
             pageSize: 10,
@@ -64,9 +65,6 @@ class Usage extends Component {
             areaId,
             floor
         } = this.state;
-        startDate = startDate || today.clone().subtract(1, 'months').format('YYYY-MM-DD');
-        endDate = endDate || today.format('YYYY-MM-DD');
-        areaId = areaId || areas[0].id;
         this.setState({
             loading: true,
             data: [],
@@ -133,7 +131,14 @@ class Usage extends Component {
         });
     }
     render() {
-        const { data, pagination, loading } = this.state;
+        const {
+            startDate,
+            endDate,
+            roomName='',
+            areaId,
+            floor,
+            data, pagination, loading
+        } = this.state;
         const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
         return (
             <div>
@@ -143,7 +148,7 @@ class Usage extends Component {
                             startDate: val.format('YYYY-MM-DD'),
                             endDate: val1.format('YYYY-MM-DD')
                         });
-                    }}/>
+                    }} placeholder={['开始时间', '结束时间']}/>
                     <Select
                         style={{ width: 120 }}
                         placeholder="请输入区域"
@@ -173,7 +178,7 @@ class Usage extends Component {
                             floor: e.target.value
                         });
                     }}/>
-                    <div />
+                    <div><a target="_blank" className="download-link" href={ `/api/report/exportRoomUseRateList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&areaId=${areaId}&floor=${floor}&roomName=${roomName}`}>下载报表</a></div>
                     <div />
                 </div>
                 <Table

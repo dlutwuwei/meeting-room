@@ -141,7 +141,15 @@ class Charts extends Component {
         });
     }
     render() {
-        const { data, pagination, loading, userList } = this.state;
+        const {
+            startDate = '',
+            endDate='',
+            roomName='',
+            roomMail='',
+            from='',
+            floor='',
+            data, pagination, loading, userList 
+        } = this.state;
         const children = userList.map((item, i) => {
             return <Option value={item.mail} key={i}>{item.name}</Option>;
           });
@@ -153,7 +161,7 @@ class Charts extends Component {
                             startDate: val.format('YYYY-MM-DD'),
                             endDate: val1.format('YYYY-MM-DD')
                         });
-                    }}/>
+                    }} placeholder={['开始时间', '结束时间']} />
                     <AutoComplete
                         dataSource={userList}
                         style={{ width: 200 }}
@@ -185,7 +193,7 @@ class Charts extends Component {
                             floor: e.target.value
                         });
                     }}/>
-                    <div></div>
+                    <div><a target="_blank" className="download-link" href={ `/api/report/exportMeetingList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&floor=${floor}&roomName=${roomName}&roomMail=${roomMail}&from=${from}`}>下载报表</a></div>
                     <div></div>
                 </div>
                 <Table
