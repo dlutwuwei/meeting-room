@@ -279,15 +279,15 @@ class Recurrence extends Component {
                                 dayOfMonth: e.target.value
                             });
                         }}/></Radio>
-                        <Radio value={2}>On the: <Select value={month} style={{width: 90}} onChange={(val) => {
+                        <Radio value={2}>On the: <Select value={month} style={{width: 120}} onChange={(val) => {
                             this.setState({
                                 month: val
                             });
-                        }}>{momentOfYear}</Select> of <Select value={weekOfMonth} style={{width: 110}} onChange={(val) => {
+                        }}>{momentOfYear}</Select> of <Select value={weekOfMonth} style={{width: 90}} onChange={(val) => {
                             this.setState({
                                 weekOfMonth: val
                             });
-                        }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 120}} onChange={(val) => {
+                        }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 100}} onChange={(val) => {
                             this.setState({
                                 dayOfWeek: val
                             });
