@@ -10837,14 +10837,29 @@ textarea.ant-pagination-options-quick-jumper input {
   width: 400px;
 }
 
-.train-container .stage-container .table-container .book-table .book-day {
+.train-container .stage-container .table-container .book-table .book-day-container {
   padding: 0px !important;
   height: 40px;
   cursor: pointer;
 }
 
-.train-container .stage-container .table-container .book-table span {
+.train-container .stage-container .table-container .book-table .book-day-container .book-day {
   width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.train-container .stage-container .table-container .book-table .book-day-container .book-day .divider {
+  height: 100%;
+  width: 1px;
+  background-color: #e8e8e8;
+}
+
+.train-container .stage-container .table-container .book-table .book-day-container .book-day span {
+  width: 50%;
   height: 100%;
   display: block;
 }
