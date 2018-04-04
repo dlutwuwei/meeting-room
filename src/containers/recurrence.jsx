@@ -375,8 +375,8 @@ class Recurrence extends Component {
         } else {
             recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
         }
-        const start =  moment(startTime * 1000);
-        const end =  moment(endTime * 1000);
+        const start =  startTime;
+        const end =  endTime;
         const recurrenceJson = JSON.stringify({
             startTime: start.clone().utc().format('HH:mm'),
             endTime: end.clone().utc().format('HH:mm'),
