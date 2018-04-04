@@ -294,8 +294,8 @@ class Appointment extends Component {
   onSelectAttendee = (attendees) => {
     // 注意去重
     const list = this.props.receivers
-    .filter(item => !attendees.find(e => item.value === e.value))
-    .concat(attendees);
+    .filter(item => !attendees.find(e => item.mail === e.mail))
+    .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email')));
     // 发送给全局state
     this.props.actions.changeProp('receivers', list);
     this.props.actions.changeProp('receiverOptions', list);
