@@ -42,6 +42,10 @@ for (let i = 0; i < zones.length; i++) {
     const zone = Timezone[zones[i]]
     children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
+const now = moment();
+
+const startHours = 19;
+const endHours = 39;
 
 class Schedule extends Component {
     constructor() {
@@ -57,7 +61,7 @@ class Schedule extends Component {
         attendeesOptions: [],
         showAddRooms: false,
         showAddAttendees: false,
-        date: moment().minutes(0),
+        date: now.hours() > endHours/2 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0),
         top: -1,
         left: -1,
         right: -1,
@@ -67,7 +71,7 @@ class Schedule extends Component {
     }
     hover = false
     componentDidMount() {
-        this.search(moment());
+        this.search(this.state.date);
         this.setState({
             attendeesCheckedList: this.props.attendeesCheckedList,
             roomsCheckedList: this.props.roomsCheckedList
@@ -76,7 +80,7 @@ class Schedule extends Component {
     }
     searchPev = () => {
         const { date } = this.state;
-        if(moment().isAfter(date)) {
+        if(now.isAfter(date) || (date.dayOfYear() - now.dayOfYear() === 1 && now.hours() > parseInt(endHours/2))) {
             return;
         }
         this.search(date.subtract(1, 'd'));
@@ -398,24 +402,26 @@ class Schedule extends Component {
                         </div>
                         <div className="schedule-content">
                             <div className="schedule-date">
-                                <Icon type="left" className={classnames("btn", { 'disable': moment().isAfter(date)})} onClick={this.searchPev} />
+                                <Icon type="left" className={classnames("btn", {
+                                    'disable': now.isAfter(date) || (date.dayOfYear() - now.dayOfYear() === 1 && now.hours() > parseInt(endHours/2) )
+                                })} onClick={this.searchPev} />
                                 <Icon type="right" className="btn" onClick={this.searchNext} />
                                 {date ? date.format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}
                             </div>
                             <div className="table">
                                 <div className="line thead">
-                                    {new Array(20).fill('').map((item, i) => {
-                                        const time = i + 18;
+                                    {new Array(endHours - startHours).fill('').map((item, i) => {
+                                        const time = i + startHours;
                                         const h = parseInt(time / 2);
                                         const m = time % h * 30 === 0 ? '00' : '30';
                                         return <div className="block">{h}:{m}</div>
                                     })}
                                 </div>
                                 {data.map((item, y) => {
-                                    const line = new Array(20).fill('');
+                                    const line = new Array(endHours - startHours).fill('');
                                     item.forEach(block => {
                                         line.forEach((_, i) => {
-                                            const time = i + 18;
+                                            const time = i + startHours;
                                             if (time >= block.start && time <= block.end) {
                                                 line[i] = block.status
                                             }
@@ -429,11 +435,11 @@ class Schedule extends Component {
                                                     'myself': y === 0,
                                                     'start': x === left,
                                                     'end': x === right,
-                                                    'busy': cell === 1,
-                                                    'out': cell === 2,
-                                                    'interim': cell === 3,
-                                                    'unkown': cell === 4,
-                                                    'occupy': cell === 5
+                                                    'busy': cell === 2,
+                                                    'out': cell === 3,
+                                                    'interim': cell === 1,
+                                                    'unkown': cell === 5,
+                                                    'occupy': cell === 4
                                                 }])}
                                                 onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                 onMouseUp={this.handleMouseUp.bind(this, x, y)}

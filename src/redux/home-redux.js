@@ -21,13 +21,15 @@ function navReducer(state = initState, action) {
       return state;
   }
 }
-const curHour = moment().hours();
 
+const now = moment();
+const initialTime = now.hours() >= 19 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0);
+const curHour = initialTime.hours();
 const appointment = {
   receivers: [],
   location: [],
-  startTime: moment().hours( curHour >= 9 ? curHour + 1 : 9).minute(0),
-  endTime: moment().hours(curHour >= 9 ? curHour + 1 : 9).minute(30),
+  startTime: initialTime.clone().hours( curHour >= 9 ? curHour : 9).minutes(0),
+  endTime: initialTime.clone().hours(curHour >= 9 ? curHour : 9).minutes(30),
   subject: '',
   content: '',
   receiverOptions: [],
