@@ -17911,6 +17911,9 @@ textarea.ant-pagination-options-quick-jumper input {
           flex: 1;
   margin: 0 10px;
   width: 0;
+  -webkit-flex-basis: 100px;
+      -ms-flex-preferred-size: 100px;
+          flex-basis: 100px;
 }
 
 .download-link {

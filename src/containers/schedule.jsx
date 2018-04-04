@@ -207,7 +207,7 @@ class Schedule extends Component {
 
         const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
         const duration = endTime.diff(startTime, 'minutes');
-        if(duration > setting.maxMeetingHour*2 + setting.maxMeetingMinutes) {
+        if(duration > setting.maxMeetingHour*60 + setting.maxMeetingMinutes) {
           message.error('预定时长超出限制');
           this.setState({
             loading: false
