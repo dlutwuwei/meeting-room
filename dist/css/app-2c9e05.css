@@ -10775,18 +10775,28 @@ textarea.ant-pagination-options-quick-jumper input {
 .train-container .menu-container {
   height: 100%;
   width: 256px;
-  -webkit-box-flex: 2;
-  -webkit-flex: 2;
-      -ms-flex: 2;
-          flex: 2;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+}
+
+.train-container .menu-container a {
+  color: white;
 }
 
 .train-container .stage-container {
   height: 100%;
-  -webkit-box-flex: 10;
-  -webkit-flex: 10;
-      -ms-flex: 10;
-          flex: 10;
+  -webkit-flex-shrink: 0;
+      -ms-flex-negative: 0;
+          flex-shrink: 0;
+  -webkit-flex-basis: 0;
+      -ms-flex-preferred-size: 0;
+          flex-basis: 0;
+  width: 1000px;
 }
 
 .train-container .stage-container .book-label-container {
@@ -10837,13 +10847,18 @@ textarea.ant-pagination-options-quick-jumper input {
   width: 400px;
 }
 
-.train-container .stage-container .table-container .book-table .book-day-container {
+.train-container .stage-container .table-container .book-table-container .book-table table {
+  table-layout: fixed;
+}
+
+.train-container .stage-container .table-container .book-table-container .book-day-container {
   padding: 0px !important;
   height: 40px;
+  width: 150px;
   cursor: pointer;
 }
 
-.train-container .stage-container .table-container .book-table .book-day-container .book-day {
+.train-container .stage-container .table-container .book-table-container .book-day-container .book-day {
   width: 100%;
   height: 100%;
   display: -webkit-box;
@@ -10852,16 +10867,21 @@ textarea.ant-pagination-options-quick-jumper input {
   display: flex;
 }
 
-.train-container .stage-container .table-container .book-table .book-day-container .book-day .divider {
+.train-container .stage-container .table-container .book-table-container .book-day-container .book-day .divider {
   height: 100%;
   width: 1px;
   background-color: #e8e8e8;
 }
 
-.train-container .stage-container .table-container .book-table .book-day-container .book-day span {
+.train-container .stage-container .table-container .book-table-container .book-day-container .book-day span {
   width: 50%;
   height: 100%;
   display: block;
+}
+
+.train-modal-container .form-header {
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .train-modal-container .form-item {
@@ -10869,6 +10889,7 @@ textarea.ant-pagination-options-quick-jumper input {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  margin: 10px 0;
 }
 
 .train-modal-container .form-item .left {
