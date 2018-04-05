@@ -5,4 +5,4 @@ export const train_delete = '/api/training/delete';
 export const train_item = '/api/training/item';
 
 export const train_book_list = '/api/training/getRoomScheduleList';
-export const train_brand_list = 'api/training/getBrandList';
+export const train_brand_list = '/api/training/getBrandList';
