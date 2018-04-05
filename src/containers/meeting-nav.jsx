@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import classNames from 'classnames';
 import '../style/meeting-nav.less';
-import { toggleTimezone, changeProp } from '../redux/home-redux';
+import { toggleTimezone, changeProp, recurrence } from '../redux/home-redux';
 
 import Select from 'components/select';
 import Recurrence from './recurrence';
@@ -50,6 +50,7 @@ class Nav extends Component {
     }
     render () {
         const { current, showRecurrence, _private, important } = this.state;
+        const { isRecurrence } = this.props.data;
         return (
             <div className="nav-container">
                 <div className="nav-zone">
@@ -67,6 +68,12 @@ class Nav extends Component {
                                 <Select defaultValue="2" style={{ width: 120 }} onChange={(val)=> {
                                     localStorage.setItem('__meeting_showas', val);
                                 }}>
+                                    {/* Free = 0,
+                                    Tentative = 1,
+                                    Busy = 2,
+                                    OOF = 3,
+                                    WorkingElsewhere = 4,
+                                    NoData = 5, */}
                                     <Option key="3" value="1" className="status interim" title="Tentative">Tentative</Option>
                                     <Option key="1" value="2" className="status busy" title="Busy">Busy</Option>
                                     <Option key="2"  value="3" className="status out" title="Out of Office">Out of Office</Option>
@@ -92,7 +99,7 @@ class Nav extends Component {
                             data={this.props.data}
                             changeProp={this.props.actions.changeProp}
                         />
-                        <div className="nav-item recurrence" onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
+                        <div className={`nav-item recurrence ${isRecurrence ? 'active' : ''}`} onClick={() => { this.openRecurrence(); }}><div className="recurrence-icon" />Recurrence</div>
                         <div className="nav-item time-zone" onClick={() => {
                             this.props.actions.toggleTimezone(!this.state.showTimezone);
                             this.setState({
@@ -127,7 +134,8 @@ function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
         toggleTimezone,
-        changeProp
+        changeProp,
+        recurrence
     }, dispatch)
   };
 }

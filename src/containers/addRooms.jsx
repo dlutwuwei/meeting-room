@@ -35,12 +35,13 @@ class AddRooms extends Component {
     }
     postData = {
         area: 'SH',
-        startTime: moment().format('YYYY-MM-DD HH:mm'),
-        endTime: moment().format('YYYY-MM-DD HH:mm')
+        // startTime: moment().format('YYYY-MM-DD HH:mm'),
+        // endTime: moment().format('YYYY-MM-DD HH:mm')
     }
     search() {
         fetch.get('/api/meeting/getRooms', {
-            token: localStorage.getItem('__meeting_token') || ''
+            token: localStorage.getItem('__meeting_token') || '',
+            capacity: this.props.defaultCapacity
         }).then(r => {
             this.setState({
                 list: r.data.list
@@ -101,6 +102,7 @@ class AddRooms extends Component {
             title: 'Action',
             key: 'action',
             render: (val, record) => {
+                const onlyone = this.props.onlyone;
                 return (<span>
                     <Checkbox
                         checked={!!record.selected}
@@ -108,7 +110,7 @@ class AddRooms extends Component {
                             this.state.list.forEach(item => {
                                 if(item.id == record.id) {
                                     item.selected = e.target.checked;
-                                } else {
+                                } else if(onlyone){
                                     item.selected = false;
                                 }
                             });
@@ -188,7 +190,7 @@ class AddRooms extends Component {
                 footer={null}
                 wrapClassName="add-room-container"
             >
-                <div className="room-item">
+                {/* <div className="room-item">
                     <label htmlFor="" className="room-title">Start Time:</label>
                     <DatePicker
                         format="YYYY-MM-DD"
@@ -233,19 +235,18 @@ class AddRooms extends Component {
                             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                         }}
                     />
-                </div>
+                </div> */}
                 <div className="room-item">
-                    <label htmlFor="" className="room-title">People:</label>
-                    <Select
+                    <label htmlFor="" className="room-title">Attendees:</label>
+                    <Input
                         style={{ width: 60 }}
-                        defaultValue={1}
-                        onChange={this.handleChange.bind(this, 'capacity')}
+                        defaultValue={this.props.defaultCapacity}
+                        onChange={(e) => { this.handleChange('capacity', e.target.value)}}
                     >
-                        {peopleOptions}
-                    </Select>
+                    </Input>
                 </div>
                 <div className="room-item">
-                    <label htmlFor="" className="room-title">楼层:</label>
+                    <label htmlFor="" className="room-title">Floor:</label>
                     <Input
                         style={{ width: 60 }}
                         defaultValue={''}
@@ -271,6 +272,11 @@ class AddRooms extends Component {
             </Modal>
         )
     }
+}
+
+AddRooms.defaultProps = {
+    onlyone: true,
+    defaultCapacity: 1
 }
 
 export default AddRooms;

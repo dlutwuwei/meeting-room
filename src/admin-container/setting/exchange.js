@@ -63,7 +63,7 @@ class Exchange extends Component {
                 </Breadcrumb>
                 <Form className="login-form" style={{width: 500, marginTop: 30}}>
                     <FormItem {...formItemLayout} label="exchange协议">
-                        {getFieldDecorator('o365Protocol', {
+                        {getFieldDecorator('o365Address', {
                             initialValue: '',
                             rules: [{ required: true, message: 'Please input protocol!' }],
                         })(
@@ -71,7 +71,7 @@ class Exchange extends Component {
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label="AD链接">
-                        {getFieldDecorator('o365Address', {
+                        {getFieldDecorator('adAddress', {
                             rules: [{ required: true, message: 'Please input server ip!' }],
                         })(
                             <Input />

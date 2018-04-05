@@ -60,7 +60,7 @@ class SearchUser extends Component {
         }).then((r) => {
             this.setState({
                 dataSource: r.data.list.map(item => ({
-                    userId: item.userId,
+                    id: item.id,
                     name: item.userName,
                     mail: item.mail
                 })),
@@ -86,11 +86,14 @@ class SearchUser extends Component {
             });
         });
     };
+    onSelect = () => {
+        // todo
+    }
     render () {
         const { modalVisible, form, handleModalVisible } = this.props;
         const { dataSource } = this.state;
         const children = dataSource.map((item, i) => {
-            return <Option value={'' + item.userId} key={i}>{item.name}</Option>;
+            return <Option value={'' + item.id} key={i}>{item.name}</Option>;
           });
         return (
             <CreateModal

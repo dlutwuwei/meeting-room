@@ -23,7 +23,7 @@ class NMeeting extends Component {
         }
         return (
             <div className="new-contianer">
-                <div className="top"><Nav onChange={(val) => { this.handleChange(val); }}/></div>
+                <div className="top"><Nav onChange={(val) => { this.handleChange(val); }} /></div>
                 <div className="new-content">
                     {content}
                 </div>

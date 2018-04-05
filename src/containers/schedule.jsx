@@ -42,6 +42,10 @@ for (let i = 0; i < zones.length; i++) {
     const zone = Timezone[zones[i]]
     children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
+const now = moment();
+
+const startHours = 19;
+const endHours = 39;
 
 class Schedule extends Component {
     constructor() {
@@ -51,12 +55,13 @@ class Schedule extends Component {
         // 计划表
         data: [],
         checkAll: false,
-        checkedList: [],
+        floors: [],
         // 列表选型
-        options: [],
+        roomsOptions: [],
+        attendeesOptions: [],
         showAddRooms: false,
         showAddAttendees: false,
-        date: moment().minutes(0),
+        date: now.hours() > endHours/2 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0),
         top: -1,
         left: -1,
         right: -1,
@@ -66,27 +71,23 @@ class Schedule extends Component {
     }
     hover = false
     componentDidMount() {
-        this.search(moment(), []);
-        const checkedList = [];
-        const { receivers, location } = this.props;
-        receivers.concat(location).forEach(i => {
-            checkedList.push(i.mail);
-        });
+        this.search(this.state.date);
         this.setState({
-            checkedList,
-            checkAll: true
+            attendeesCheckedList: this.props.attendeesCheckedList,
+            roomsCheckedList: this.props.roomsCheckedList
         });
+        this.searchRooms()
     }
     searchPev = () => {
-        const { attendees, date } = this.state;
-        if(moment().isAfter(date)) {
+        const { date } = this.state;
+        if(now.isAfter(date) || (date.dayOfYear() - now.dayOfYear() === 1 && now.hours() > parseInt(endHours/2))) {
             return;
         }
-        this.search(date.subtract(1, 'd'), attendees);
+        this.search(date.subtract(1, 'd'));
     }
     searchNext = () => {
-        const { attendees, date } = this.state;
-        this.search(date.add(1, 'd'), attendees);
+        const { date } = this.state;
+        this.search(date.add(1, 'd'));
     }
     search(date) {
         this.setState({
@@ -100,102 +101,99 @@ class Schedule extends Component {
             mail: localStorage.getItem('__meeting_user_email'),
             name: localStorage.getItem('__meeting_user_name'),
         };
-        const { data } = this.state;
-        const { receivers, location } = this.props;
-        const options = receivers.concat(location);
+        const { receiverOptions, locationOptions } = this.props;
+        const options = receiverOptions.concat(locationOptions); //receivers.concat(location);
         options.unshift(my);
-        const users = receivers.slice();
+        const users = receiverOptions.slice();
         users.unshift(my);
         this.setState({
             loading: true,
             options,
+            data: []
+        }, () => {
+            // 清空数据后加载
+            const { data } = this.state;
+            fetch.get('/api/schedule/getList', {
+                userMails: users.map(item => item.mail).join(','),
+                roomMails: locationOptions.map(item => item.mail).join(','),
+                startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                token: localStorage.getItem('__meeting_token') || ''
+            }).then(r => {
+                const list = r.data;
+                options.forEach((user, i) => {
+                    const user_data = list.filter(t => t.mail == user.mail);
+                    let user_list = [];
+                    if(user_data.length) {
+                        user_list = user_data.map(item => {
+                            const startTime = moment(item.startTime*1000);
+                            const endTime = moment(item.endTime*1000);
+                            const start = startTime.hours()*2 + parseInt(startTime.minutes()/30);
+                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30);
+                            return ({
+                                status: item.showAs,
+                                start,
+                                end
+                            })
+                        });
+                    }
+                    data[i] = user_list;
+                });
+                this.setState({
+                    data,
+                    loading: false
+                });
+            }).catch(() => {
+                this.setState({
+                    loading: false
+                });
+            });
         });
-        fetch.get('/api/schedule/getList', {
-            userMails: users.map(item => item.mail).join(','),
-            roomMails: location.map(item => item.mail).join(','),
-            startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
-            endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
-            token: localStorage.getItem('__meeting_token') || ''
-        }).then(r => {
-            const list = r.data;
-            options.forEach((user, i) => {
-                const user_data = list.filter(t => t.mail == user.mail);
-                let user_list = [];
-                if(user_data.length) {
-                    user_list = user_data.map(item => {
-                        const startTime = moment(item.startTime*1000);
-                        const endTime = moment(item.endTime*1000);
-                        const start = startTime.hours()*2 + startTime.minutes()/30;
-                        const end = endTime.hours()*2 + endTime.minutes()/30;
-                        return ({
-                            status: item.showAs,
-                            start,
-                            end
-                        })
-                    });
-                }
-                data[i] = user_list;
-            });
-            this.setState({
-                data,
-                loading: false
-            });
-        }).catch(() => {
-            this.setState({
-                loading: false
-            });
-        });
+        
     }
-    onChange(checkedList) {
-        const selects = this.state.checkedList.filter(item => checkedList.includes(item));
-        if(selects.length > 0) {
-            this.props.actions.changeProp('location', this.props.location
-                .filter(item => selects.includes(item.mail)));
-            this.props.actions.changeProp('receivers', this.props.receivers
-                .filter(item => selects.includes(item.mail)));
+    onAttendeeChange = (checkedList) => {
+        // 可以多选
+        this.props.actions.changeProp('attendeesCheckedList', checkedList)
+        this.props.actions.changeProp('receivers', this.props.receiverOptions.filter(item => checkedList.includes(item.mail)));
+    }
+    onRoomChange = (checkedList) => {
+        // 清除已经选中
+        const list = checkedList.filter(item => !this.props.location.find(l => l.mail === item));
+        if(checkedList.length === 1) {
+            this.props.actions.changeProp('roomsCheckedList', checkedList);
+        } else {
+            this.props.actions.changeProp('roomsCheckedList', list);
         }
-        this.setState({
-            checkedList,
-            checkAll: checkedList.length === this.state.options.length,
-        });
+        this.props.actions.changeProp('location', this.props.locationOptions.filter(item => list.includes(item.mail)));
     }
-    onCheckAllChange(e) {
-        const allOptions = this.state.options.map(item => item.value);
-        this.setState({
-            checkedList: e.target.checked ? allOptions : [],
-            checkAll: e.target.checked,
-        });
-    }
-    addToList(data) {
+    addToList(data, type) {
         const options = data.map(item => ({
-            label: item.name,
-            value: item.mail
-        })).filter(item => {
-            return !this.state.checkedList.find(ele => ele === item.value);
-        });
+            name: item.name,
+            mail: item.mail
+        }));
         const newOptions = options;
+        // 保存checklist的options
+        this.props.actions.changeProp(type === 'room' ? 'locationOptions' : 'receiverOptions', newOptions)
         this.setState({
-            options: newOptions,
-            checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
-            checkAll: true,
+            // [ type === 'room' ? 'roomsOptions' : 'attendeesOptions' ]: newOptions,
+            // checkedList: this.state.checkedList.concat(newOptions.map(item => item.value)),
             // data: this.state.data.concat(options.map(() => ([])))
         }, () => {
-            // options更新之后在请求计划表
-            this.search(this.state.date, data)
+            // options更新之后, 请求计划表
+            this.search(this.state.date)
         });
     }
     onSelectRoom(rooms) {
-        this.setState({
-            rooms
-        });
-        this.props.actions.changeProp('location', rooms);
-        this.addToList(rooms);
+        this.props.actions.changeProp('location', rooms.filter(item => {
+            return this.state.roomsCheckedList.find(ele => ele === item.mail);
+        }));
+        this.addToList(rooms, 'room');
     }
     onSelectAttendee(attendees) {
-        this.props.actions.changeProp('receivers', this.props.receivers
+        const users = this.props.receivers
         .filter(item => !attendees.find(e => item.mail === e.mail))
-        .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email'))));
-        this.addToList(attendees)
+        .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email')));
+        this.addToList(users, 'attendees')
     }
     handleSend = () => {
         const { startTime, endTime, subject, receivers, content, location } = this.props;
@@ -205,18 +203,38 @@ class Schedule extends Component {
         data.from = localStorage.getItem('__meeting_user_email') || '';
         data.receiver = receivers.map(item => item.mail).join(';');
         data.roomMails = location.map(item => item.mail).join(';');
-        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
-        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
+
         data.showas = localStorage.getItem('__meeting_showas') || 2;
         data.reminder = localStorage.getItem('__meeting_reminder') || 15;
         data.isPrivate = localStorage.getItem('__meeting_private') || false;
         data.importance = localStorage.getItem('__meeting_important') || 1;
+
+        const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
+        const duration = endTime.diff(startTime, 'minutes');
+        if(duration > setting.maxMeetingHour*60 + setting.maxMeetingMinutes) {
+          message.error('预定时长超出限制');
+          this.setState({
+            loading: false
+          });
+          return;
+        }
+        if(setting.maxBookingDays < startTime.diff(new moment(), 'days')){
+          message.error(`超出可预订时间范围，只允许预定${setting.maxBookingDays}天内的会议`);
+          this.setState({
+            loading: false
+          });
+          return;
+        }
+
+        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
+
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
           data.recurrenceJson = recurrenceJson;
-          data.isReccurent = true;
+          data.isRecurrence = true;
         } else {
-            data.isReccurent = false;
+            data.isRecurrence = false;
         }
         localStorage.setItem('__appointment_data', JSON.stringify(data));
         if (!data.receiver || !data.roomMails) {
@@ -225,7 +243,7 @@ class Schedule extends Component {
             });
         } else if (!data.content || !data.subject) {
             confirm({
-                title: '没有填写标题和内容，确认发送？',
+                title: '没有填写标题或内容，确认发送？',
                 onOk: () => {
                     this.sendAppointment(data)
                 },
@@ -234,7 +252,18 @@ class Schedule extends Component {
                 }
             });
         } else {
-            this.sendAppointment(data);
+            confirm({
+                title: '预定须知',
+                content: setting.responseMessage || '',
+                onOk: () => {
+                    this.sendAppointment(data)
+                },
+                onCancel: () => {
+                    this.setState({
+                        loading: false
+                    });
+                }
+            });
         }
 
     }
@@ -304,11 +333,35 @@ class Schedule extends Component {
             this.props.actions.changeProp('endTime', time.utc());
         }
     }
+    searchRooms(floor) {
+        fetch.get('/api/meeting/getRooms', {
+            token: localStorage.getItem('__meeting_token') || '',
+            floor
+        }).then(r => {
+            const data = {};
+            r.data.list.forEach(item => {
+                if(!data[item.floor]) {
+                    data[item.floor] = true;
+                }
+            })
+            this.setState({
+                floors: Object.keys(data)
+            });
+        });
+    }
+    handleSelectFloor = (floor) => {
+        fetch.get('/api/meeting/getRooms', {
+            token: localStorage.getItem('__meeting_token') || '',
+            floor
+        }).then(r => {
+            this.onSelectRoom(r.data.list)
+        });
+    }
     render() {
-        const { data, checkedList, date, showAddRooms,
+        const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
             timezone } = this.state;
-        const { startTime, endTime, showTimezone, receivers, location } = this.props;
+        const { startTime, endTime, showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Spin spinning={this.state.loading}>
@@ -326,32 +379,49 @@ class Schedule extends Component {
                                     </Checkbox>
                                 </div>
                                 <CheckboxGroup
-                                    options={receivers.concat(location).map(item => ({ label: item.name, value: item.mail }))}
-                                    value={checkedList}
-                                    onChange={this.onChange.bind(this)}
-                                />
+                                    className="list"
+                                    value={attendeesCheckedList}
+                                    onChange={this.onAttendeeChange.bind(this)}
+                                >
+                                    {receiverOptions.map(item => (<Checkbox
+                                            disabled={item.mail === localStorage.getItem('__meeting_user_email')}
+                                            checked={true}
+                                            value={item.mail}
+                                        >{item.name}</Checkbox>))}
+                                </CheckboxGroup>
+                                <CheckboxGroup
+                                    className="list"
+                                    value={roomsCheckedList}
+                                    onChange={this.onRoomChange.bind(this)}
+                                >
+                                    {locationOptions.map(item => (<Checkbox
+                                            value={item.mail}
+                                        >{item.name}</Checkbox>))}
+                                </CheckboxGroup>
                             </div>
                         </div>
                         <div className="schedule-content">
                             <div className="schedule-date">
-                                <Icon type="left" className={classnames("btn", { 'disable': moment().isAfter(date)})} onClick={this.searchPev} />
+                                <Icon type="left" className={classnames("btn", {
+                                    'disable': now.isAfter(date) || (date.dayOfYear() - now.dayOfYear() === 1 && now.hours() > parseInt(endHours/2) )
+                                })} onClick={this.searchPev} />
                                 <Icon type="right" className="btn" onClick={this.searchNext} />
                                 {date ? date.format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')}
                             </div>
                             <div className="table">
                                 <div className="line thead">
-                                    {new Array(20).fill('').map((item, i) => {
-                                        const time = i + 18;
+                                    {new Array(endHours - startHours).fill('').map((item, i) => {
+                                        const time = i + startHours;
                                         const h = parseInt(time / 2);
                                         const m = time % h * 30 === 0 ? '00' : '30';
                                         return <div className="block">{h}:{m}</div>
                                     })}
                                 </div>
                                 {data.map((item, y) => {
-                                    const line = new Array(20).fill('');
+                                    const line = new Array(endHours - startHours).fill('');
                                     item.forEach(block => {
                                         line.forEach((_, i) => {
-                                            const time = i + 18;
+                                            const time = i + startHours;
                                             if (time >= block.start && time <= block.end) {
                                                 line[i] = block.status
                                             }
@@ -365,11 +435,11 @@ class Schedule extends Component {
                                                     'myself': y === 0,
                                                     'start': x === left,
                                                     'end': x === right,
-                                                    'busy': cell === 1,
-                                                    'out': cell === 2,
-                                                    'interim': cell === 3,
-                                                    'unkown': cell === 4,
-                                                    'occupy': cell === 5
+                                                    'busy': cell === 2,
+                                                    'out': cell === 3,
+                                                    'interim': cell === 1,
+                                                    'unkown': cell === 5,
+                                                    'occupy': cell === 4
                                                 }])}
                                                 onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                 onMouseUp={this.handleMouseUp.bind(this, x, y)}
@@ -435,6 +505,8 @@ class Schedule extends Component {
                                 visible={showAddRooms}
                                 onClose={() => this.setState({ showAddRooms: false })}
                                 onSelect={this.onSelectRoom.bind(this)}
+                                onlyone={false}
+                                defaultCapacity={this.props.receivers.length + 1}
                             />
                             <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({ showAddRooms: true }) }}>Add Rooms</Button>
                             <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>End Time</div>
@@ -473,6 +545,14 @@ class Schedule extends Component {
                             >
                                 {children}
                             </Select>}
+                            <Select
+                                size="default"
+                                placeholder={'Select floor'}
+                                onChange={this.handleSelectFloor}
+                                style={{ width: 200, marginLeft: 20 }}
+                            >
+                                {this.state.floors.map(item => <Option value={item}>{item}</Option>)}
+                            </Select>
                         </div>
                         <div className="item">
                             <div className="status busy">Busy</div>

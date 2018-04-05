@@ -87,11 +87,16 @@ function request(method, url, data, opts) {
                         okText: '确认',
                         cancelText: '取消',
                         onOk() {
-                            location.href='http://mt.auth.ig66.com?callback=' + encodeURIComponent(location.href);
+                            location.href=`${window.auth_url}?callback=` + encodeURIComponent(`${location.protocol}//${location.host}${location.pathname}`);
                         },
                         onCancel() {
                         },
                     })
+                } else if (data.code === 505) {
+                    Modal.info({
+                        title: '没有权限使用这个功能, 请联系管理员',
+                        okText: '确认'
+                    });
                 }
                 return Promise.reject({ code: data.code, msg: `错误码${data.code}` })
             }

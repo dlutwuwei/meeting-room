@@ -12,7 +12,8 @@ class AddAttendees extends Component {
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
-            visible: nextProps.visible
+            visible: nextProps.visible,
+            list: nextProps.list || []
         });
     }
     getClomuns() {
@@ -55,7 +56,6 @@ class AddAttendees extends Component {
         this.closeModal();
     }
     onSelect = (val) => {
-        console.log(val)
         const { list } = this.state;
         if(!list.find(item => item.mail == val.key)) {
             list.push({

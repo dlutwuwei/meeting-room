@@ -212,7 +212,14 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             fieldsValue.areaId = values.areaId;
                         }
-                        fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
+                        if(fieldsValue.onlyForUsers) {
+                            fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
+                        }
+                        if(fieldsValue.isEnable) {
+                            fieldsValue.isEnable = true;
+                        } else {
+                            fieldsValue.isEnable = false;
+                        }
                         fieldsValue.devices.forEach(item => {
                             fieldsValue[item] = true
                         });
@@ -226,7 +233,7 @@ export default (type, onCreated) => {
                             onCreated();
                         }).catch(() => {
                             message.error(isEdit ? '修改失败' : '创建失败')
-                            handleModalVisible(false);
+                            // handleModalVisible(false);
                         });
                     });
                 };

@@ -13,10 +13,18 @@ var languages = {
 	"cn": require("./src/locale/cn.json")
 };
 
+function chunksSortMode(c1, c2) {
+  let orders = ['lib', 'config', 'app', 'board', 'admin', 'train'];
+  let o1 = orders.indexOf(c1.names[0]);
+  let o2 = orders.indexOf(c2.names[0]);
+  return o1 - o2;
+}
+
 const mockserver = "http://mt.ig66.com"
 module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
+        config: ['./src/config.js'],
         lib: [ 'react', 'react-dom', 'babel-polyfill' ],
         app: ['./src/app.js'],
         board: ['./src/board.js'],
@@ -26,7 +34,7 @@ module.exports = Object.keys(languages).map(lan => {
     output: {
         publicPath: isDev ? '/' : '/static/',
         path: path.join(__dirname, 'dist'),
-        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}-[hash:6].js`
+        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}.js`
     },
     devServer: {
         hot: false,
@@ -40,6 +48,12 @@ module.exports = Object.keys(languages).map(lan => {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
+          '/api/trainingRoom/*': {
+            target: 'http://47.95.238.222:9001/mock/11/mt'
+          },
+          '/api/training/*': {
+            target: 'http://47.95.238.222:9001/mock/11/mt'
+          },
           '/api/*': {
               target:  `${mockserver}`,
               changeOrigin: true,
@@ -160,22 +174,35 @@ module.exports = Object.keys(languages).map(lan => {
         new HtmlWebpackPlugin({
             template: 'public/index.html',
             filename: 'index.html',
-            chunks: ['lib', 'app'],
+            chunks: ['lib', 'app', 'config'],
             title: '会议室预定',
-            inject: true
+            chunksSortMode,
+            inject: true,
+            hash: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-board.html',
-          chunks: [ 'lib', 'board'],
+          chunks: ['lib', 'board', 'config'],
           title: '会议室看板',
-          inject: true
+          chunksSortMode,
+          inject: true,
+          hash: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-admin.html',
           title: '会议室管理',
-          chunks: [ 'lib', 'admin'],
+          chunks: ['lib', 'admin', 'config'],
+          chunksSortMode,
+          inject: true,
+          hash: true
+        }),
+        new HtmlWebpackPlugin({
+          template: 'public/index.html',
+          filename: 'index-train.html',
+          title: '培训室管理',
+          chunks: ['lib', 'train', 'config'],
           inject: true
         }),
         new HtmlWebpackPlugin({

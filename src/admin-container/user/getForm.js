@@ -49,7 +49,7 @@ export default (type, onCreated) => {
     switch(type) {
         case 'list':
             return Form.create()((props) => {
-                const { modalVisible, form, handleModalVisible, values } = props;
+                const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const okHandle = (before, after) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
@@ -58,11 +58,12 @@ export default (type, onCreated) => {
                             fieldsValue.userName = values.userName;
                         }
                         before && before();
-                        fetch.post('/api/user/update', {
+                        fetch.post(isEdit ? '/api/user/update' : '/api/user/add', {
                             token: localStorage.getItem('__meeting_token'),
                             ...fieldsValue
                         }).then(() => {
                             handleModalVisible(false);
+                            onCreated();
                             after && after();
                         }).catch(() => {
                             handleModalVisible(false);
@@ -98,6 +99,18 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
+                            label="域用户名"
+                        >
+                            {form.getFieldDecorator('userName', {
+                                rules: [{ required: true, message: '请输入域用户名' }],
+                                initialValue: values.userName
+                            })(
+                                <Input placeholder="请输入域用户名" />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
                             label="邮箱"
                         >
                             {form.getFieldDecorator('mail', {
@@ -126,7 +139,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('roleId', {
                                 rules: [{ required: true, message: '请选择角色' }],
-                                initialValue: '' + values.roleId
+                                initialValue: '' + (values.roleId || '')
                             })(
                                 <Select style={{ width: 130 }} placeholder="请选择角色" >
                                     {roles.map(item => <Option key={item.id} value={'' + item.id}>{item.name}</Option>)}
@@ -140,7 +153,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('areaId', {
                                 rules: [{ required: true, message: '请输入区域' }],
-                                initialValue: '' + values.areaId
+                                initialValue: '' + (values.areaId || '')
                             })(
                                 <Select style={{ width: 120 }} placeholder="请输入区域" >
                                     { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
@@ -181,9 +194,13 @@ export default (type, onCreated) => {
             return Form.create()((props) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const actions = [];
+                const ACTION_MAP = {};
+                const ACTION_NAME_MAP = {};
                 JSON.parse(localStorage.getItem('__meeting_actions') || '[]').forEach(item => {
                     item.actions.forEach(action => {
-                        actions.push(action.action)
+                        actions.push(action.name);
+                        ACTION_MAP[action.name] = action.action;
+                        ACTION_NAME_MAP[action.action] = action.name;
                     });
                 });
                 const okHandle = (before, after) => {
@@ -192,7 +209,7 @@ export default (type, onCreated) => {
                         if(values.id) {
                             fieldsValue.id = values.id;
                         }
-                        fieldsValue.actions= fieldsValue.actions.join(',');
+                        fieldsValue.actions= fieldsValue.actions.map(item => ACTION_MAP[item]).join(',');
                         before && before();
                         fetch.post(isEdit? '/api/role/update' : '/api/role/add', {
                             token: localStorage.getItem('__meeting_token'),
@@ -250,7 +267,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('actions', {
                                 rules: [{ required: true, message: '请选择权限' }],
-                                initialValue: values.actions ? values.actions.split(',') : []
+                                initialValue: values.actions ? values.actions.split(',').map(item => ACTION_NAME_MAP[item]).filter(item => !!item) : []
                             })(
                                 <Select
                                     mode="multiple"

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DatePicker, Form, Spin, message } from 'antd';
+import { DatePicker, Form, Spin, message, Modal } from 'antd';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import AddAttendees from './addAttendees';
 import Recurrence from './recurrence';
+const confirm = Modal.confirm;
 
 import {
   changeProp
@@ -115,6 +116,30 @@ class Appointment extends Component {
         this.setState({
           loading: true
         });
+
+        const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
+        const duration = data.endTime.diff(data.startTime, 'minutes');
+        if(duration > setting.maxMeetingHour*60 + setting.maxMeetingMinutes) {
+          message.error('预定时长超出限制');
+          this.setState({
+            loading: false
+          });
+          return;
+        }
+        if(setting.maxBookingDays < data.startTime.diff(new moment(), 'days')){
+          message.error(`超出可预订时间范围，只允许预定${setting.maxBookingDays}天内的会议`);
+          this.setState({
+            loading: false
+          });
+          return;
+        }
+        const recurrenceJson =  localStorage.getItem('__meeting_recurrenceJson');
+        if(recurrenceJson) {
+          data.recurrenceJson = recurrenceJson;
+          data.isRecurrence = true;
+        } else {
+          data.isRecurrence = false;
+        }
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
@@ -129,31 +154,43 @@ class Appointment extends Component {
         if(this.props.isEdit) {
           data.id = this.props.editId;
         }
-        const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
-        if(recurrenceJson) {
-          data.recurrenceJson = recurrenceJson;
-          data.isReccurent = true;
-        } else {
-          data.isReccurent = false;
-        }
-        const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
-        fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, values).then(() => {
-          message.success('预定成功');
-          setTimeout(() => {
-            location.href = '/home/mymeeting';
-          });
-          this.setState({
-            loading: false
-          });
-          localStorage.setItem('__meeting_recurrenceJson', '');
-        }).catch(() => {
-          message.error('预定失败');
-          this.setState({
-            loading: false
-          });
+        confirm({
+          title: '预定须知',
+          width: 600,
+          content: setting.responseMessage || '',
+          onOk: () => {
+            this.sendAppointment(data)
+          },
+          onCancel: () => {
+            this.setState({
+              loading: false
+            });
+          }
         });
+
       }
 
+    });
+  }
+  sendAppointment(data) {
+    this.setState({
+        loading: true
+    })
+    const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
+    fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
+      message.success('预定成功');
+      setTimeout(() => {
+        location.href = '/home/mymeeting';
+      });
+      this.setState({
+        loading: false
+      });
+      localStorage.setItem('__meeting_recurrenceJson', '');
+    }).catch(() => {
+      message.error('预定失败');
+      this.setState({
+        loading: false
+      });
     });
   }
   handleSearch = (value) => {
@@ -212,6 +249,8 @@ class Appointment extends Component {
       receivers: userList.map(item => item.mail)
     });
     this.props.actions.changeProp('receivers', userList);
+    this.props.actions.changeProp('receiverOptions', userList);
+    this.props.actions.changeProp('attendeesCheckedList', userList.map(item => item.mail));
   }
   handelDeselect = (val) => {
     let userList = this.props.receivers;
@@ -228,6 +267,10 @@ class Appointment extends Component {
       location: rooms
     });
     this.props.actions.changeProp('location', rooms);
+    this.props.actions.changeProp('locationOptions', this.props.locationOptions.filter(item => {
+      return item.mail !== rooms[0].mail; //去重
+    }).concat(rooms));
+    this.props.actions.changeProp('roomsCheckedList', rooms.map(item => item.mail));
   }
   handleTime(type, time) {
     const offsetUTC = this.state.timezone.label.split(' ')[0];
@@ -251,10 +294,12 @@ class Appointment extends Component {
   onSelectAttendee = (attendees) => {
     // 注意去重
     const list = this.props.receivers
-    .filter(item => !this.props.receivers.find(e => item.value === e.value))
-    .concat(attendees);
+    .filter(item => !attendees.find(e => item.mail === e.mail))
+    .concat(attendees.filter(item => item.mail !== localStorage.getItem('__meeting_user_email')));
     // 发送给全局state
     this.props.actions.changeProp('receivers', list);
+    this.props.actions.changeProp('receiverOptions', list);
+    this.props.actions.changeProp('attendeesCheckedList', list.map(item => item.mail));
     // 发送给form
     this.props.form.setFieldsValue({
       receivers: list.map(item => item.mail),
@@ -278,7 +323,7 @@ class Appointment extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone, isEdit } = this.props;
+    const { showTimezone, isEdit, isRecurrence } = this.props;
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
 
     return (
@@ -367,6 +412,7 @@ class Appointment extends Component {
                     visible={showAddRooms}
                     onClose={() => this.setState({ showAddRooms: false })}
                     onSelect={this.handleSelectRoom}
+                    defaultCapacity={this.props.receivers.length + 1}
                   />
                   {getFieldDecorator('location', {
                     initialValue: [],

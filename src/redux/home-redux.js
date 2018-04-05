@@ -8,6 +8,7 @@ const initState = {
 const TOGGLE_TIMEZONE = 'TOGGLE_TIMEZONE';
 const CHANGE_PROP = 'CHANGE_PROP';
 const BATCH_CHANGE_PROP = 'BATCH_CHANGE_PROP';
+
 // ---------------- export default is reducer -------------
 // reducers
 function navReducer(state = initState, action) {
@@ -20,15 +21,23 @@ function navReducer(state = initState, action) {
       return state;
   }
 }
-const curHour = moment().hours();
 
+const now = moment();
+const initialTime = now.hours() >= 19 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0);
+const curHour = initialTime.hours();
 const appointment = {
   receivers: [],
-  startTime: moment().hours( curHour >= 9 ? curHour + 1 : 9).minute(0),
-  endTime: moment().hours(curHour >= 9 ? curHour + 1 : 9).minute(30),
-  subject: '',
   location: [],
-  content: ''
+  startTime: initialTime.clone().hours( curHour >= 9 ? curHour : 9).minutes(0),
+  endTime: initialTime.clone().hours(curHour >= 9 ? curHour : 9).minutes(30),
+  subject: '',
+  content: '',
+  receiverOptions: [],
+  locationOptions: [],
+  attendeesCheckedList: [],
+  roomsCheckedList: [],
+  isRecurrence: false,
+  recurrenceJson: ''
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {
@@ -41,7 +50,7 @@ function appointmentReducer(state = appointment, action) {
       return {
         ...state,
         ...action.data
-      }
+      };
     default:
       return state;
   }

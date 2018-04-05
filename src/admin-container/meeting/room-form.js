@@ -13,7 +13,7 @@ deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
 
 class Room extends Component {
     state = {
-        showOnlyUsers:  this.props.values.roomType === 2,
+        showOnlyUsers:  this.props.values.roomType === 2 || this.props.values.roomType === 3,
         dataSource: [],
         fetching: false,
     }
@@ -66,7 +66,7 @@ class Room extends Component {
         const { form, values } = this.props;
         const devices = [];
         Object.keys(values).forEach(item => {
-            if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
+            if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item) && values[item]) {
                 devices.push(item);
             }
         });
@@ -135,10 +135,10 @@ class Room extends Component {
                     label="楼层"
                 >
                     {form.getFieldDecorator('floor', {
-                        rules: [{ required: true, message: '请输入设备' }],
+                        rules: [{ required: true, message: '请输入楼层' }],
                         initialValue: values.floor
                     })(
-                        <Input placeholder="请输入设备" />
+                        <Input placeholder="请输入楼层" />
                     )}
                 </FormItem>
                 <FormItem
@@ -164,7 +164,7 @@ class Room extends Component {
                     })(
                         <Select style={{ width: 120 }} placeholder="请输入类型" onChange={(val) => {
                             this.setState({
-                                showOnlyUsers: val === 2
+                                showOnlyUsers: val === 2 || val === 3
                             });
                         }}>
                             { roomTypes.map((item) => (<Option key={item.RoomType} value={item.RoomType}>{item.name}</Option>)) }
@@ -177,7 +177,7 @@ class Room extends Component {
                     label="预留给"
                 >
                     {form.getFieldDecorator('onlyForUsers', {
-                        initialValue: (values.onlyForUsers || '').split(','),
+                        initialValue: values.onlyForUsers ? values.onlyForUsers.split(',') : [],
                         rules: [{
                             type: 'array',
                             required: false,

@@ -116,9 +116,9 @@ class RoomSettings extends Component {
             fieldsValue.isDefaultBgForBusy = selectBusy;
             fieldsValue.bgForFree = imageUrl1;
             fieldsValue.bgForBusy = imageUrl2;
-            if(!this.state.responseMsg) {
-                fieldsValue.responseMessage = '';
-            }
+            // if(!this.state.responseMsg) {
+            //     fieldsValue.responseMessage = '';
+            // }
             this.setState({
                 loading: true
             });
@@ -255,7 +255,7 @@ class RoomSettings extends Component {
                             分钟
                         </FormItem>
                         <FormItem {...formItemLayout} label="是否可循环预定">
-                            {getFieldDecorator('isReccurent', {
+                            {getFieldDecorator('allowRecurrence', {
                                 rules: [{ required: true, message: '请选择是否可循环预定' }],
                             })(
                                 <RadioGroup>

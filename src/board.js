@@ -6,7 +6,7 @@ import classnames from 'classNames';
 
 import './style/board.less';
 
-const statusMap = ['未知', '预定中', '进行中', '会议被取消', '会议已结束'];
+const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
 
 class MeetingBoard extends Component {
     state = {

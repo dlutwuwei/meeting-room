@@ -1,57 +1,49 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Input, AutoComplete } from 'antd';
+import { Table, DatePicker, Input, Select } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
-const Option = AutoComplete.Option;
+const Option = Select.Option;
 const { RangePicker } = DatePicker;
 
-const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
-
 const columns = [{
-    title: '主题',
-    dataIndex: 'subject'
+    title: '会议室名称',
+    dataIndex: 'roomName'
 }, {
-    title: '开始时间',
-    dataIndex: 'startTime',
-    render: (text, record) => {
-        return moment(record.startTime*1000).format('YYYY-MM-DD HH:mm');
-    }
+    title: '区域',
+    dataIndex: 'areaName',
+}, {
+    title: '总预订次数',
+    dataIndex: 'meetingTimes'
 },  {
-    title: '结束时间',
-    dataIndex: 'endTime',
-    render: (text, record) => {
-        return moment(record.endTime*1000).format('YYYY-MM-DD HH:mm');
-    }
+    title: '总预订时长(分钟)',
+    dataIndex: 'meetingTimeLength'
 }, {
     title: '楼层',
-    dataIndex: 'roomFloor'
+    dataIndex: 'floor'
 }, {
-    title: '会议室',
-    dataIndex: 'roomNames'
-}, {
-    title: '发起人',
-    dataIndex: 'userName'
-}, {
-    title: '状态',
-    key: 'state',
+    title: '使用率',
+    key: 'usedRate',
     render: (text, record) => {
-        return statusMap[record.state]
-    },
+        return record.usedRate + '%'
+    }
 }];
-import './charts.less';
 
-class Charts extends Component {
+import './charts.less';
+const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+const today = new moment();
+class Usage extends Component {
     state = {
         loading: false,
         data: [],
         attendees: '',
         userList: [],
-        startDate: '',
-        endDate: '',
+        startDate: today.clone().subtract(1, 'months').format('YYYY-MM-DD'),
+        endDate: today.format('YYYY-MM-DD'),
         roomName: '',
         roomMail: '',
         from: '',
         floor: '',
+        areaId: areas[0].id,
         pagination:{
             position: 'bottom',
             pageSize: 10,
@@ -66,29 +58,27 @@ class Charts extends Component {
         this.load(1, {});
     }
     load(page, params) {
-        const {
-            startDate = '',
-            endDate='',
+        let {
+            startDate,
+            endDate,
             roomName='',
-            roomMail='',
-            from='',
-            floor=''
+            areaId,
+            floor
         } = this.state;
         this.setState({
             loading: true,
             data: [],
             ...params
         });
-        fetch.get('/api/report/getMeetingList', {
+        fetch.get('/api/report/getRoomUseRateList', {
             token: localStorage.getItem('__meeting_token'),
             page: page,
             pageSize: 10,
             startDate,
             endDate,
             roomName,
-            roomMail,
-            from,
             floor,
+            areaId,
             ...params
         }).then(r => {
             this.setState({
@@ -142,46 +132,41 @@ class Charts extends Component {
     }
     render() {
         const {
-            startDate = '',
-            endDate='',
+            startDate,
+            endDate,
             roomName='',
-            roomMail='',
-            from='',
-            floor='',
-            data, pagination, loading, userList 
+            areaId,
+            floor,
+            data, pagination, loading
         } = this.state;
-        const children = userList.map((item, i) => {
-            return <Option value={item.mail} key={i}>{item.name}</Option>;
-          });
+        const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
         return (
             <div>
                 <div className="filter-list">
-                    <RangePicker onChange={([val, val1]) => {
+                    <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today]} onChange={([val, val1]) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
                             endDate: val1.format('YYYY-MM-DD')
                         });
-                    }} placeholder={['开始时间', '结束时间']} />
-                    <AutoComplete
-                        dataSource={userList}
-                        style={{ width: 200 }}
-                        onSelect={this.handleSelect}
-                        onSearch={this.handleSearch}
-                        placeholder="发起人搜索"
+                    }} placeholder={['开始时间', '结束时间']}/>
+                    <Select
+                        style={{ width: 120 }}
+                        placeholder="请输入区域"
+                        defaultValue={areas[0].id}
                         onChange={(val) => {
                             this.load(1, {
-                                from: val
+                                areaId: val
                             });
                         }}
                     >
-                        {children}
-                    </AutoComplete>
-                    <Input placeholder="输入房间名称" onChange={(e) => {
+                        { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                    </Select>
+                    <Input placeholder="输入会议室名称" onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
                     }}/>
-                    {/* <DatePicker placeholder="输入结束日期" onChange={(val) => {
+                    {/* <DatePicker placeholder="输入结束日期" defaultValue={today} onChange={(val) => {
                         this.load(1, {
                             endDate: val.format('YYYY-MM-DD')
                         });
@@ -193,8 +178,8 @@ class Charts extends Component {
                             floor: e.target.value
                         });
                     }}/>
-                    <div><a target="_blank" className="download-link" href={ `/api/report/exportMeetingList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&floor=${floor}&roomName=${roomName}&roomMail=${roomMail}&from=${from}`}>下载报表</a></div>
-                    <div></div>
+                    <div><a target="_blank" className="download-link" href={ `/api/report/exportRoomUseRateList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&areaId=${areaId}&floor=${floor}&roomName=${roomName}`}>下载报表</a></div>
+                    <div />
                 </div>
                 <Table
                     loading={loading}
@@ -207,4 +192,4 @@ class Charts extends Component {
     }
 }
 
-export default Charts
+export default Usage;

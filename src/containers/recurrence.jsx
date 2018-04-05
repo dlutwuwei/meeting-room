@@ -21,6 +21,10 @@ for (let i = 0; i < zones.length; i++) {
     children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
 
+function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment().endOf('day');
+}
 
 const durationOptions = new Array(12).fill('').map((item, i) => {
     return <Option key={i} value={i+1}>{(i+1)/2} hours</Option>
@@ -35,7 +39,7 @@ const eqOptions = [
     { label: 'Sunday', value: 0 },
 ];
 
-const weekOfMonth = [
+const weekOfMonthOptions = [
     <Option key={1} value={1}>first</Option>,
     <Option key={2} value={2}>second</Option>,
     <Option key={3} value={3}>third</Option>,
@@ -43,7 +47,7 @@ const weekOfMonth = [
     <Option key={5} value={5}>fifth</Option>
 ];
 
-const dayOfWeek = [
+const dayOfWeekOptions = [
     <Option key={1} value={1}>Monday</Option>,
     <Option key={2} value={2}>Tuesday</Option>,
     <Option key={3} value={3}>Wednesday</Option>,
@@ -77,32 +81,53 @@ class Recurrence extends Component {
         openKeys: [],
         startTime: moment().hours(9).minutes(0),
         endTime:  moment().hours(9).minutes(30),
-        recurrence_pattern: 0,
+        recurrence_pattern: 1,
         recurrence: [],
         duration: 1,
         timezone: JSON.parse(localStorage.getItem('__meeting_timezone') || '{ "key": "CCT", "label": "08:00 中国北京时间（俄罗斯伊尔库茨克时区）"}'),
         everyDays: 1,
-        everyWeekDay: false,
-        everyMonths: 0,
-        dayOfMonth: 0,
-        weekOfMonth: 0,
-        dayOfWeek: 0,
-        everyYear: 0,
-        month: 0,
-        everyWeeks: 0,
+        everyWorkDay: false,
+        everyMonths: 1,
+        dayOfMonth: 1,
+        weekOfMonth: 1,
+        dayOfWeek: 1,
+        everyYear: 1,
+        month: 1,
+        everyWeeks: 1,
         daysOfTheWeek: 0,
-        yearType: 0, // 年循环选择星期还是日期，1 or 2
-        monthType: 0, // 月循环选择星期还是日期，1 or 2
-        noEnd: false // 是否无线循环
+        yearType: 1, // 年循环选择星期还是日期，1 or 2
+        monthType: 1, // 月循环选择星期还是日期，1 or 2
+        noEnd: false, // 是否无线循环
+        endType: 1,
+        numberOfOccurrences: 1,
     }
     componentWillReceiveProps(props) {
         this.setState({
             visible: props.visible
         });
         if(props.visible) {
+            let initState = {};
+
+            // 显示保存的值
+            const recurrenceJson = props.data.recurrenceJson || JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
+            if(recurrenceJson.daily) {
+                initState = recurrenceJson.daily;
+                initState.recurrence_pattern = 1;
+            } else if(recurrenceJson.weekly) {
+                initState = recurrenceJson.weekly;
+                initState.recurrence_pattern = 2;
+            } else if(recurrenceJson.monthly) {
+                initState = recurrenceJson.monthly;
+                initState.recurrence_pattern = 3;
+            } else if(recurrenceJson.yearly) {
+                initState = recurrenceJson.yearly;
+                initState.recurrence_pattern = 4;
+            }
+            const { startTime, endTime } = props.data;
             this.setState({
-                startTime: moment(props.data.startTime),
-                endTime: moment(props.data.endTime)
+                startTime: startTime ? startTime : new moment(),
+                endTime: endTime ? endTime : new moment(),
+                ...initState
             });
         }
     }
@@ -145,14 +170,24 @@ class Recurrence extends Component {
     }
     handleTime = (type, time) => {
         if(type === 'startTime') {
-            this.setState({
-                startTime: time
-            });
+            const { startTime, endTime } = this.state;
+            const date = startTime.dayOfYear();
+            if(startTime.isAfter(endTime)) {
+                this.setState({
+                    startTime: time.clone(),
+                    endTime: endTime.clone().dayOfYear(date + 1)
+                });
+            } else {
+                this.setState({
+                    startTime: time.clone(),
+                });
+            }
             // this.props.changeProp('startTime', time);
         } else if(type === 'endTime') {
+            const date = this.state.startTime.dayOfYear();
             this.setState({
-                endTime: time,
-                duration: time.diff(this.state.startTime, 'minutes')/30
+                endTime: time.clone(),
+                duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             });
             // this.props.changeProp('endTime', time);
         }
@@ -164,15 +199,16 @@ class Recurrence extends Component {
     }
     renderPattern(recurrence_pattern) {
         let pattern;
+        const { everyMonths, month, monthType, everyYear, yearType, everyDays, weekOfMonth, daysOfTheWeek, dayOfMonth, dayOfWeek, everyWorkDay, everyWeeks } = this.state;
         switch(recurrence_pattern) {
             case 1:
                 pattern = (
-                    <RadioGroup  defaultValue={1} onChange={e => {
+                    <RadioGroup value={everyWorkDay ? 2 : 1} onChange={e => {
                         this.setState({
-                            everyWeekDay: e.target.value == 2
+                            everyWorkDay: e.target.value == 2
                         });
                     }}>
-                        <Radio value={1}>Every <Input defaultValue={1} onChange={(e) => {
+                        <Radio value={1}>Every <Input value={everyDays} onChange={(e) => {
                             this.setState({
                                 everyDays: e.target.value
                             });
@@ -183,12 +219,12 @@ class Recurrence extends Component {
                 break;
             case 2:
                 pattern = (<div>
-                    Recurrent every <Input defaultValue={1} onChange={(e) => {
+                    Recurrent every <Input value={everyWeeks} onChange={(e) => {
                         this.setState({
                             everyWeeks: e.target.value
                         });
                     }}/> week(s) on:
-                    <CheckboxGroup options={eqOptions} defaultValue={[1]} onChange={(value) => {
+                    <CheckboxGroup options={eqOptions} value={daysOfTheWeek} onChange={(value) => {
                         this.setState({
                             daysOfTheWeek: value
                         })
@@ -196,61 +232,66 @@ class Recurrence extends Component {
                 </div>);
                 break;
             case 3:
-                pattern = (<RadioGroup onChange={(val) => {
+                pattern = (<RadioGroup value={monthType} onChange={(e) => {
                     this.setState({
-                        monthType: val
+                        monthType: e.target.value
                     });
                 }}>
-                    <Radio value={1}>Day <Input onChange={(e) => {
+                    <Radio value={1}>Day <Input value={dayOfMonth} onChange={(e) => {
                         this.setState({
                             dayOfMonth: e.target.value
                         });
-                    }}/> of every <Input onChnage={(e) => {
+                    }}/> of every <Input value={everyMonths} onChange={(e) => {
                         this.setState({
-                            dayOfMonth: e.target.value
+                            everyMonths: e.target.value
                         });
                     }}/> month(s)</Radio>
-                    <Radio value={2}>The <Select style={{width: 100, height: 30}} onChange={(val) => {
+                    <Radio value={2}>The <Select value={weekOfMonth} style={{width: 100, height: 30}} onChange={(val) => {
                         this.setState({
                             weekOfMonth: val
                         });
-                    }}>{weekOfMonth}</Select> <Select style={{width: 100, height: 30}}>{dayOfWeek}</Select>of every <Input /> month(s)</Radio>
+                    }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 100, height: 30}}>{dayOfWeekOptions}</Select>
+                     of every <Input value={everyMonths} onChange={(e) => {
+                        this.setState({
+                            everyMonths: e.target.value
+                        })
+                     }}/> month(s)</Radio>
                 </RadioGroup>);
                 break;
             case 4:
                 pattern = (<div>
-                    <div style={{marginBottom: 6}}>重复间隔为<Input onChange={(e) => {
+                    <div style={{marginBottom: 6}}>Recur every <Input value={everyYear} onChange={(e) => {
                         this.setState({
                             everyYear: e.target.value
                         });
-                    }}/>年</div>
-                    <RadioGroup onChange={(val) => {
+                    }}/> year(s)</div>
+                    <RadioGroup value={yearType} onChange={(e) => {
                         this.setState({
-                            yearType: val
+                            yearType: e.target.value
                         });
                     }}>
-                        <Radio value={1}>时间: <Select style={{width: 110}} onChange={(val) => {
+                        <Radio value={1}>On: <Select value={month} style={{width: 110}} onChange={(val) => {
                             this.setState({
                                 month: val
                             });
-                        }}>{momentOfYear}</Select> <Input onChange={(e) => {
+                        }}>{momentOfYear}</Select> <Input value={dayOfMonth} onChange={(e) => {
                             this.setState({
                                 dayOfMonth: e.target.value
                             });
-                        }}/>日</Radio>
-                        <Radio value={2}>The <Select style={{width: 90}} onChange={(val) => {
+                        }}/></Radio>
+                        <Radio value={2}>On the: <Select value={month} style={{width: 120}} onChange={(val) => {
                             this.setState({
                                 month: val
                             });
-                        }}>{momentOfYear}</Select>的<Select style={{width: 110}} onChange={(val) => {
+                        }}>{momentOfYear}</Select> of <Select value={weekOfMonth} style={{width: 90}} onChange={(val) => {
                             this.setState({
                                 weekOfMonth: val
                             });
-                        }}>{weekOfMonth}</Select> <Select style={{width: 120}} onChange={(val) => {
+                        }}>{weekOfMonthOptions}</Select> <Select value={dayOfWeek} style={{width: 100}} onChange={(val) => {
                             this.setState({
                                 dayOfWeek: val
                             });
-                        }}>{dayOfWeek}</Select></Radio>
+                        }}>{dayOfWeekOptions}</Select></Radio>
                     </RadioGroup>
                 </div>);
                 break;
@@ -262,7 +303,7 @@ class Recurrence extends Component {
 
         const {
             everyDays,
-            everyWeekDay,
+            everyWorkDay,
 
             everyWeeks,
             daysOfTheWeek,
@@ -283,19 +324,12 @@ class Recurrence extends Component {
         } = this.state;
 
         let recurrent_parma = {};
-        if(endType === 1) {
-            recurrent_parma.endDate = null;
-        } else if(endType === 2) {
-            recurrent_parma.numberOfOccurrences = numberOfOccurrences;
-        } else {
-            recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
-        }
         switch(recurrence_pattern) {
             case 1:
                 recurrent_parma = {
                     daily: {
                         everyDays,
-                        everyWeekDay
+                        everyWorkDay
                     }
                 }
                 break;
@@ -313,6 +347,7 @@ class Recurrence extends Component {
                         everyMonths,
                         dayOfMonth
                     } : {
+                        everyMonths,
                         weekOfMonth,
                         dayOfWeek,
                     }
@@ -322,8 +357,10 @@ class Recurrence extends Component {
                 recurrent_parma = {
                     yearly: yearType === 1 ? {
                         everyYear,
-                        month
+                        month,
+                        dayOfMonth
                     } : {
+                        everyYear,
                         month,
                         weekOfMonth,
                         dayOfWeek,
@@ -331,28 +368,38 @@ class Recurrence extends Component {
                 }
                 break
         }
+        if(endType === 1) {
+            recurrent_parma.endDate = null;
+        } else if(endType === 2) {
+            recurrent_parma.numberOfOccurrences = numberOfOccurrences;
+        } else {
+            recurrent_parma.endDate = endTime.format('YYYY-MM-DD');
+        }
+        const start =  startTime;
+        const end =  endTime;
         const recurrenceJson = JSON.stringify({
-            startTime: startTime.format('HH:mm'),
-            endTime: endTime.format('HH:mm'),
-            startDate: startTime.format('YYYY-MM-DD'),
-            endDate: endTime.format('YYYY-MM-DD'),
-            length: duration*60,
+            startTime: start.clone().utc().format('HH:mm'),
+            endTime: end.clone().utc().format('HH:mm'),
+            startDate: start.clone().utc().format('YYYY-MM-DD'),
+            endDate: end.clone().utc().format('YYYY-MM-DD'),
+            duration: duration*60,
             timeZone,
             ...recurrent_parma
         });
         // 保存信息
         localStorage.setItem('__meeting_recurrenceJson', recurrenceJson);
-        this.setState({
-            visible: false
-        });
+        this.closeModal();
+        this.props.changeProp('isRecurrence', true)
+
     }
     handleCancel = () => {
         localStorage.setItem('__meeting_recurrenceJson', '');
         message.info('Remove recurrence success');
         this.closeModal();
+        this.props.changeProp('isRecurrence', false)
     }
     render () {
-        const { visible, timezone, startTime, endTime, duration, recurrence_pattern } = this.state;
+        const { visible, timezone, startTime, endTime, duration, recurrence_pattern, endType, numberOfOccurrences } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Modal
@@ -439,7 +486,7 @@ class Recurrence extends Component {
                 </Card>
                 <Card className="my-card" title={'Recurrence Pattern'} bordered={false}>
                     <div className="section">
-                        <div className="section-left" style={{flex: 1}}>
+                        <div className="section-left">
                             <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={this.state.recurrence_pattern}>
                                 <Radio value={1}>Daily</Radio>
                                 <Radio value={2}>Weekly</Radio>
@@ -447,7 +494,7 @@ class Recurrence extends Component {
                                 <Radio value={4}>Yearly</Radio>
                             </RadioGroup>
                         </div>
-                        <div className="section-right" style={{flex: 2}}>
+                        <div className="section-right">
                             {this.renderPattern(recurrence_pattern)}
                         </div>
                     </div>
@@ -460,18 +507,19 @@ class Recurrence extends Component {
                                 format="YYYY-MM-DD"
                                 placeholder="Select Date"
                                 value={startTime.zone(offsetUTC)}
+                                disabledDate={disabledDate}
                                 onChange={this.handleTime.bind(this, 'startTime')}
                                 className="my-date-picker"
                             />
                         </div>
                         <div className="section-right">
-                            <RadioGroup className="my-radio-group" onChange={(val) => {
+                            <RadioGroup className="my-radio-group" value={endType} onChange={(e) => {
                                 this.setState({
-                                    endType: val
+                                    endType: e.target.value
                                 });
                             }}>
                                 <Radio value={1}>No end date</Radio>
-                                <Radio value={2}>End after: <Input  onChange={(val) => {
+                                <Radio value={2}>End after: <Input value={numberOfOccurrences} onChange={(val) => {
                                     this.setState({
                                         numberOfOccurrences: val
                                     });
@@ -480,6 +528,8 @@ class Recurrence extends Component {
                                     <DatePicker
                                         format="YYYY-MM-DD"
                                         placeholder="Select Date"
+                                        value={endTime}
+                                        disabledDate={disabledDate}
                                         onChange={this.handleTime.bind(this, 'endTime')}
                                         className="my-date-picker"
                                     />
