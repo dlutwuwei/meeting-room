@@ -48,7 +48,6 @@ class FormItem extends React.Component {
       ref,
       onChange
     } = this.props;
-    console.log("options:", options);
     let inputDom = (
       <input
         name={name}
@@ -73,16 +72,26 @@ class FormItem extends React.Component {
       );
     } else if (type === "select") {
       inputDom = (
-        <Select defaultValue={value} style={{ width: 120 }} onChange={onChange} className="right">
+        <Select
+          defaultValue={value}
+          style={{ width: 120 }}
+          onChange={onChange}
+          className="right"
+        >
           {options.map(({ label, value }) => (
             <Option value={value}>{label}</Option>
           ))}
         </Select>
       );
-    } else if(type === 'checkbox') {
+    } else if (type === "checkbox") {
       inputDom = (
-        <Checkbox name={name}  defaultValue={value} className="right" ref={ref} />
-      )
+        <Checkbox
+          name={name}
+          defaultValue={value}
+          className="right"
+          ref={ref}
+        />
+      );
     }
     return (
       <div className="form-item">
@@ -285,7 +294,6 @@ export default class Train extends React.Component {
       label: x,
       value: x
     }));
-    console.log("brand_options:", brand_options, division_options);
     const train_info = [
       {
         name: "brandName",
@@ -490,7 +498,7 @@ export default class Train extends React.Component {
             defaultValue={this.state.range}
           />
         </div>
-        <div className="book-table">{this.renderBookTable()}</div>
+        <div className="book-table-container">{this.renderBookTable()}</div>
       </div>
     );
   }
@@ -523,28 +531,29 @@ export default class Train extends React.Component {
         title: "品牌",
         dataIndex: "brandName",
         width: 100,
-        fixed: 'left'
+        fixed: "left"
       },
       {
         title: "楼层",
         dataIndex: "floor",
         width: 100,
-        fixed: 'left'
+        fixed: "left"
       },
       {
         title: "培训室（容纳人数)",
         dataIndex: "capacity",
         width: 100,
-        fixed:'left'
+        fixed: "left"
       },
       ...range
     ];
     return (
       <Table
-        scroll={{ x: 800 }}
+        scroll={{ x: 1500 }}
         dataSource={this.state.train_list}
         columns={columns}
         rowKey="roomId"
+        className="book-table"
         bordered
       />
     );

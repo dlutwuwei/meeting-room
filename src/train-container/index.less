@@ -6,11 +6,14 @@
   .menu-container {
     height: 100%;
     width: 256px;
-    flex: 2;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
   .stage-container {
     height: 100%;
-    flex: 10;
+    flex-shrink: 0;
+    flex-basis: 0;
+    width: 1000px;
     .book-label-container {
       padding: 16px;
       border: 1px solid black;
@@ -43,10 +46,17 @@
         margin: auto;
         width: 400px;
       }
-      .book-table {
+      .book-table-container {
+        .book-table {
+          table {
+            table-layout: fixed;
+          }
+          
+        }
         .book-day-container {
           padding: 0px !important;
           height: 40px;
+          width: 150px;
           cursor: pointer;
           .book-day {
             width: 100%;
