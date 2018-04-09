@@ -31,7 +31,7 @@ fetch.get('/api/public/getCurrentUserInfo', {
   localStorage.setItem('__meeting_showas', '');
   localStorage.setItem('__meeting_important', '');
   localStorage.setItem('__meeting_recurrenceJson', '');
-  fetch.get('/api/meetingRoomSetting/getSetting', {
+  fetch.get('/api/meeting/getRoomSetting', {
     token: token || localStorage.getItem('__meeting_token')
   }).then(r => {
     localStorage.setItem('__meeting_setting', JSON.stringify(r.data));
