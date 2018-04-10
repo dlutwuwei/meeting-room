@@ -18,7 +18,7 @@ fetch.get('/api/public/getCurrentUserInfo', {
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);
   localStorage.setItem('__meeting_user_name', r.data.userName);
-
+  localStorage.setItem('__meeting_user_actions', r.data.roleActions);
   ReactDOM.render((
     <Router>
         <Route path="/admin" component={Admin}/>
