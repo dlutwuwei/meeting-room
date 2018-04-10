@@ -29,8 +29,8 @@ export default class TrainRoute extends Component {
             </Link>
           </Menu.Item>
           <SubMenu key="sub4" title={<span><Icon type="pie-chart" /><span>统计报表</span></span>}>
-              <Menu.Item key="1"><Link to="/train/sheet/">按月报表</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/admin/sheet/total">总使用率报表</Link></Menu.Item>
+              <Menu.Item key="1"><Link to="/train/sheet/month">按月报表</Link></Menu.Item>
+              <Menu.Item key="2"><Link to="/train/sheet/total">总使用率报表</Link></Menu.Item>
           </SubMenu>
           {/* <Menu.Item key="sub4">
             <Link to={"/train/sheet"}>
@@ -47,7 +47,7 @@ export default class TrainRoute extends Component {
       <React.Fragment>
         <Route path={"/train/book"} component={TrainBook} />
         <Route path={"/train/info"} component={TrainInfo} />
-        <Route path={"/train/sheet"} component={TrainSheet} />
+        <Route path={"/train/sheet/:type"} component={TrainSheet} />
       </React.Fragment>
     );
   }
