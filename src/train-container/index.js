@@ -4,6 +4,7 @@ import { Menu, Icon } from 'antd';
 import TrainBook from "./train-book";
 import TrainInfo from "./train-info";
 import TrainSheet from "./train-sheet";
+const SubMenu = Menu.SubMenu;
 
 export default class TrainRoute extends Component {
   renderMenu() {
@@ -27,12 +28,16 @@ export default class TrainRoute extends Component {
               <span>我的培训室</span>
             </Link>
           </Menu.Item>
-          <Menu.Item key="sub4">
+          <SubMenu key="sub4" title={<span><Icon type="pie-chart" /><span>统计报表</span></span>}>
+              <Menu.Item key="1"><Link to="/train/sheet/">按月报表</Link></Menu.Item>
+              <Menu.Item key="2"><Link to="/admin/sheet/total">总使用率报表</Link></Menu.Item>
+          </SubMenu>
+          {/* <Menu.Item key="sub4">
             <Link to={"/train/sheet"}>
               <Icon type="setting" />
               <span>统计报表</span>
             </Link>
-          </Menu.Item>
+          </Menu.Item> */}
         </Menu>
       </div>
     );
