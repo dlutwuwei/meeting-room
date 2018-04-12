@@ -81,7 +81,7 @@ function request(method, url, data, opts) {
             if(data.code === 0) {
                 return Promise.resolve(data);
             } else {
-                if(data.code ===  404) {
+                if(data.code ===  404 || data.code === 402) {
                     Modal.confirm({
                         title: 'Token过期，重新授权?',
                         okText: '确认',
