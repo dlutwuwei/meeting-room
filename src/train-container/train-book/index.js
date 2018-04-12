@@ -504,13 +504,19 @@ export default class Train extends React.Component {
         fixed: "left"
       },
       {
+        title: "培训室",
+        dataIndex: "name",
+        width: 100,
+        fixed: "left"
+      },
+      {
         title: "楼层",
         dataIndex: "floor",
         width: 100,
         fixed: "left"
       },
       {
-        title: "培训室（容纳人数)",
+        title: "容纳人数",
         dataIndex: "capacity",
         width: 100,
         fixed: "left"
@@ -530,10 +536,12 @@ export default class Train extends React.Component {
   }
   renderStage() {
     return (
-      <div className="stage-container">
-        {this.renderLabel()}
-        {this.renderTable()}
-      </div>
+      <React.Fragment>
+        <div className="stage-container">
+          {this.renderLabel()}
+          {this.renderTable()}
+        </div>
+      </React.Fragment>
     );
   }
   renderModal() {
