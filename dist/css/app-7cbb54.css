@@ -17981,9 +17981,9 @@ textarea.ant-pagination-options-quick-jumper input {
 }
 
 .monitor .room-list-body span {
-  width: 100px;
+  min-width: 100px;
   height: 48px;
-  line-height: 48px;
+  line-height: 38px;
   text-align: center;
   margin: 10px 10px 10px 0;
   background: #f0f3f6;
@@ -17993,7 +17993,7 @@ textarea.ant-pagination-options-quick-jumper input {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 5px;
+  padding: 5px 8px;
 }.admin-container .ant-layout-sider-collapsed .logo {
   background-image: none!important;
 }
