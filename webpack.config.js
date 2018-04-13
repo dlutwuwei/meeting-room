@@ -25,7 +25,7 @@ module.exports = Object.keys(languages).map(lan => {
   return {
     entry: {
         config: ['./src/config.js'],
-        lib: [ 'react', 'react-dom', 'babel-polyfill' ],
+        lib: [ 'babel-polyfill','react', 'react-dom' ],
         app: ['./src/app.js'],
         board: ['./src/board.js'],
         admin: ['./src/admin.js'],
