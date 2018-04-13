@@ -54,7 +54,7 @@
   },
   "scripts": {
     "build": "rm -rf dist && NODE_ENV=production webpack",
-    "start": "webpack-dev-server --progress --devtool cheap-module-source-map --hot",
+    "start": "NODE_ENV=development webpack-dev-server --progress --devtool cheap-module-source-map --hot",
     "setup": "npm i --registry=https://registry.npm.taobao.org",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint --fix public/js"

@@ -34,6 +34,8 @@ function toQueryString(obj) {
     }).join('&') : ''
 }
 
+let popFlag = false;
+
 function request(method, url, data, opts) {
     const isGet = method === 'get'
 
@@ -81,17 +83,23 @@ function request(method, url, data, opts) {
             if(data.code === 0) {
                 return Promise.resolve(data);
             } else {
+                if(popFlag) {
+                    return;
+                }
+                popFlag = true;
                 if(data.code ===  404 || data.code === 402 || data.code === 401) {
                     Modal.confirm({
                         title: 'Token过期，重新授权?',
                         okText: '确认',
                         cancelText: '取消',
                         onOk() {
+                            popFlag = false;
                             location.href=`${window.auth_url}?callback=` + encodeURIComponent(`${location.protocol}//${location.host}${location.pathname}`);
                         },
                         onCancel() {
+                            popFlag = false;
                         },
-                    })
+                    });
                 } else if (data.code === 505) {
                     Modal.info({
                         title: '没有权限使用这个功能, 请联系管理员',
