@@ -88,7 +88,7 @@ module.exports = Object.keys(languages).map(lan => {
                 loader: 'url-loader',
                 options: {
                   limit: 10000,
-                  name: 'iconfont/[name].[hash:8].[ext]',
+                  name: 'css/iconfont/[name].[hash:8].[ext]',
                 }
               }
             ]

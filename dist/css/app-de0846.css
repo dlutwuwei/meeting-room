@@ -17998,6 +17998,13 @@ textarea.ant-pagination-options-quick-jumper input {
   background-image: none!important;
 }
 
+@font-face {
+  font-family: 'anticon';
+  src: url(/static/css/iconfont/font_anticon.9e949c77.eot);
+  /* IE9*/
+  src: url(/static/css/iconfont/font_anticon.e0e83f09.woff) format('woff'),  url(/static/css/iconfont/font_anticon.5cc79c23.ttf) format('truetype'),  url(data:image/svg+xml;base64,bW9kdWxlLmV4cG9ydHMgPSBfX3dlYnBhY2tfcHVibGljX3BhdGhfXyArICJpbWcvZm9udF9hbnRpY29uLnN2ZyI7#iconfont) format('svg');
+}
+
 .admin-container {
   min-height: 100%;
 }
