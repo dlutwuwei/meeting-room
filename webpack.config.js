@@ -48,12 +48,6 @@ module.exports = Object.keys(languages).map(lan => {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
         },
         proxy: {
-          '/api/trainingRoom/*': {
-            target: 'http://47.95.238.222:9001/mock/11/mt'
-          },
-          '/api/training/*': {
-            target: 'http://47.95.238.222:9001/mock/11/mt'
-          },
           '/api/*': {
               target:  `${mockserver}`,
               changeOrigin: true,
