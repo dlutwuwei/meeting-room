@@ -1,0 +1,37 @@
+.train-container {
+  display: flex;
+  .layout-left {
+    flex: 0 0 200px;
+    background: rgba(0,21,42,1);
+    .menu-container {
+      a {
+        color: white;
+      }
+      .logo {
+        height: 64px;
+        background-image: url("../img/logo.png");
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: #e6f7ff;
+      }
+      
+    }
+  }
+  .layout-right {
+    flex: 1;
+    width: 800px;
+    background: #f0f2f5;
+    .nav {
+      height: 64px;
+      justify-content: flex-end;
+      align-items: center;
+      display: flex;
+      padding: 20px;
+      background: #fff;
+    }
+    .stage-container {
+      padding: 20px;
+    }
+  }
+}

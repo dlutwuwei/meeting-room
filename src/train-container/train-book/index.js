@@ -1,16 +1,14 @@
-import React, { Fragment } from "react";
+import React from "react";
 import {
-  Menu,
-  Icon,
   DatePicker,
   Table,
   Modal,
   message,
   Radio,
   Select,
+  Input,
   Checkbox
 } from "antd";
-import { Link, Route } from "react-router-dom";
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
 import Fetch from "../../lib/fetch";
@@ -50,12 +48,12 @@ class FormItem extends React.Component {
       onChange
     } = this.props;
     let inputDom = (
-      <input
+      <Input
         name={name}
         type={type}
-        defaultValue={value}
+        value={value}
         readOnly={readOnly}
-        onChange={value => onChange(name, value)}
+        onChange={e => onChange(name, e.target.value)}
         className="right"
         ref={ref}
       />
@@ -64,23 +62,23 @@ class FormItem extends React.Component {
       inputDom = (
         <RadioGroup
           options={options}
-          defaultValue={value}
+          value={value}
           name={name}
           ref={ref}
           className="right"
-          onChange={onChange}
+          onChange={e => onChange(name, e.target.value)}
         />
       );
     } else if (type === "select") {
       inputDom = (
         <Select
-          defaultValue={value}
+          value={value}
           style={{ width: 120 }}
-          onChange={onChange}
+          onChange={value => onChange(name, value)}
           className="right"
         >
           {options.map(({ label, value }) => (
-            <Option value={value}>{label}</Option>
+            <Option value={value} key={label}>{label}</Option>
           ))}
         </Select>
       );
@@ -88,8 +86,9 @@ class FormItem extends React.Component {
       inputDom = (
         <Checkbox
           name={name}
-          defaultValue={value}
+          checked={value || false}
           className="right"
+          onChange={e => onChange(name, e.target.checked)}
           ref={ref}
         />
       );
@@ -209,16 +208,14 @@ export default class Train extends React.Component {
       });
     });
   }
-  updateForm = (name, e) => {
-    /*
+  updateForm = (name, value) => {
+    console.log('name:',name,value);
     const { selected_train } = this.state;
-    selected_train[name] = e.target.value;
+    selected_train[name] = value;
     this.setState({
       selected_train
     });
-    */
   };
-  formatTrainData(train_list) {}
   get formInfo() {
     const { selected_train, selected_day } = this.state;
     const { roomName, floor, capacity, deviceNames } = selected_train;
@@ -281,9 +278,9 @@ export default class Train extends React.Component {
       subject,
       time,
       people,
-      tea_break,
-      lunch,
-      memo
+      teaBreak,
+      outLunch,
+      remark
     } = selected_train;
     const { date } = selected_day;
     const { brandMap, divisionMap } = this.state;
@@ -334,6 +331,10 @@ export default class Train extends React.Component {
           {
             label: "下半天(12:30-18:30)",
             value: 2
+          },
+          {
+            label: '全天',
+            value: 3
           }
         ]
       },
@@ -343,21 +344,21 @@ export default class Train extends React.Component {
         value: people
       },
       {
-        name: "teaBreaak",
+        name: "teaBreak",
         label: "需要茶歇时间",
-        value: tea_break,
+        value: teaBreak,
         type: "checkbox"
       },
       {
         name: "outLunch",
         label: "需要外出午餐",
-        value: lunch,
+        value: outLunch,
         type: "checkbox"
       },
       {
         name: "remark",
         label: "备注",
-        value: memo
+        value: remark
       }
     ];
     return {
@@ -504,13 +505,19 @@ export default class Train extends React.Component {
         fixed: "left"
       },
       {
+        title: "培训室",
+        dataIndex: "roomName",
+        width: 100,
+        fixed: "left"
+      },
+      {
         title: "楼层",
         dataIndex: "floor",
         width: 100,
         fixed: "left"
       },
       {
-        title: "培训室（容纳人数)",
+        title: "容纳人数",
         dataIndex: "capacity",
         width: 100,
         fixed: "left"
@@ -525,15 +532,18 @@ export default class Train extends React.Component {
         rowKey="roomId"
         className="book-table"
         bordered
+        pagination={false}
       />
     );
   }
   renderStage() {
     return (
-      <div className="stage-container">
-        {this.renderLabel()}
-        {this.renderTable()}
-      </div>
+      <React.Fragment>
+        <div className="stage-container">
+          {this.renderLabel()}
+          {this.renderTable()}
+        </div>
+      </React.Fragment>
     );
   }
   renderModal() {
@@ -543,7 +553,7 @@ export default class Train extends React.Component {
       <div className="room-container">
         <div className="form-header">培训室信息:</div>
         {room_info.map(config => (
-          <FormItem {...config} onChange={this.updateForm} />
+          <FormItem {...config} onChange={this.updateForm} key={config.name} />
         ))}
       </div>
     );
@@ -551,7 +561,7 @@ export default class Train extends React.Component {
       <div className="user-container">
         <div className="form-header">预订人信息:</div>
         {user_info.map(config => (
-          <FormItem {...config} onChange={this.updateForm} />
+          <FormItem {...config} onChange={this.updateForm} key={config.name} />
         ))}
       </div>
     );
@@ -559,7 +569,7 @@ export default class Train extends React.Component {
       <div className="train-contaienr">
         <div className="form-header">培训信息:</div>
         {train_info.map(config => (
-          <FormItem {...config} onChange={this.updateForm} />
+          <FormItem {...config} onChange={this.updateForm} key={config.name}/>
         ))}
       </div>
     );
