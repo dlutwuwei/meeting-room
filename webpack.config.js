@@ -212,10 +212,7 @@ module.exports = Object.keys(languages).map(lan => {
         }),
         new I18nPlugin(
           languages['cn']
-        ),
-        new webpack.DefinePlugin({
-          'process.env.NODE_ENV': JSON.stringify('production')
-        })
+        )
     ].concat(!isDev ? [
         new webpack.HashedModuleIdsPlugin(),
         new UglifyJSPlugin({
@@ -226,8 +223,15 @@ module.exports = Object.keys(languages).map(lan => {
             },
             minimize: true
           }
+        }),
+        new webpack.DefinePlugin({
+          'process.env.NODE_ENV': JSON.stringify('production')
         })
-    ] : [ ]),
+    ] : [
+      new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('development')
+      })
+    ]),
     resolve: {
         extensions: ['.js', '.jsx'],
         modules: [ path.resolve(__dirname, 'src/'), 'node_modules']
