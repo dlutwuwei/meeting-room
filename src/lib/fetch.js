@@ -89,7 +89,7 @@ function request(method, url, data, opts) {
                 popFlag = true;
                 if(data.code ===  404 || data.code === 402 || data.code === 401) {
                     Modal.confirm({
-                        title: 'Token过期，重新授权?',
+                        title: '登录已失效，请点击确定重新登录?',
                         okText: '确认',
                         cancelText: '取消',
                         onOk() {

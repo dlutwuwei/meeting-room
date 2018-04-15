@@ -44,8 +44,11 @@ const formItemLayout = {
   }
 };
 const curHour = moment().hours();
+const curMin = moment().minutes();
+const initStartTime = moment().hours( curHour > 9 ? curHour : 9).minutes(curMin >= 30 ? 60 : 30);
+
 const startTimeConfig = {
-  initialValue: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(0),
+  initialValue: initStartTime,
   rules: [{
     type: 'object',
     required: true,
@@ -54,7 +57,7 @@ const startTimeConfig = {
 };
 
 const endTimeConfig = {
-  initialValue: moment().hours( curHour >=9 ? curHour + 1 : 9).minute(30),
+  initialValue: initStartTime.add(30, 'minutes'),
   rules: [{
     type: 'object',
     required: true,
