@@ -135,7 +135,7 @@ function getColumns(type, removeFromTable, showEditor) {
                         if(record.hasProjector) {
                             devices.push(<Tag>投影仪</Tag>)
                         }
-                        if(record.hasTv) {
+                        if(record.hasTV) {
                             devices.push(<Tag>电视</Tag>)
                         }
                         if(record.hasPhone) {

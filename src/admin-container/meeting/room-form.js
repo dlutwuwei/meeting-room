@@ -6,7 +6,7 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 
 const deviceChildren = [];
-deviceChildren.push(<Option key={'hasTv'}>电视</Option>);
+deviceChildren.push(<Option key={'hasTV'}>电视</Option>);
 deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
 deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
 deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
@@ -66,7 +66,7 @@ class Room extends Component {
         const { form, values } = this.props;
         const devices = [];
         Object.keys(values).forEach(item => {
-            if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item) && values[item]) {
+            if(['hasTV', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item) && values[item]) {
                 devices.push(item);
             }
         });

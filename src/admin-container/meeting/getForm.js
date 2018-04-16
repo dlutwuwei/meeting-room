@@ -188,7 +188,7 @@ export default (type, onCreated) => {
             });
         case 'rooms':
             deviceChildren = [];
-            deviceChildren.push(<Option key={'hasTv'}>电视</Option>);
+            deviceChildren.push(<Option key={'hasTV'}>电视</Option>);
             deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
             deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
             deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
@@ -200,7 +200,7 @@ export default (type, onCreated) => {
                 const { modalVisible, form, handleModalVisible, values, isEdit } = props;
                 const devices = [];
                 Object.keys(values).forEach(item => {
-                    if(['hasTv', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
+                    if(['hasTV', 'hasPhone', 'hasWhiteBoard', 'hasProjector'].includes(item)) {
                         devices.push(item);
                     }
                 });

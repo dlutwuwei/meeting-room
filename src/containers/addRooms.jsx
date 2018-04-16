@@ -72,7 +72,7 @@ class AddRooms extends Component {
             }
         }, {
             title: 'TV',
-            dataIndex: 'hasTv',
+            dataIndex: 'hasTV',
             key: 'tv',
             render: (val) => {
                 return val && <Icon type="check" />
