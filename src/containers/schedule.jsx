@@ -7,7 +7,7 @@ import moment from 'moment';
 import classnames from 'classNames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Checkbox, DatePicker, Icon, message, Modal, Select, Spin } from 'antd';
+import { Checkbox, DatePicker, Icon, message, Modal, Select, Spin, Popover } from 'antd';
 import TimePicker from 'rc-time-picker';
 import PropTypes from 'prop-types';
 
@@ -26,15 +26,15 @@ function disabledDate(current) {
     return current && current < moment().endOf('day');
 }
 
-// function generateOptions(length, include) {
-//     const arr = [];
-//     for (let value = 0; value < length; value++) {
-//         if (include(value)) {
-//             arr.push(value);
-//         }
-//     }
-//     return arr;
-// }
+function generateOptions(length, include) {
+    const arr = [];
+    for (let value = 0; value < length; value++) {
+        if (include(value)) {
+            arr.push(value);
+        }
+    }
+    return arr;
+}
 
 const children = [];
 const zones = Object.keys(Timezone);
@@ -133,7 +133,11 @@ class Schedule extends Component {
                             return ({
                                 status: item.showAs,
                                 start,
-                                end
+                                end,
+                                name: item.userName,
+                                tel: item.tel,
+                                subject: item.subject,
+                                mail: item.mail
                             })
                         });
                     }
@@ -423,12 +427,13 @@ class Schedule extends Component {
                                         line.forEach((_, i) => {
                                             const time = i + startHours;
                                             if (time >= block.start && time <= block.end) {
-                                                line[i] = block.status
+                                                line[i] = block
                                             }
                                         });
                                     });
                                     return (<div className="line">
-                                        {line.map((cell, x) => {
+                                        {line.map((item, x) => {
+                                            const cell = item.status;
                                             return <div
                                                 className={classnames(['block', {
                                                     'active': top >= 0 && left >= 0 && x >= left && x <= right,
@@ -444,7 +449,18 @@ class Schedule extends Component {
                                                 onMouseDown={this.handleMouseDown.bind(this, x, y)}
                                                 onMouseUp={this.handleMouseUp.bind(this, x, y)}
                                                 onMouseOver={this.handleMouseOver.bind(this, x, y)}
-                                            />
+                                            >
+                                                { cell && <Popover arrowPointAtCenter={true} autoAdjustOverflow={true}
+                                                    content={
+                                                        <div className="schedule-pop">
+                                                            <div><label>name:</label><span>{item.name}</span></div>
+                                                            <div><label>mail:</label><span>{item.mail}</span></div>
+                                                            <div><label>phone:</label><span>{item.tel}</span></div>
+                                                        </div>
+                                                    } trigger="hover" title={item.subject}>
+                                                    <div style={{width: '100%', height: '100%'}}></div>
+                                                </Popover>}
+                                            </div>
                                         })}
                                     </div>);
                                 })}
@@ -483,11 +499,11 @@ class Schedule extends Component {
                                 disabledHours={() => {
                                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                                 }}
-                                // disabledMinutes={() => {
-                                //     return generateOptions(60, (m) => {
-                                //         return m % 30 !== 0
-                                //     });
-                                // }}
+                                disabledMinutes={() => {
+                                    return generateOptions(60, (m) => {
+                                        return m % 30 !== 0
+                                    });
+                                }}
                             />
                             {showTimezone && <Select
                                 size="default"
@@ -528,11 +544,11 @@ class Schedule extends Component {
                                 disabledHours={() => {
                                     return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
                                 }}
-                                // disabledMinutes={() => {
-                                //     return generateOptions(60, (m) => {
-                                //         return m % 30 !== 0
-                                //     });
-                                // }}
+                                disabledMinutes={() => {
+                                    return generateOptions(60, (m) => {
+                                        return m % 10 !== 0
+                                    });
+                                }}
                                 onChange={(date) => { this.handleTime('endTime',date) }}
                             />
                             {showTimezone && <Select

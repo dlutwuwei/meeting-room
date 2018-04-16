@@ -72,15 +72,15 @@ for (let i = 0; i < zones.length; i++) {
   children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
 }
 
-// function generateOptions(length, include) {
-//   const arr = [];
-//   for (let value = 0; value < length; value++) {
-//     if (include(value)) {
-//       arr.push(value);
-//     }
-//   }
-//   return arr;
-// }
+function generateOptions(length, include) {
+  const arr = [];
+  for (let value = 0; value < length; value++) {
+    if (include(value)) {
+      arr.push(value);
+    }
+  }
+  return arr;
+}
 
 /** 
  * 由于组件使用了antd的form表单（主要为使用它的表单验证功能），所以为了和其他页面保持数据同步，必须向redux发送一份一样的数据。
@@ -452,11 +452,11 @@ class Appointment extends Component {
                     disabledHours={() => {
                       return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                     }}
-                    // disabledMinutes={() => {
-                    //   return generateOptions(60, (m) => {
-                    //     return m % 30 !== 0
-                    //   });
-                    // }}
+                    disabledMinutes={() => {
+                      return generateOptions(60, (m) => {
+                        return m % 10 !== 0
+                      });
+                    }}
                     onChange={(date) => { this.handleTime('startTime',date) }}
                   />
                 )}
@@ -494,11 +494,11 @@ class Appointment extends Component {
                     disabledHours={() => {
                       return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                     }}
-                    // disabledMinutes={() => {
-                    //   return generateOptions(60, (m) => {
-                    //     return m % 30 !== 0
-                    //   });
-                    // }}
+                    disabledMinutes={() => {
+                      return generateOptions(60, (m) => {
+                        return m % 30 !== 0
+                      });
+                    }}
                     onChange={(date) => { this.handleTime('endTime',date) }}
                   />
                 )}
