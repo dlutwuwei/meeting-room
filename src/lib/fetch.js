@@ -50,7 +50,7 @@ function request(method, url, data, opts) {
     const finalOpts = Object.assign(
         {
             method: method,
-            signal: true
+            signal: false
         },
         defOpts,
         isGet ? defGetOpts : defPostOpts,
