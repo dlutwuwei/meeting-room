@@ -454,7 +454,7 @@ class Schedule extends Component {
                                                     content={
                                                         <div className="schedule-pop">
                                                             <div><label>name:</label><span>{item.name}</span></div>
-                                                            <div><label>mail:</label><span>{item.mail}</span></div>
+                                                            {/* <div><label>mail:</label><span>{item.mail}</span></div> */}
                                                             <div><label>phone:</label><span>{item.tel}</span></div>
                                                         </div>
                                                     } trigger="hover" title={item.subject}>
