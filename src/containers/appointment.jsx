@@ -47,6 +47,7 @@ const curHour = moment().hours();
 const curMin = moment().minutes();
 const initStartTime = moment().hours( curHour > 9 ? curHour : 9).minutes(curMin >= 30 ? 60 : 30);
 
+const me = localStorage.getItem('__meeting_user_email');
 const startTimeConfig = {
   initialValue: initStartTime,
   rules: [{
@@ -146,6 +147,9 @@ class Appointment extends Component {
         // 处理参数
         data.receiver = data.receivers.join(';');
         delete data.receivers;
+        if(!data.receiver) {
+          data.receiver = me;
+        }
         data.startTime = data.startTime.clone().utc().format('YYYY-MM-DD HH:mm');
         data.endTime = data.endTime.clone().utc().format('YYYY-MM-DD HH:mm');
         data.roomMails = data.location.map(item => item.mail).join(';');
@@ -326,7 +330,7 @@ class Appointment extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone, isEdit, isRecurrence } = this.props;
+    const { showTimezone, isEdit } = this.props;
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
 
     return (
@@ -374,7 +378,7 @@ class Appointment extends Component {
                   initialValue: [],
                   rules: [{
                     type: 'array',
-                    required: true,
+                    required: false,
                     message: 'Please input attendees',
                   }]
                 })(

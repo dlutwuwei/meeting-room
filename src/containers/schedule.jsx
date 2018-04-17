@@ -47,6 +47,7 @@ const now = moment();
 const startHours = 19;
 const endHours = 39;
 
+const me = localStorage.getItem('__meeting_user_email');
 class Schedule extends Component {
     constructor() {
         super();
@@ -247,13 +248,16 @@ class Schedule extends Component {
             data.isRecurrence = false;
         }
         localStorage.setItem('__appointment_data', JSON.stringify(data));
-        if (!data.receiver || !data.roomMails) {
+        if(!data.receiver) {
+            data.receiver = me;
+        }
+        if (!data.roomMails) {
             Modal.error({
-                title: '没有填写收件人或会议室',
+                title: '没有选择会议室',
             });
-        } else if (!data.content || !data.subject) {
+        } else if (!data.subject) {
             confirm({
-                title: '没有填写标题或内容，确认发送？',
+                title: '没有填写标题，确认发送？',
                 onOk: () => {
                     this.sendAppointment(data)
                 },
