@@ -147,6 +147,12 @@ class Schedule extends Component {
                     data,
                     loading: false
                 });
+                function setDay(time, date) {
+                    const n = date.dayOfYear();
+                    return time.clone().dayOfYear(n);
+                }
+                this.props.actions.changeProp('startTime', setDay(this.props.startTime, date))
+                this.props.actions.changeProp('endTime', setDay(this.props.startTime,date))
             }).catch(() => {
                 this.setState({
                     loading: false
