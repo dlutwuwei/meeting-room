@@ -461,6 +461,7 @@ class Appointment extends Component {
                         return m % 10 !== 0
                       });
                     }}
+                    style={{ verticalAlign: 'middle'}}
                     onChange={(date) => { this.handleTime('startTime',date) }}
                   />
                 )}
@@ -494,10 +495,10 @@ class Appointment extends Component {
                     placeholder="Select Time"
                     showSecond={false}
                     hideDisabledOptions={true}
-                    className="my-date-picker"
                     disabledHours={() => {
                       return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                     }}
+                    style={{ verticalAlign: 'middle' }}
                     disabledMinutes={() => {
                       return generateOptions(60, (m) => {
                         return m % 30 !== 0

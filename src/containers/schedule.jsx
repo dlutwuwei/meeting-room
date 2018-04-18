@@ -305,7 +305,7 @@ class Schedule extends Component {
     handleMouseDown = (x, y) => {
         // console.log('down', x, y, `${9+parseInt(x/2)}:${(x%2)*30}`)
         this.hover = true;
-        const startTime = this.state.date.clone().hours(9 + parseInt(x / 2)).minutes((x % 2) * 30);
+        const startTime = this.state.date.clone().hours(9 + parseInt(x / 2)).minutes((x % 2 + 1) * 30);
         this.setState({
             left: x,
             top: y,
@@ -315,7 +315,7 @@ class Schedule extends Component {
         this.props.actions.changeProp('startTime', startTime);
     }
     handleMouseOver = (x, y) => {
-        const endTime = this.state.date.clone().hours(9 + parseInt((x + 1) / 2)).minutes(((x + 1) % 2) * 30);
+        const endTime = this.state.date.clone().hours(9 + parseInt((x + 1) / 2)).minutes(((x + 1) % 2 + 1) * 30);
         if (this.hover) {
             this.setState({
                 right: x,
@@ -330,7 +330,7 @@ class Schedule extends Component {
             right: x,
             bottom: y,
         });
-        const endTime = this.state.date.clone().hours(9 + parseInt((x + 1) / 2)).minutes(((x + 1) % 2) * 30);
+        const endTime = this.state.date.clone().hours(9 + parseInt((x + 1) / 2)).minutes(((x + 1) % 2 + 1) * 30);
         this.props.actions.changeProp('endTime', endTime)
     }
     handleTimezoneChange = (val) => {
