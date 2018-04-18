@@ -346,7 +346,9 @@ class Schedule extends Component {
         } else if(type === 'endTime') {
             this.props.actions.changeProp('endTime', time.utc());
         }
-        this.search(time)
+        if(time.format('YYYY-MM-DD') !== this.props.startTime.format('YYYY-MM-DD')) {
+            this.search(time);
+        }
     }
     searchRooms(floor) {
         fetch.get('/api/meeting/getRooms', {

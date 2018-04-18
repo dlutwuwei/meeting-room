@@ -73,8 +73,8 @@ class MyMeeting extends Component {
                 content: r.data.content,
                 endTime: moment(r.data.endTime*1000),
                 // 编辑展示时只需要mail
-                location: r.data.roomMails.split(';').map(mail => ({ mail })),
-                receivers: r.data.receiver.split(';').map(mail => ({ mail })),
+                location: r.data.roomMails ? r.data.roomMails.split(';').map(mail => ({ mail })) : [],
+                receivers: r.data.receiver ? r.data.receiver.split(';').map(mail => ({ mail })) : [],
                 showTimezone: false,
                 startTime: moment(r.data.startTime*1000),
                 subject: r.data.subject,
@@ -174,7 +174,7 @@ class MyMeeting extends Component {
                     </Spin>
                 </div>
                 <Modal
-                    width={800}
+                    width={1000}
                     title="Edit meeting"
                     visible={visible}
                     onCancel={() => { this.setState({ visible: false })}}

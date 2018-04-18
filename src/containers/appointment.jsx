@@ -313,10 +313,14 @@ class Appointment extends Component {
     });
   }
   handleRecurrence = () => {
+    // 单独获取重复预定信息
     fetch.get(`/api/meeting/getItem?`, {
       token: localStorage.getItem('__meeting_token') || '',
       id: this.props.editId
     }).then(r => {
+      const { startTime, endTime } = r.data;
+      r.data.startTime = moment(startTime*1000);
+      r.data.endTime = moment(endTime*1000);
       this.setState({
         data: r.data
       }, () => {
