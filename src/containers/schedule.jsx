@@ -464,7 +464,7 @@ class Schedule extends Component {
                                                 onMouseUp={this.handleMouseUp.bind(this, x, y)}
                                                 onMouseOver={this.handleMouseOver.bind(this, x, y)}
                                             >
-                                                { cell && <Popover arrowPointAtCenter={true} autoAdjustOverflow={true}
+                                                { !!cell && <Popover arrowPointAtCenter={true} autoAdjustOverflow={true}
                                                     content={
                                                         <div className="schedule-pop">
                                                             <div><label>name:</label><span>{item.name}</span></div>
