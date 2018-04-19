@@ -87,10 +87,10 @@ function request(method, url, data, opts) {
                 return Promise.resolve(data);
             } else {
                 if(popFlag) {
-                    return;
+                    return Promise.reject();
                 }
-                popFlag = true;
                 if(data.code ===  404 || data.code === 402 || data.code === 401) {
+                    popFlag = true;
                     Modal.confirm({
                         title: '登录已失效，请点击确定重新登录?',
                         okText: '确认',
@@ -104,6 +104,7 @@ function request(method, url, data, opts) {
                         },
                     });
                 } else if (data.code === 505) {
+                    popFlag = true;
                     Modal.info({
                         title: '没有权限使用这个功能, 请联系管理员',
                         okText: '确认'

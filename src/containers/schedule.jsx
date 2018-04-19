@@ -130,7 +130,8 @@ class Schedule extends Component {
                             const startTime = moment(item.startTime*1000);
                             const endTime = moment(item.endTime*1000);
                             const start = startTime.hours()*2 + parseInt(startTime.minutes()/30);
-                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30);
+                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30) - 1;
+                            // console.log(item.mail, start, end, startTime, endTime);
                             return ({
                                 status: item.showAs,
                                 start,
@@ -237,8 +238,8 @@ class Schedule extends Component {
           return;
         }
 
-        data.startTime = startTime.utc().format('YYYY-MM-DD HH:mm');
-        data.endTime = endTime.utc().format('YYYY-MM-DD HH:mm');
+        data.startTime = startTime.clone().utc().format('YYYY-MM-DD HH:mm');
+        data.endTime = endTime.clone().utc().format('YYYY-MM-DD HH:mm');
 
         const recurrenceJson = localStorage.getItem('__meeting_recurrenceJson');
         if(recurrenceJson) {
