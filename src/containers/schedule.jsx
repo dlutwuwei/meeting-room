@@ -341,10 +341,10 @@ class Schedule extends Component {
     }
     handleTime(type, time) {
         if(type === 'startTime') {
-            this.props.actions.changeProp('startTime', time.utc());
-            this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes').utc());
+            this.props.actions.changeProp('startTime', time);
+            this.props.actions.changeProp('endTime', time.clone().add(30, 'minutes'));
         } else if(type === 'endTime') {
-            this.props.actions.changeProp('endTime', time.utc());
+            this.props.actions.changeProp('endTime', time);
         }
         if(time.format('YYYY-MM-DD') !== this.props.startTime.format('YYYY-MM-DD')) {
             this.search(time);
