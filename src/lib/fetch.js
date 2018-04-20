@@ -104,7 +104,6 @@ function request(method, url, data, opts) {
                         },
                     });
                 } else if (data.code === 505) {
-                    popFlag = true;
                     Modal.info({
                         title: '没有权限使用这个功能, 请联系管理员',
                         okText: '确认'

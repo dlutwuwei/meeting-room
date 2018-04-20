@@ -45,7 +45,7 @@ for (let i = 0; i < zones.length; i++) {
 const now = moment();
 
 const startHours = 19;
-const endHours = 39;
+const endHours = 37;
 
 const me = localStorage.getItem('__meeting_user_email');
 class Schedule extends Component {
