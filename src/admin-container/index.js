@@ -135,7 +135,7 @@ class Admin extends React.Component {
             <span style={{padding: '0 20px', float: 'right'}}>{localStorage.getItem('__meeting_user_name')}</span>
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-            <Route path={`${match.url}/meeting/:type`} component={MeetingList}/>
+            <Route path={`${match.url}/meeting/:type`} component={MeetingList} />
             <Route path={`${match.url}/user/:type`} component={UserList}/>
             <Route path={`${match.url}/classroom/:type`} component={Classroom}/>
             <Route path={`${match.url}/setting/`} component={Setting}/>

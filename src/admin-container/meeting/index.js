@@ -5,6 +5,9 @@ import List from '../list';
 
 import getForm from './getForm';
 import getColumns from './getColums';
+import { AbortController } from 'lib/abort-controller';
+
+const abortCtl = new AbortController();
 const Search = Input.Search;
 
 function getBreadcrumb(type) {
@@ -55,6 +58,8 @@ export default class BasicList extends PureComponent {
             token: localStorage.getItem('__meeting_token'),
             page,
             pageSize
+        }, {
+            signal: abortCtl.signal
         }).then(res => {
             done && done();
             if(type === 'rooms') {

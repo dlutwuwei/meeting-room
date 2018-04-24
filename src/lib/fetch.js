@@ -49,8 +49,7 @@ function request(method, url, data, opts) {
     const finalUrl = isGet ? url + '?' + query : url
     const finalOpts = Object.assign(
         {
-            method: method,
-            signal: false
+            method: method
         },
         defOpts,
         isGet ? defGetOpts : defPostOpts,

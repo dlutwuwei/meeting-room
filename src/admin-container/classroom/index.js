@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Breadcrumb, Input, message, DatePicker } from 'antd';
+import { Breadcrumb, message, DatePicker } from 'antd';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 import fetch from 'lib/fetch';
@@ -7,7 +7,9 @@ import List from '../list';
 
 import getForm from './getForm';
 import getColumns from './getColums';
-const Search = Input.Search;
+import { AbortController } from 'lib/abort-controller';
+
+const abortCtl = new AbortController();
 
 function getBreadcrumb(type) {
     let breadcrumb = null;
@@ -71,6 +73,8 @@ export default class BasicList extends PureComponent {
             page,
             pageSize,
             ...( type === 'festival' ? { startDate, stopDate } : {})
+        }, {
+            signal: abortCtl.signal,
         }).then(res => {
             done && done();
             if(type === 'admin' || type == "room") {

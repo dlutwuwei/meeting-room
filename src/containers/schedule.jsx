@@ -49,8 +49,8 @@ const endHours = 37;
 
 const me = localStorage.getItem('__meeting_user_email');
 class Schedule extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
     state = {
         // 计划表
@@ -62,7 +62,7 @@ class Schedule extends Component {
         attendeesOptions: [],
         showAddRooms: false,
         showAddAttendees: false,
-        date: now.hours() > endHours/2 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0),
+        date: this.props.startTime, //now.hours() > endHours/2 ? now.clone().add(1, 'days').hours(9).minutes(0) : now.clone().minutes(0),
         top: -1,
         left: -1,
         right: -1,
