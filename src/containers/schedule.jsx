@@ -260,7 +260,18 @@ class Schedule extends Component {
             confirm({
                 title: '没有填写标题，确认发送？',
                 onOk: () => {
-                    this.sendAppointment(data)
+                    confirm({
+                        title: '预定须知',
+                        content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
+                        onOk: () => {
+                            this.sendAppointment(data)
+                        },
+                        onCancel: () => {
+                            this.setState({
+                                loading: false
+                            });
+                        }
+                    });
                 },
                 onCancel() {
                     // console.log('Cancel');
@@ -269,7 +280,7 @@ class Schedule extends Component {
         } else {
             confirm({
                 title: '预定须知',
-                content: setting.responseMessage || '',
+                content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
                 onOk: () => {
                     this.sendAppointment(data)
                 },
