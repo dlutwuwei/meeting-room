@@ -31,6 +31,9 @@ class AddRooms extends Component {
     state = {
         visible: false,
         list: [],
+        pagination: {
+
+        },
         eqGroup: []
     }
     postData = {
@@ -44,7 +47,12 @@ class AddRooms extends Component {
             capacity: this.props.defaultCapacity
         }).then(r => {
             this.setState({
-                list: r.data.list
+                list: r.data.list,
+                pagination: {
+                    total: r.data.totalPage * r.data.pageSize,
+                    pageSize: r.data.pageSize,
+                    current: r.data.page
+                }
             });
         });
     }
@@ -143,7 +151,10 @@ class AddRooms extends Component {
         this.props.onSelect(rooms);
         this.closeModal();
     }
-    handleChange(type, value) {
+    handelPagination = (pagination) => {
+        this.handleChange('', '', pagination.current, pagination.pageSize)
+    }
+    handleChange(type, value, page = 1, pageSize = 10) {
         if (type === 'startDate' || type === 'endDate') {
             type = type.replace('Date', 'Time');
         }
@@ -159,10 +170,17 @@ class AddRooms extends Component {
         this.postData[type] = value;
         fetch.get('/api/meeting/getRooms', {
             ...this.postData,
+            page,
+            pageSize,
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
-                list: r.data.list
+                list: r.data.list,
+                pagination: {
+                    total: r.data.totalPage * r.data.pageSize,
+                    pageSize: r.data.pageSize,
+                    current: r.data.page
+                }
             });
         });
     }
@@ -173,7 +191,12 @@ class AddRooms extends Component {
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
-                list: r.data.list
+                list: r.data.list,
+                pagination: {
+                    total: r.data.totalPage * r.data.pageSize,
+                    pageSize: r.data.pageSize,
+                    current: r.data.page
+                }
             });
         })
     }
@@ -258,7 +281,14 @@ class AddRooms extends Component {
                     <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
                 <div className="room-item">
-                    <Table bordered columns={this.getClomuns()} dataSource={list} style={{width: 760, marginTop: 20}}/>
+                    <Table
+                        bordered
+                        columns={this.getClomuns()}
+                        dataSource={list}
+                        style={{width: 760, marginTop: 20}}
+                        pagination={this.state.pagination}
+                        onChange={this.handelPagination}
+                    />
                 </div>
                 <div className="room-item room-select">
                     <Button
