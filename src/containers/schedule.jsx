@@ -363,18 +363,12 @@ class Schedule extends Component {
         }
     }
     searchRooms(floor) {
-        fetch.get('/api/meeting/getRooms', {
+        fetch.get('/api/meeting/getRoomFloors', {
             token: localStorage.getItem('__meeting_token') || '',
             floor
         }).then(r => {
-            const data = {};
-            r.data.list.forEach(item => {
-                if(!data[item.floor]) {
-                    data[item.floor] = true;
-                }
-            })
             this.setState({
-                floors: Object.keys(data)
+                floors: r.data.list
             });
         });
     }
