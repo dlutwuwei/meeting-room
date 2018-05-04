@@ -23,7 +23,7 @@ for (let i = 0; i < zones.length; i++) {
 
 function disabledDate(current) {
     // Can not select days before today and today
-    return current && current < moment().endOf('day');
+    return current && current < moment().startOf('day');
 }
 
 const durationOptions = new Array(12).fill('').map((item, i) => {

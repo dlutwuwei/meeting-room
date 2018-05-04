@@ -23,7 +23,7 @@ const Option = Select.Option;
 
 function disabledDate(current) {
     // Can not select days before today and today
-    return current && current < moment().endOf('day');
+    return current && current < moment().startOf('day');
 }
 
 function generateOptions(length, include) {
