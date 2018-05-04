@@ -81,6 +81,7 @@ class SearchUser extends Component {
                 handleModalVisible(false);
                 SearchUser.created();
             }).catch(() => {
+                after && after();
                 handleModalVisible(false);
                 message.error('添加失败');
             });
@@ -93,7 +94,7 @@ class SearchUser extends Component {
         const { modalVisible, form, handleModalVisible } = this.props;
         const { dataSource } = this.state;
         const children = dataSource.map((item, i) => {
-            return <Option value={'' + item.id} key={i}>{item.name}</Option>;
+            return <Option value={'' + item.mail} key={i}>{item.name}</Option>;
           });
         return (
             <CreateModal
@@ -109,7 +110,7 @@ class SearchUser extends Component {
                     wrapperCol={{ span: 15 }}
                     label="用户"
                 >
-                    {form.getFieldDecorator('userId', {
+                    {form.getFieldDecorator('mail', {
                         rules: [{ required: true, message: '"请输入名称' }],
                     })(
                         <AutoComplete
