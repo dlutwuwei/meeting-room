@@ -1,19 +1,10 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, Checkbox, Table, TimePicker, Icon, Button, Input } from 'antd';
-import Select from 'components/select';
+import { Modal, Checkbox, Table, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 import fetch from 'lib/fetch';
 
 const CheckboxGroup = Checkbox.Group;
 
-const peopleOptions = new Array(12).fill('').map((item, i) => {
-    return <Option key={i} value={i + 1}>{i + 1}</Option>
-});
-
-function disabledDate(current) {
-    // Can not select days before today and today
-    return current && current < moment().endOf('day');
-}
 
 const eqOptions = ['Phone', 'Projector', 'TV', 'Whiteboard'];
 

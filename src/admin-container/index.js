@@ -6,6 +6,7 @@ import UserList from './user';
 import Setting from './setting';
 import Charts from './charts';
 import Usage from './charts/Usage'
+import Manage from './charts/manage'
 import Monitor from './monitor';
 import Classroom from './classroom'
 import PropTypes from 'prop-types';
@@ -36,7 +37,8 @@ const KEY_MAP = {
   '/admin/classroom/room': '20',
   '/admin/classroom/festival': '21',
   '/admin/charts/rooms': '13',
-  '/admin/charts/usage': '15'
+  '/admin/charts/usage': '15',
+  '/admin/meeting_manage': '16'
 }
 
 const isTrain = util.getQuery('isTrain');
@@ -59,7 +61,7 @@ const KEY_OPEN = {
   '/admin/classroom/room': 'sub4',
   '/admin/classroom/festival': 'sub4',
   '/admin/charts/rooms': 'sub5',
-  '/admin/charts/usage': 'sub5'
+  '/admin/charts/usage': 'sub5',
 }
 
 const actions = localStorage.getItem('__meeting_user_actions') || '';
@@ -118,6 +120,7 @@ class Admin extends React.Component {
                 { permits['whiteList'] && <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>}
                 { permits['meetingRoomSetting'] && <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>}
             </SubMenu>}
+            {!isTrain && <Menu.Item key="16"><Link to="/admin/meeting_manage"><Icon type="dot-chart" /><span>会议管理</span></Link></Menu.Item>}
             {!isTrain && permits['report'] && <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>报表分析</span></span>}>
               <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>会议室报表</span></Link></Menu.Item>
               <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>使用率报表</span></Link></Menu.Item>
@@ -136,6 +139,7 @@ class Admin extends React.Component {
           </Header>
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
             <Route path={`${match.url}/meeting/:type`} component={MeetingList} />
+            <Route path={`${match.url}/meeting_manage`} component={Manage} />
             <Route path={`${match.url}/user/:type`} component={UserList}/>
             <Route path={`${match.url}/classroom/:type`} component={Classroom}/>
             <Route path={`${match.url}/setting/`} component={Setting}/>
