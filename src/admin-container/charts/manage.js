@@ -38,21 +38,21 @@ class Usage extends Component {
     }
     columns = [{
         title: '会议主题',
-        dataIndex: 'meeting'
+        dataIndex: 'subject'
     }, {
-        title: '品牌',
-        dataIndex: 'brand',
+        title: '预订人',
+        dataIndex: 'userName',
     }, {
         title: '房间',
-        dataIndex: 'room'
+        dataIndex: 'roomNames'
     }, {
         title: '楼层',
-        dataIndex: 'floor'
+        dataIndex: 'roomFloor'
     }, {
         title: '操作',
         key: 'option',
         render: (text, record) => {
-            return <div><a onClick={this.handleComplain.bind(record.id)} style={{marginRight: 5}}>投诉会议</a><a onClick={this.handleCancel.bind(record.id)}>取消会议</a></div>
+            return <div><a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a><a onClick={() => this.handleCancel(record.id)}>取消会议</a></div>
         }
     }]
     handleComplain = (id) => {
@@ -106,7 +106,7 @@ class Usage extends Component {
             data: [],
             ...params
         });
-        fetch.get('/api/Board/getList', {
+        fetch.get('/api/meetingManage/getMeetingList', {
             token: localStorage.getItem('__meeting_token'),
             page: page,
             pageSize: 10,
@@ -214,7 +214,7 @@ class Usage extends Component {
                             floor: e.target.value
                         });
                     }}/>
-                    <div><a target="_blank" className="download-link" href={ `/api/report/exportRoomUseRateList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&areaId=${areaId}&floor=${floor}&roomName=${roomName}`}>下载报表</a></div>
+                    <div />
                     <div />
                 </div>
                 <Table
