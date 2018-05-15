@@ -10,6 +10,8 @@ const confirm = Modal.confirm;
 import './charts.less';
 const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
 const today = new moment();
+const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
+
 class Usage extends Component {
     state = {
         loading: false,
@@ -49,10 +51,18 @@ class Usage extends Component {
         title: '楼层',
         dataIndex: 'roomFloor'
     }, {
+        title: '状态',
+        dataIndex: 'state',
+        render: (text, record) => {
+            return statusMap[record.state];
+        }
+    }, {
         title: '操作',
         key: 'option',
         render: (text, record) => {
-            return <div><a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a><a onClick={() => this.handleCancel(record.id)}>取消会议</a></div>
+            return record.state === 4 ? (<div>
+                <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a><a onClick={() => this.handleCancel(record.id)}>取消会议</a>
+            </div>) : null;
         }
     }]
     handleComplain = (id) => {
