@@ -262,6 +262,7 @@ class Schedule extends Component {
                 onOk: () => {
                     confirm({
                         title: '预定须知',
+                        width: 600,
                         content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
                         onOk: () => {
                             this.sendAppointment(data)
@@ -280,6 +281,7 @@ class Schedule extends Component {
         } else {
             confirm({
                 title: '预定须知',
+                width: 600,
                 content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
                 onOk: () => {
                     this.sendAppointment(data)
