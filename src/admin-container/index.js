@@ -120,7 +120,7 @@ class Admin extends React.Component {
                 { permits['whiteList'] && <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>}
                 { permits['meetingRoomSetting'] && <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>}
             </SubMenu>}
-            {!isTrain && <Menu.Item key="16"><Link to="/admin/meeting_manage"><Icon type="dot-chart" /><span>会议管理</span></Link></Menu.Item>}
+            {!isTrain && permits['meetingManage'] && <Menu.Item key="16"><Link to="/admin/meeting_manage"><Icon type="book" /><span>会议管理</span></Link></Menu.Item>}
             {!isTrain && permits['report'] && <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>报表分析</span></span>}>
               <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>会议室报表</span></Link></Menu.Item>
               <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>使用率报表</span></Link></Menu.Item>
