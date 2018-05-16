@@ -19,7 +19,7 @@ class Usage extends Component {
         attendees: '',
         userList: [],
         startDate: today.clone().subtract(1, 'months').format('YYYY-MM-DD'),
-        endDate: today.format('YYYY-MM-DD'),
+        endDate: today.clone().add(1, 'days').format('YYYY-MM-DD'),
         roomName: '',
         roomMail: '',
         from: '',
@@ -54,14 +54,18 @@ class Usage extends Component {
         title: '状态',
         dataIndex: 'state',
         render: (text, record) => {
-            return statusMap[record.state];
+            return record.isComplained ? '已投诉' : statusMap[record.state];
         }
+    }, {
+        title: '投诉时间',
+        dataIndex: 'complainTime'
     }, {
         title: '操作',
         key: 'option',
         render: (text, record) => {
-            return record.state === 4 ? (<div>
-                <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a><a onClick={() => this.handleCancel(record.id)}>取消会议</a>
+            return !record.isComplained ? (<div>
+                { record.state === 2 && <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a>}
+                { (record.state === 2 || record.state === 1) && <a onClick={() => this.handleCancel(record.id)}>取消会议</a>}
             </div>) : null;
         }
     }]
