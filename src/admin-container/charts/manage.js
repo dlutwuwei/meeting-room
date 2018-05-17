@@ -64,7 +64,7 @@ class Usage extends Component {
         key: 'option',
         render: (text, record) => {
             return !record.isComplained ? (<div>
-                { record.state === 2 && <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a>}
+                <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a>
                 { (record.state === 2 || record.state === 1) && <a onClick={() => this.handleCancel(record.id)}>取消会议</a>}
             </div>) : null;
         }
