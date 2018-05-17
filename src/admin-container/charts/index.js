@@ -159,7 +159,7 @@ class Charts extends Component {
                     <RangePicker onChange={([val, val1]) => {
                         this.load(1, {
                             startDate: val.format('YYYY-MM-DD'),
-                            endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
+                            endDate: val1.add(1, 'days').format('YYYY-MM-DD')
                         });
                     }} placeholder={['开始时间', '结束时间']} />
                     <AutoComplete

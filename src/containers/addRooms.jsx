@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
-import { Modal, Checkbox, Table, Icon, Button, Input } from 'antd';
+import { Modal, Checkbox, Table, Icon, Button, Input, DatePicker } from 'antd';
 import moment from 'moment';
 import fetch from 'lib/fetch';
+import ScheduleTable from 'components/shedule-table';
+const { RangePicker } = DatePicker;
 
 const CheckboxGroup = Checkbox.Group;
 
 
 const eqOptions = ['Phone', 'Projector', 'TV', 'Whiteboard'];
+
+function disabledDate(current) {
+    // Can not select days before today and today
+    return current && current < moment().startOf('day');
+}
 
 const equipment = {
     'Phone': 1,
@@ -25,7 +32,9 @@ class AddRooms extends Component {
         pagination: {
 
         },
-        eqGroup: []
+        loading: false,
+        eqGroup: [],
+        showShedule: false
     }
     postData = {
         area: 'SH',
@@ -159,6 +168,10 @@ class AddRooms extends Component {
             value = moment(this.postData['endTime'] || nowDate).utc().format('YYYY-MM-DD HH:mm');
         }
         this.postData[type] = value;
+        this.setState({
+            loading: true,
+            list: []
+        });
         fetch.get('/api/meeting/getRooms', {
             ...this.postData,
             page,
@@ -167,32 +180,119 @@ class AddRooms extends Component {
         }).then(r => {
             this.setState({
                 list: r.data.list,
+                loading: false,
                 pagination: {
                     total: r.data.totalPage * r.data.pageSize,
                     pageSize: r.data.pageSize,
                     current: r.data.page
                 }
             });
+        }).catch(() => {
+            this.setState({
+                loading: false
+            });
         });
     }
     onEuipmentChange(value) {
         this.postData['equipment'] = value.map(val => equipment[val]).join(',');
+        this.setState({
+            loading: true,
+            list: []
+        });
         fetch.get('/api/meeting/getRooms', {
             ...this.postData,
             token: localStorage.getItem('__meeting_token') || ''
         }).then(r => {
             this.setState({
                 list: r.data.list,
+                loading: false,
                 pagination: {
                     total: r.data.totalPage * r.data.pageSize,
                     pageSize: r.data.pageSize,
                     current: r.data.page
                 }
             });
+        }).catch(() => {
+            this.setState({
+                loading: false
+            });
         })
     }
+    searchSchedule = (date) => {
+        this.setState({
+            date,
+            left: -1,
+            top: -1,
+            right: -1,
+            bottom: -1
+        });
+        const my = {
+            mail: localStorage.getItem('__meeting_user_email'),
+            name: localStorage.getItem('__meeting_user_name'),
+        };
+        const { receiverOptions, locationOptions } = this.props;
+        const options = receiverOptions.concat(locationOptions); //receivers.concat(location);
+        options.unshift(my);
+        const users = receiverOptions.slice();
+        users.unshift(my);
+        this.setState({
+            loading: true,
+            options,
+            list: []
+        }, () => {
+            // 清空数据后加载
+            const { data } = this.state;
+            fetch.get('/api/schedule/getList', {
+                userMails: users.map(item => item.mail).join(','),
+                roomMails: locationOptions.map(item => item.mail).join(','),
+                startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
+                token: localStorage.getItem('__meeting_token') || ''
+            }).then(r => {
+                const list = r.data;
+                options.forEach((user, i) => {
+                    const user_data = list.filter(t => t.mail == user.mail);
+                    let user_list = [];
+                    if(user_data.length) {
+                        user_list = user_data.map(item => {
+                            const startTime = moment(item.startTime*1000);
+                            const endTime = moment(item.endTime*1000);
+                            const start = startTime.hours()*2 + parseInt(startTime.minutes()/30);
+                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30) - 1;
+                            // console.log(item.mail, start, end, startTime, endTime);
+                            return ({
+                                status: item.showAs,
+                                start,
+                                end,
+                                name: item.userName,
+                                tel: item.tel,
+                                subject: item.subject,
+                                mail: item.mail
+                            })
+                        });
+                    }
+                    data[i] = user_list;
+                });
+                this.setState({
+                    data,
+                    loading: false
+                });
+                function setDay(time, date) {
+                    const n = date.dayOfYear();
+                    return time.clone().dayOfYear(n);
+                }
+                this.props.actions.changeProp('startTime', setDay(this.props.startTime, date))
+                this.props.actions.changeProp('endTime', setDay(this.props.endTime, date))
+            }).catch(() => {
+                this.setState({
+                    loading: false
+                });
+            });
+        });
+        
+    }
     render() {
-        const { visible, list } = this.state;
+        const { visible, list, showShedule, loading } = this.state;
         return (
             <Modal
                 title="Add Rooms"
@@ -204,52 +304,6 @@ class AddRooms extends Component {
                 footer={null}
                 wrapClassName="add-room-container"
             >
-                {/* <div className="room-item">
-                    <label htmlFor="" className="room-title">Start Time:</label>
-                    <DatePicker
-                        format="YYYY-MM-DD"
-                        placeholder="Select Date"
-                        disabledDate={disabledDate}
-                        defaultValue={moment()}
-                        onChange={this.handleChange.bind(this, 'startDate')}
-                        className="my-date-picker"
-                    />
-                    <TimePicker
-                        prefixCls="ant-time-picker"
-                        placeholder="Select Time"
-                        showSecond={false}
-                        format="HH:mm"
-                        defaultValue={moment()}
-                        hideDisabledOptions={true}
-                        onChange={this.handleChange.bind(this, 'startTime')}
-                        disabledHours={() => {
-                            return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
-                        }}
-                    />
-                </div>
-                <div className="room-item">
-                    <label htmlFor="" className="room-title">End Time:</label>
-                    <DatePicker
-                        format="YYYY-MM-DD"
-                        placeholder="Select Date"
-                        disabledDate={disabledDate}
-                        defaultValue={moment()}
-                        onChange={this.handleChange.bind(this, 'endDate')}
-                        className="my-date-picker"
-                    />
-                    <TimePicker
-                        prefixCls="ant-time-picker"
-                        placeholder="Select Time"
-                        showSecond={false}
-                        format="HH:mm"
-                        onChange={this.handleChange.bind(this, 'endTime')}
-                        defaultValue={moment()}
-                        hideDisabledOptions={true}
-                        disabledHours={() => {
-                            return [0, 1, 2, 3, 4, 5, 6, 7, 8, 22, 23];
-                        }}
-                    />
-                </div> */}
                 <div className="room-item">
                     <label htmlFor="" className="room-title">Attendees:</label>
                     <Input
@@ -271,15 +325,34 @@ class AddRooms extends Component {
                     <label htmlFor="" className="room-title">Equipment:</label>
                     <CheckboxGroup options={eqOptions} defaultValue={[]} onChange={this.onEuipmentChange.bind(this)} />
                 </div>
+                <div><a onClick={() => {
+                    this.setState({
+                        showShedule: !this.state.showShedule
+                    })
+                }}>{showShedule ? 'Show Room List' : 'Show Room Schedule'}</a></div>
                 <div className="room-item">
-                    <Table
+                    { !showShedule && <Table
                         bordered
                         columns={this.getClomuns()}
                         dataSource={list}
+                        loading={loading}
                         style={{width: 760, marginTop: 20}}
                         pagination={this.state.pagination}
                         onChange={this.handelPagination}
-                    />
+                    />}
+                    { !!showShedule && <div>
+                        <RangePicker
+                            defaultValue={[moment().clone(), moment().clone().add(1, 'days')]}
+                            onChange={([val, val1]) => {
+                                this.load(1, {
+                                    startDate: val.format('YYYY-MM-DD'),
+                                    endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
+                                });
+                            }}
+                            placeholder={['Start Time', 'End Time']}
+                        />
+                        <ScheduleTable /> 
+                    </div>}
                 </div>
                 <div className="room-item room-select">
                     <Button
