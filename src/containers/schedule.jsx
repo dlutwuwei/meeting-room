@@ -544,6 +544,9 @@ class Schedule extends Component {
                                 onSelect={this.onSelectRoom.bind(this)}
                                 onlyone={false}
                                 defaultCapacity={this.props.receivers.length + 1}
+                                startTime={startTime.zone(offsetUTC)}
+                                endTime={endTime.zone(offsetUTC)}
+                                changeProp={this.props.actions.changeProp}
                             />
                             <Button style={{ width: 125, marginRight: 8 }} onClick={() => { this.setState({ showAddRooms: true }) }}>Add Rooms</Button>
                             <div className="label" style={{ 'width': 70, 'marginRight': 10 }}>End Time</div>

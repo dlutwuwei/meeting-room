@@ -334,9 +334,9 @@ class Appointment extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone, isEdit } = this.props;
+    const { showTimezone, isEdit, startTime, endTime } = this.props;
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
-
+    const offsetUTC = timezone.label.split(' ')[0];
     return (
       <Spin spinning={this.state.loading}>
         <div className="appointment-container">
@@ -424,6 +424,9 @@ class Appointment extends Component {
                     onClose={() => this.setState({ showAddRooms: false })}
                     onSelect={this.handleSelectRoom}
                     defaultCapacity={this.props.receivers.length + 1}
+                    startTime={startTime.zone(offsetUTC)}
+                    endTime={endTime.zone(offsetUTC)}
+                    changeProp={this.props.actions.changeProp}
                   />
                   {getFieldDecorator('location', {
                     initialValue: [],

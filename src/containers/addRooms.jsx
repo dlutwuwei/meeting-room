@@ -281,8 +281,8 @@ class AddRooms extends Component {
                     const n = date.dayOfYear();
                     return time.clone().dayOfYear(n);
                 }
-                this.props.actions.changeProp('startTime', setDay(this.props.startTime, date))
-                this.props.actions.changeProp('endTime', setDay(this.props.endTime, date))
+                this.props.changeProp('startTime', setDay(this.props.startTime, date))
+                this.props.changeProp('endTime', setDay(this.props.endTime, date))
             }).catch(() => {
                 this.setState({
                     loading: false
@@ -293,6 +293,7 @@ class AddRooms extends Component {
     }
     render() {
         const { visible, list, showShedule, loading } = this.state;
+        const { startTime, endTime } = this.props;
         return (
             <Modal
                 title="Add Rooms"
@@ -342,12 +343,14 @@ class AddRooms extends Component {
                     />}
                     { !!showShedule && <div>
                         <RangePicker
-                            defaultValue={[moment().clone(), moment().clone().add(1, 'days')]}
+                            value={[startTime, endTime]}
                             onChange={([val, val1]) => {
-                                this.load(1, {
-                                    startDate: val.format('YYYY-MM-DD'),
-                                    endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
-                                });
+                                // this.searchSchedule(1, {
+                                //     startDate: val.format('YYYY-MM-DD'),
+                                //     endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
+                                // });
+                                this.props.changeProp('startTime', val);
+                                this.props.changeProp('endTime', val1);
                             }}
                             placeholder={['Start Time', 'End Time']}
                         />

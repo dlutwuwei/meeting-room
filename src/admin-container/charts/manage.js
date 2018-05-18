@@ -51,6 +51,18 @@ class Usage extends Component {
         title: '楼层',
         dataIndex: 'roomFloor'
     }, {
+        title: '开始时间',
+        dataIndex: 'createTime',
+        render: (text) => {
+            return moment(text*1000).format('YYYY-MM-DD HH:mm')
+        }
+    }, {
+        title: '结束时间',
+        dataIndex: 'endTime',
+        render: (text) => {
+            return moment(text*1000).format('YYYY-MM-DD HH:mm')
+        }
+    }, {
         title: '状态',
         dataIndex: 'state',
         render: (text, record) => {
@@ -58,14 +70,17 @@ class Usage extends Component {
         }
     }, {
         title: '投诉时间',
-        dataIndex: 'complainTime'
+        dataIndex: 'complainTime',
+        render: (text) => {
+            return text ? moment(text*1000).format('YYYY-MM-DD HH:mm') : '';
+        }
     }, {
         title: '操作',
         key: 'option',
         render: (text, record) => {
             return !record.isComplained ? (<div>
-                <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉会议</a>
-                { (record.state === 2 || record.state === 1) && <a onClick={() => this.handleCancel(record.id)}>取消会议</a>}
+                <a onClick={() => this.handleComplain(record.id)} style={{marginRight: 5}}>投诉</a>
+                { (record.state === 2 || record.state === 1 || record.state === 0 ) && <a onClick={() => this.handleCancel(record.id)}>取消</a>}
             </div>) : null;
         }
     }]
