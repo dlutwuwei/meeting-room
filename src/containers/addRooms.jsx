@@ -220,37 +220,19 @@ class AddRooms extends Component {
     }
     searchSchedule = (date) => {
         this.setState({
-            date,
-            left: -1,
-            top: -1,
-            right: -1,
-            bottom: -1
-        });
-        const my = {
-            mail: localStorage.getItem('__meeting_user_email'),
-            name: localStorage.getItem('__meeting_user_name'),
-        };
-        const { receiverOptions, locationOptions } = this.props;
-        const options = receiverOptions.concat(locationOptions); //receivers.concat(location);
-        options.unshift(my);
-        const users = receiverOptions.slice();
-        users.unshift(my);
-        this.setState({
             loading: true,
-            options,
-            list: []
         }, () => {
             // 清空数据后加载
             const { data } = this.state;
             fetch.get('/api/schedule/getList', {
-                userMails: users.map(item => item.mail).join(','),
-                roomMails: locationOptions.map(item => item.mail).join(','),
+                userMails: ',',
+                roomMails: this.state.list.map(item => item.mail).join(','),
                 startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
                 endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
                 token: localStorage.getItem('__meeting_token') || ''
             }).then(r => {
                 const list = r.data;
-                options.forEach((user, i) => {
+                this.state.list.forEach((user, i) => {
                     const user_data = list.filter(t => t.mail == user.mail);
                     let user_list = [];
                     if(user_data.length) {
@@ -293,7 +275,7 @@ class AddRooms extends Component {
     }
     render() {
         const { visible, list, showShedule, loading } = this.state;
-        const { startTime, endTime } = this.props;
+        const { startTime } = this.props;
         return (
             <Modal
                 title="Add Rooms"
@@ -342,15 +324,10 @@ class AddRooms extends Component {
                         onChange={this.handelPagination}
                     />}
                     { !!showShedule && <div>
-                        <RangePicker
-                            value={[startTime, endTime]}
-                            onChange={([val, val1]) => {
-                                // this.searchSchedule(1, {
-                                //     startDate: val.format('YYYY-MM-DD'),
-                                //     endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
-                                // });
-                                this.props.changeProp('startTime', val);
-                                this.props.changeProp('endTime', val1);
+                        <DatePicker
+                            defaultValue={startTime}
+                            onChange={(val) => {
+                                this.searchSchedule(val);
                             }}
                             placeholder={['Start Time', 'End Time']}
                         />
