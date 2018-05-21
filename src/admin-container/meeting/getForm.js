@@ -208,9 +208,10 @@ export default (type, onCreated) => {
                     form.validateFields((err, fieldsValue) => {
                         if (err) return;
                         before && before();
+                        // 编辑时需要id
                         if(values.id) {
                             fieldsValue.id = values.id;
-                            fieldsValue.areaId = values.areaId;
+                            // fieldsValue.areaId = values.areaId;
                         }
                         if(fieldsValue.onlyForUsers) {
                             fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
