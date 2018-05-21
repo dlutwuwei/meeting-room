@@ -13,9 +13,9 @@ class SceduleTable extends Component {
                 <div className="schedule-contianer">
                     <div className="schedule-main">
                         <div className="schedule-left">
-                            <div className="attendees">
+                            <div className="attendees" style={{ paddingTop: 33 }}>
                                 {users.map(item => {
-                                    return <div>{item.name}</div>
+                                    return <div style={{ lineHeight: '21px' }}>{item.name}</div>
                                 })}
                             </div>
                         </div>
