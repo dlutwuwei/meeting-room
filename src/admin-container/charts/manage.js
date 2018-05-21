@@ -52,7 +52,7 @@ class Usage extends Component {
         dataIndex: 'roomFloor'
     }, {
         title: '开始时间',
-        dataIndex: 'createTime',
+        dataIndex: 'startTime',
         render: (text) => {
             return moment(text*1000).format('YYYY-MM-DD HH:mm')
         }
