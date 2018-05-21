@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Modal, Checkbox, Table, Icon, Button, Input, DatePicker } from 'antd';
+import { Modal, Checkbox, Table, Icon, Button, Input, DatePicker, Spin } from 'antd';
 import moment from 'moment';
 import fetch from 'lib/fetch';
 import ScheduleTable from 'components/shedule-table';
-const { RangePicker } = DatePicker;
 
 const CheckboxGroup = Checkbox.Group;
 
@@ -222,10 +221,9 @@ class AddRooms extends Component {
         this.setState({
             loading: true,
         }, () => {
-            // 清空数据后加载
-            const { data } = this.state;
+            const data = [];
             fetch.get('/api/schedule/getList', {
-                userMails: ',',
+                userMails: 'wuwei@mail.com',
                 roomMails: this.state.list.map(item => item.mail).join(','),
                 startTime: date.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
                 endTime: date.clone().hours(24).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
@@ -259,12 +257,12 @@ class AddRooms extends Component {
                     data,
                     loading: false
                 });
-                function setDay(time, date) {
-                    const n = date.dayOfYear();
-                    return time.clone().dayOfYear(n);
-                }
-                this.props.changeProp('startTime', setDay(this.props.startTime, date))
-                this.props.changeProp('endTime', setDay(this.props.endTime, date))
+                // function setDay(time, date) {
+                //     const n = date.dayOfYear();
+                //     return time.clone().dayOfYear(n);
+                // }
+                // this.props.changeProp('startTime', setDay(this.props.startTime, date))
+                // this.props.changeProp('endTime', setDay(this.props.endTime, date))
             }).catch(() => {
                 this.setState({
                     loading: false
@@ -311,7 +309,8 @@ class AddRooms extends Component {
                 <div><a onClick={() => {
                     this.setState({
                         showShedule: !this.state.showShedule
-                    })
+                    });
+                    this.searchSchedule(this.props.startTime);
                 }}>{showShedule ? 'Show Room List' : 'Show Room Schedule'}</a></div>
                 <div className="room-item">
                     { !showShedule && <Table
@@ -323,15 +322,15 @@ class AddRooms extends Component {
                         pagination={this.state.pagination}
                         onChange={this.handelPagination}
                     />}
-                    { !!showShedule && <div>
+                    { !!showShedule && <div style={{ width: '100%',  padding: '10px', marginLeft: -30 }}>
                         <DatePicker
                             defaultValue={startTime}
                             onChange={(val) => {
                                 this.searchSchedule(val);
                             }}
-                            placeholder={['Start Time', 'End Time']}
+                            style={{ marginLeft: 30 }}
                         />
-                        <ScheduleTable /> 
+                        <ScheduleTable loading={loading} users={this.state.list} data={this.state.data}/> 
                     </div>}
                 </div>
                 <div className="room-item room-select">
