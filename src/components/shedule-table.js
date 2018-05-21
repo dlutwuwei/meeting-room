@@ -29,7 +29,7 @@ class SceduleTable extends Component {
                                     return <div className="block">{h}:{m}</div>
                                 })}
                                 </div>
-                                {data.map((item, y) => {
+                                {data.map((item) => {
                                     const line = new Array(endHours - startHours).fill('');
                                     item.forEach(block => {
                                         line.forEach((_, i) => {
@@ -40,7 +40,7 @@ class SceduleTable extends Component {
                                         });
                                     });
                                     return (<div className="line">
-                                        {line.map((item, x) => {
+                                        {line.map((item) => {
                                             const cell = item.status;
                                             return <div
                                                 className={classnames(['block', {

@@ -328,6 +328,7 @@ class AddRooms extends Component {
                             onChange={(val) => {
                                 this.searchSchedule(val);
                             }}
+                            disabledDate={disabledDate}
                             style={{ marginLeft: 30 }}
                         />
                         <ScheduleTable loading={loading} users={this.state.list} data={this.state.data}/> 
