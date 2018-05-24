@@ -167,6 +167,7 @@ function EditCell(props) {
     </div>
   );
 }
+
 export default class Train extends React.Component {
   constructor(props) {
     super(props);
