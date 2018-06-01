@@ -10919,7 +10919,11 @@ textarea.ant-pagination-options-quick-jumper input {
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
-}.train-container {
+}.root {
+  height: 100%;
+}
+
+.train-container {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
