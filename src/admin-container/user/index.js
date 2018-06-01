@@ -34,6 +34,11 @@ export default class BasicList extends PureComponent {
                 return '/api/user/getList';
             case 'role':
                 return '/api/role/getList';
+            case 'department':
+                return '/api/department/getList';
+            case 'area':
+                return '/api/area/getList';
+
         }
     }
     fetchData = (done, page = 1, pageSize = 10) => {
@@ -48,16 +53,21 @@ export default class BasicList extends PureComponent {
         }).then(res => {
             done && done();
             if(type === 'list') {
-                // 拉取最新role列表
-                fetch.get(this.getUrl('role'), {
+                Promise.all([fetch.get(this.getUrl('area'), {
                     token: localStorage.getItem('__meeting_token')
-                }).then(r => {
-                    localStorage.setItem('__meeting_role', JSON.stringify(r.data.list || '[]'));
+                }), fetch.get(this.getUrl('department'), {
+                    token: localStorage.getItem('__meeting_token')
+                }), fetch.get(this.getUrl('role'), {
+                    token: localStorage.getItem('__meeting_token')
+                })]).then(([areas, departments, roles]) => {
+                    localStorage.setItem('__meeting_areas', JSON.stringify(areas.data.list));
+                    localStorage.setItem('__meeting_department', JSON.stringify(departments.data.list));
+                    localStorage.setItem('__meeting_role', JSON.stringify(roles.data.list));
                     this.setState({
-                        data: res.data.list,
+                        data: res.data.length ? res.data: res.data.list,
                         page: res.data.page,
                         pageSize: res.data.pageSize,
-                        totalPage: res.data.totalPage,
+                        totalPage: res.data.totalPage
                     });
                 });
             } else if(type === 'role') {
