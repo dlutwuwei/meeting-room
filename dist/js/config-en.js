@@ -1,1 +1,1 @@
-webpackJsonp([4],{0:function(t,n,o){t.exports=o("QmSG")},QmSG:function(t,n,o){"use strict";window.auth_url="http://mt.auth.ig66.com"}},[0]);
+webpackJsonp([4],{0:function(o,t,n){o.exports=n("QmSG")},QmSG:function(o,t,n){"use strict";window.auth_url="http://mt.auth.ig66.com",window.show_logo=!0}},[0]);

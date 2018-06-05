@@ -88,7 +88,7 @@ class Admin extends React.Component {
           collapsible
           collapsed={this.state.collapsed}
         >
-          <div className="logo" />
+          {window.show_logo && <div className="logo" />}
           <Menu
             defaultSelectedKeys={[KEY_MAP[location.pathname]]}
             defaultOpenKeys={[KEY_OPEN[location.pathname]]}

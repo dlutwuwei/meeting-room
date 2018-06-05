@@ -25,7 +25,7 @@ class Home extends Component {
     return (
       <div>
         <header className="app-header">
-          <img src={logo} className="app-logo" alt="logo" />
+          { window.show_logo && <img src={logo} className="app-logo" alt="logo" />}
           <span style={{padding: '0 20px'}}>{localStorage.getItem('__meeting_user_name')}</span>
         </header>
         <div className="app-main card-container">
