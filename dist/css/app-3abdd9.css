@@ -18031,6 +18031,11 @@ textarea.ant-pagination-options-quick-jumper input {
   background-color: #e6f7ff;
 }
 
+.admin-container .nologo {
+  height: 64px;
+  background-color: #e6f7ff;
+}
+
 #root {
   height: 100%;
 }
