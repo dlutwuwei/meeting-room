@@ -146,7 +146,7 @@ class Usage extends Component {
                     <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today]} onChange={([val, val1]) => {
                         this.load(1, {
                             startDate: val.clone().utc().hours(0).minutes(0).format('YYYY-MM-DD'),
-                            endDate: val1.clone().utc().hours(0).minutes(0).add(1, 'days').format('YYYY-MM-DD')
+                            endDate: val1.clone().utc().add(1, 'days').hours(0).minutes(0).format('YYYY-MM-DD')
                         });
                     }} placeholder={['开始时间', '结束时间']}/>
                     <Select
