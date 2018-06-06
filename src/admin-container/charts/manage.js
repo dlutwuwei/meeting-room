@@ -210,8 +210,8 @@ class Usage extends Component {
                 <div className="filter-list">
                     <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today]} onChange={([val, val1]) => {
                         this.load(1, {
-                            startDate: val.format('YYYY-MM-DD'),
-                            endDate: val1.clone().add(1, 'days').format('YYYY-MM-DD')
+                            startDate: val.clone().utc().format('YYYY-MM-DD HH:mm'),
+                            endDate: val1.clone().utc().add(1, 'days').format('YYYY-MM-DD HH:mm')
                         });
                     }} placeholder={['开始时间', '结束时间']}/>
                     <Select
