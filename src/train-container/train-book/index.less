@@ -62,8 +62,9 @@
             }
             span {
               width: 50%;
-              height: 100%;
-              display: block;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
         }
@@ -87,8 +88,11 @@
     .left {
       flex: 4;
     }
-    .right {
+    .item-right {
       flex: 6;
+      .ant-select {
+        width: 100%;
+      }
     }
   }
 }

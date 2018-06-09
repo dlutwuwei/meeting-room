@@ -203,7 +203,7 @@ module.exports = Object.keys(languages).map(lan => {
           template: 'public/index.html',
           filename: 'index-train.html',
           title: '培训室管理',
-          chunks: ['lib', 'train'],
+          chunks: ['lib', 'train', 'config'],
           inject: true
         }),
         new ExtractTextPlugin({

@@ -52,7 +52,7 @@ class FormItem extends React.Component {
         name={name}
         type={type}
         value={value}
-        readOnly={readOnly}
+        disabled={readOnly}
         onChange={e => onChange(name, e.target.value)}
         className="right"
         ref={ref}
@@ -73,7 +73,6 @@ class FormItem extends React.Component {
       inputDom = (
         <Select
           value={value}
-          style={{ width: 120 }}
           onChange={value => onChange(name, value)}
           className="right"
         >
@@ -96,7 +95,7 @@ class FormItem extends React.Component {
     return (
       <div className="form-item">
         <label className="left">{label}</label>
-        {inputDom}
+        <div className="item-right">{inputDom}</div>
       </div>
     );
   }
@@ -141,12 +140,14 @@ function EditCell(props) {
     <div className="book-day">
       <span
         style={am_style}
-        onClick={() =>
-          onClick({
-            date: moment(1000 * theDate).format(dateFormat),
-            period: 1
-          })
-        }
+        onClick={() => {
+          if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+              onClick({
+              date: moment(1000 * theDate).format(dateFormat),
+              period: 1
+            });
+          }
+        }}
         className="book-am"
       >
         {morningReservationName}
@@ -154,12 +155,14 @@ function EditCell(props) {
       <div className="divider" />
       <span
         style={pm_style}
-        onClick={() =>
-          onClick({
-            date: moment(1000 * theDate).format(dateFormat),
-            period: 2
-          })
-        }
+        onClick={() => {
+          if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+            onClick({
+              date: moment(1000 * theDate).format(dateFormat),
+              period: 2
+            })
+          }
+        }}
         className="book-pm"
       >
         {afternoonReservationName}
@@ -185,6 +188,7 @@ export default class Train extends React.Component {
       showModal: false,
       form_info: {}
     };
+    // 获取所有品牌
     Fetch.get(URL.train_brand_list, {
       token: localStorage.getItem("__meeting_token")
     }).then(result => {
@@ -317,7 +321,8 @@ export default class Train extends React.Component {
       {
         name: "date",
         label: "培训日期",
-        value: date
+        value: date,
+        readOnly: true
       },
       {
         name: "time",
@@ -395,21 +400,12 @@ export default class Train extends React.Component {
     return range_list;
   }
   updateRange = (date, dateString) => {
-    this.setState({
-      range: date
-    });
-    this.getRange(date[0], date[1]);
+    this.fetchData(date);
   };
   componentDidMount() {
     this.fetchData();
   }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.range !== prevState.range) {
-      this.fetchData();
-    }
-  }
-  fetchData() {
-    const { range } = this.state;
+  fetchData(range = [moment(), moment().add(1, 'week')]) {
     Fetch.get(URL.train_book_list, {
       token: localStorage.getItem("__meeting_token"),
       startDate: range[0].format(dateFormat),
@@ -419,6 +415,8 @@ export default class Train extends React.Component {
       this.setState({
         train_list: [...data.mine, ...data.others]
       });
+    }).catch(() => {
+      message.error('日程查找失败');
     });
   }
   renderLabel() {
