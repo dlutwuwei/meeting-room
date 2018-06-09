@@ -214,7 +214,6 @@ export default class Train extends React.Component {
     });
   }
   updateForm = (name, value) => {
-    console.log('name:',name,value);
     const { selected_train } = this.state;
     selected_train[name] = value;
     this.setState({
@@ -223,7 +222,11 @@ export default class Train extends React.Component {
   };
   get formInfo() {
     const { selected_train, selected_day } = this.state;
+    // 培训室相关信息
     const { roomName, floor, capacity, deviceNames } = selected_train;
+    // 选中方格信息（日期，中午，下午，全天）
+    const { date, period } = selected_day;
+    // 个人信息：姓名，邮箱，电话，部门
     const { name, mail, tel, department } = window.userInfo || {};
     const room_info = [
       {
@@ -281,13 +284,12 @@ export default class Train extends React.Component {
       brandName,
       divisionName,
       subject,
-      time,
       people,
       teaBreak,
       outLunch,
       remark
     } = selected_train;
-    const { date } = selected_day;
+
     const { brandMap, divisionMap } = this.state;
     const brand_options = Object.keys(brandMap).map(x => ({
       label: x,
@@ -311,7 +313,6 @@ export default class Train extends React.Component {
         type: "select",
         options: division_options,
         value: divisionName,
-        readOnly: true
       },
       {
         name: "subject",
@@ -327,7 +328,7 @@ export default class Train extends React.Component {
       {
         name: "time",
         label: "培训时间",
-        value: time,
+        value: period,
         type: "radio",
         options: [
           {

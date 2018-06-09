@@ -10853,8 +10853,18 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .train-container .stage-container .table-container .book-table-container .book-day-container .book-day span {
   width: 50%;
-  height: 100%;
-  display: block;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .train-modal-container .form-header {
@@ -10881,11 +10891,15 @@ textarea.ant-pagination-options-quick-jumper input {
           flex: 4;
 }
 
-.train-modal-container .form-item .right {
+.train-modal-container .form-item .item-right {
   -webkit-box-flex: 6;
   -webkit-flex: 6;
       -ms-flex: 6;
           flex: 6;
+}
+
+.train-modal-container .form-item .item-right .ant-select {
+  width: 100%;
 }.filter-list {
   display: -webkit-box;
   display: -webkit-flex;
