@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Route, Link } from "react-router-dom";
 import { Menu, Icon } from "antd";
+import fetch from 'lib/fetch';
+
 import TrainBook from "./train-book";
 import TrainInfo from "./train-info";
 import TrainSheet from "./train-sheet";

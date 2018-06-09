@@ -14,20 +14,38 @@ import Train from './train-container';
 
 import * as util from 'lib/util';
 const token = util.getQuery('token');
-ReactDOM.render((
-    <Router>
-        <Route path="/train" component={Train}/>
-    </Router>
-  ), document.getElementById('root'));
 
+function getUrl(type) {
+    switch (type) {
+        case 'device':
+            return '/api/device/getList';
+        case 'brand':
+            return '/api/brand/getList';
+        case 'division':
+            return '/api/division/getList';
+        case 'admin':
+            return '/api/brandAdmin/getList';
+        case 'room':
+            return '/api/trainingRoom/getList';
+        case 'festival':
+            return '/api/festival/getList';
+    }
+}
 
-fetch.get('/api/public/getCurrentTrainUserInfo', {
+Promise.all([fetch.get(getUrl('brand'), {
+    token: localStorage.getItem('__meeting_token')
+}), fetch.get(getUrl('division'), {
+    token: localStorage.getItem('__meeting_token')
+}), fetch.get(getUrl('device'), {
+    token: localStorage.getItem('__meeting_token')
+}), fetch.get('/api/public/getCurrentTrainUserInfo', {
   token: token || localStorage.getItem('__meeting_token')
-}).then(r => {
-  window.userInfo = r.data;
-  localStorage.setItem('__meeting_user_email', r.data.mail);
-  localStorage.setItem('__meeting_user_name', r.data.userName);
-
+})]).then(([brand, division, device, userInfo ]) => {
+  localStorage.setItem('__meeting_brand', JSON.stringify(brand.data.list));
+  localStorage.setItem('__meeting_division', JSON.stringify(division.data.list));
+  localStorage.setItem('__meeting_device', JSON.stringify(device.data.list));
+  localStorage.setItem('__meeting_user_email', userInfo.data.mail);
+  localStorage.setItem('__meeting_user_name', userInfo.data.userName);
   ReactDOM.render((
     <Router>
         <Route path="/train" component={Train}/>

@@ -4,6 +4,7 @@ import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
+import './sheet.less';
 
 const columns = [{
   title: '品牌',
@@ -31,8 +32,8 @@ const columns = [{
   dataIndex: 'price'
 }];
 
-import './sheet.less';
 const brands = JSON.parse(localStorage.getItem('__meeting_brand')|| '[]');
+
 const areas = [
     {
         id: '1',
