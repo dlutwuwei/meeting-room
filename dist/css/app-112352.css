@@ -10872,6 +10872,12 @@ textarea.ant-pagination-options-quick-jumper input {
   font-size: 14px;
 }
 
+.train-modal-container .form-title {
+  font-size: 18px;
+  text-align: center;
+  padding: 5px;
+}
+
 .train-modal-container .form-item {
   display: -webkit-box;
   display: -webkit-flex;
