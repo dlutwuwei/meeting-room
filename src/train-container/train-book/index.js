@@ -107,15 +107,16 @@ function EditCell(props) {
   }
   const {
     afternoonReservationName,
-    afternoonId,
+    afternoonReservationId: afternoonId,
     morningReservationName,
-    morningId,
+    morningReservationId: morningId,
     isFestival,
     theDate
   } = text;
   const { lockState, isAllowMeBooking } = record;
   let am_status = AVALIABLE;
   let pm_status = AVALIABLE;
+
   if (morningId) {
     am_status = BOOKED;
   }
@@ -143,9 +144,10 @@ function EditCell(props) {
         onClick={() => {
           if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
               onClick({
-              date: moment(1000 * theDate).format(dateFormat),
-              period: 1
-            });
+                date: moment(1000 * theDate).format(dateFormat),
+                period: 1,
+                id: morningId
+              });
           }
         }}
         className="book-am"
@@ -159,7 +161,8 @@ function EditCell(props) {
           if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
             onClick({
               date: moment(1000 * theDate).format(dateFormat),
-              period: 2
+              period: 2,
+              id: afternoonId
             })
           }
         }}
@@ -223,9 +226,24 @@ export default class Train extends React.Component {
   get formInfo() {
     const { selected_train, selected_day } = this.state;
     // 培训室相关信息
-    const { roomName, floor, capacity, deviceNames } = selected_train;
+    const {
+      roomName,
+      floor,
+      deviceNames,
+      brandName, // 品牌
+      divisionName, // 部门
+      subject, // 主题
+      capacity, 
+      teaBreak,
+      outLunch,
+      remark,
+    } = selected_train;
     // 选中方格信息（日期，中午，下午，全天）
     const { date, period } = selected_day;
+    let { periodOfDay } = selected_train;
+    if(!periodOfDay) {
+      periodOfDay = period;
+    }
     // 个人信息：姓名，邮箱，电话，部门
     const { name, mail, tel, department } = window.userInfo || {};
     const room_info = [
@@ -280,15 +298,7 @@ export default class Train extends React.Component {
         readOnly: true
       }
     ];
-    const {
-      brandName,
-      divisionName,
-      subject,
-      people,
-      teaBreak,
-      outLunch,
-      remark
-    } = selected_train;
+
 
     const { brandMap, divisionMap } = this.state;
     const brand_options = Object.keys(brandMap).map(x => ({
@@ -326,9 +336,9 @@ export default class Train extends React.Component {
         readOnly: true
       },
       {
-        name: "time",
+        name: "periodOfDay",
         label: "培训时间",
-        value: period,
+        value: periodOfDay,
         type: "radio",
         options: [
           {
@@ -348,7 +358,7 @@ export default class Train extends React.Component {
       {
         name: "people",
         label: "培训人数",
-        value: people
+        value: capacity
       },
       {
         name: "teaBreak",
@@ -377,17 +387,16 @@ export default class Train extends React.Component {
   getFormData() {
     const form = document.querySelector(".form-container");
     const { roomId, brandId } = this.state.selected_train;
-    const { date, period } = this.state.selected_day;
+    const { date } = this.state.selected_day;
     const formData = new FormData(form);
+
     formData.append("trainingRoomId", roomId);
     formData.append("brandId", brandId);
     formData.append("trainingDate", date);
-    formData.append("trainingDate", date);
-    formData.append("periodOfDay", period);
     formData.append("divisionId", 1);
     const obj = {};
     for (const [key, value] of formData.entries()) {
-      obj[key] = value;
+      obj[key] = value === 'on' || value;
     }
     return obj;
   }
@@ -474,11 +483,30 @@ export default class Train extends React.Component {
     );
   }
   showBookModal = (selected_day, record) => {
-    this.setState({
-      selected_day,
-      showModal: true,
-      selected_train: record
-    });
+    if(selected_day.id) {
+      Fetch.get(URL.train_item, {
+        token: localStorage.getItem("__meeting_token"),
+        id: selected_day.id
+      }).then(r => {
+        this.setState({
+          isEdit: true,
+          selected_day,
+          showModal: true,
+          selected_train: {
+            ...record,
+            ...r.data
+          }
+        });
+      });
+    } else {
+      this.setState({
+        isEdit: false,
+        selected_day,
+        showModal: true,
+        selected_train: record
+      });
+    }
+   
   };
   renderBookTable() {
     const range = this.getRange().map((x, idx) => {
@@ -547,7 +575,7 @@ export default class Train extends React.Component {
     );
   }
   renderModal() {
-    const { showModal } = this.state;
+    const { showModal, isEdit} = this.state;
     const { room_info, train_info, user_info } = this.formInfo;
     const room_dom = (
       <div className="room-container">
@@ -582,11 +610,14 @@ export default class Train extends React.Component {
         okText={"预订"}
         cancelText={"取消"}
       >
-        <form className="form-container">
-          {room_dom}
-          {user_dom}
-          {train_dom}
-        </form>
+        <div>
+          <div className="form-title">{isEdit ? '编辑预定信息' : '培训室预定'}</div>
+          <form className="form-container">
+            {room_dom}
+            {user_dom}
+            {train_dom}
+          </form>
+        </div>
       </Modal>
     );
   }
@@ -597,7 +628,11 @@ export default class Train extends React.Component {
   };
   submit_book = () => {
     const data = this.getFormData();
-    Fetch.post(URL.train_create, {
+    const { isEdit, selected_day } = this.state;
+    if(isEdit) {
+      data.id = selected_day.id;
+    }
+    Fetch.post(isEdit ? URL.train_update : URL.train_create, {
       token: localStorage.getItem("__meeting_token"),
       ...data
     }).then(

@@ -80,7 +80,7 @@ class Usage extends Component {
             data: [],
             ...params
         });
-        fetch.get('/api/report/exportMonthUsageRateList', {
+        fetch.get('/api/report/getMonthUsageRateList', {
             token: localStorage.getItem('__meeting_token'),
             page: page,
             pageSize: 10,
