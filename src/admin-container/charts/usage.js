@@ -55,7 +55,12 @@ class Usage extends Component {
         }
     }
     componentDidMount () {
-        this.load(1, {});
+        fetch.get('/api/area/getList', {
+            token: localStorage.getItem('__meeting_token')
+        }).then(r => {
+            localStorage.setItem('__meeting_areas', JSON.stringify(r.data.list));
+            this.load(1, {});
+        });
     }
     load(page, params) {
         let {
