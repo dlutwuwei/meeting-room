@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import fetch from './lib/fetch';
 import QueueAnim from 'rc-queue-anim';
 import classnames from 'classNames';
+import * as util from './lib/util';
 
 import './style/board.less';
 
@@ -30,6 +31,7 @@ class MeetingBoard extends Component {
         const pageSize = parseInt((window.innerHeight - 414)/98);
         fetch.get('/api/board/getList', {
             page: this.page,
+            area: util.getQuery('area'),
             pageSize,
             token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {

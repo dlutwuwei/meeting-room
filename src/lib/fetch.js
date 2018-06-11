@@ -95,7 +95,6 @@ function request(method, url, data, opts) {
                         okText: '确认',
                         cancelText: '取消',
                         onOk() {
-                            debugger
                             popFlag = false;
                             location.href=`${window.auth_url}?callback=` + encodeURIComponent(`${location.protocol}//${location.host}${location.pathname}`);
                         },
