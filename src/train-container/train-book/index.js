@@ -116,16 +116,15 @@ function EditCell(props) {
   const { lockState, isAllowMeBooking } = record;
   let am_status = AVALIABLE;
   let pm_status = AVALIABLE;
-
+  if (lockState) {
+    am_status = LOCKED;
+    pm_status = LOCKED;
+  }
   if (morningId) {
     am_status = BOOKED;
   }
   if (afternoonId) {
     pm_status = BOOKED;
-  }
-  if (lockState) {
-    am_status = LOCKED;
-    pm_status = LOCKED;
   }
   if (isFestival) {
     am_status = HOLIDAY;
