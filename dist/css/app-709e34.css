@@ -10843,6 +10843,7 @@ textarea.ant-pagination-options-quick-jumper input {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  color: #fff;
 }
 
 .train-container .stage-container .table-container .book-table-container .book-day-container .book-day .divider {
