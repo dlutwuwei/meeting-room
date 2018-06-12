@@ -102,7 +102,7 @@ module.exports = Object.keys(languages).map(lan => {
               {
                 loader: 'url-loader',
                 options: {
-                  limit: 1000,
+                  limit: 10000,
                   name: 'img/[name].[ext]',
                 },
               },
