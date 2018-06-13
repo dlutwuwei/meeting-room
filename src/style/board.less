@@ -7,21 +7,31 @@
     .meeting-header {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 50px;
+        height: 15%;
     }
     .meeting-logo {
-        background: url(~img/logo.png) no-repeat;
-        background-size: contain;
-        width: 370px;
-        height: 140px;
-        display: inline-block;
+        &:before {
+            content: '';
+            background: url(~img/logo.png) no-repeat;
+            background-size: contain;
+            width:100%;
+            padding-bottom: 33%;
+            display: block;
+        }
+        width: 20%;
     }
     .meeting-sub-logo {
-        background: url(~img/sub-logo.png) no-repeat;
-        background-size: contain;
-        width: 370px;
-        height: 140px;
-        display: inline-block;
+        &:before {
+            content: '';
+            background: url(~img/sub-logo.png) no-repeat;
+            background-size: contain;
+            width:100%;
+            padding-bottom: 33%;
+            display: block;
+        }
+        width: 20%;
     }
     .meeting-table {
         width: 100%;
