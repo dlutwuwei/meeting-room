@@ -28,12 +28,11 @@ class MeetingBoard extends Component {
         }, 20000);
     }
     load() {
-        const pageSize = parseInt((window.innerHeight - 414)/98);
+        const pageSize = parseInt((window.innerHeight - window.innerWidth*0.2 - 20)/98);
         fetch.get('/api/board/getList', {
             page: this.page,
             area: util.getQuery('area'),
             pageSize,
-            token: '40a56c3e9cc9465f60c810f2d26d38c'
         }).then(r => {
             this.setState({
                 loading: true
