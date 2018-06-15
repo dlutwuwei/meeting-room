@@ -7,6 +7,7 @@ import {
   Radio,
   Select,
   Input,
+  Icon,
   Checkbox
 } from "antd";
 const { RangePicker } = DatePicker;
@@ -467,15 +468,31 @@ export default class Train extends React.Component {
       </div>
     );
   }
+  preWeek = () => {
+    const [start, end] = this.state.range;
+    this.setState({
+      range: [ start.subtract(1, 'weeks'), end.subtract(1, 'weeks') ]
+    });
+    this.fetchData([start, end]);
+  }
+  nextWeek = () => {
+    const [start, end] = this.state.range;
+    this.setState({
+      range: [ start.add(1, 'weeks'), end.add(1, 'weeks') ]
+    });
+    this.fetchData([start, end]);
+  }
   renderTable() {
     return (
       <div className="table-container">
         <div className="date-pick">
+          <Icon type="double-left" className="week-btn next-week" onClick={this.preWeek}/>
           <RangePicker
             format={dateFormat}
-            onChange={this.updateRange}
-            defaultValue={this.state.range}
+            value={this.state.range}
+            disabled
           />
+          <Icon type="double-right" className="week-btn next-week" onClick={this.nextWeek} />
         </div>
         <div className="book-table-container">{this.renderBookTable()}</div>
       </div>

@@ -10818,6 +10818,26 @@ textarea.ant-pagination-options-quick-jumper input {
 .train-container .stage-container .table-container .date-pick {
   margin: auto;
   width: 400px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.train-container .stage-container .table-container .date-pick .week-btn {
+  cursor: pointer;
+}
+
+.train-container .stage-container .table-container .date-pick .week-btn:hover {
+  color: #333;
 }
 
 .train-container .stage-container .table-container .book-table-container {
