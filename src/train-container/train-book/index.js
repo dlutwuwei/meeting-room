@@ -628,6 +628,8 @@ export default class Train extends React.Component {
   submit_book = () => {
     const data = this.getFormData();
     const { isEdit, selected_day } = this.state;
+    // formdata无法识别radiobox groupd的值，这里重新赋值
+    data.periodOfDay = selected_day.period;
     if(isEdit) {
       data.id = selected_day.id;
     }
@@ -638,6 +640,8 @@ export default class Train extends React.Component {
       () => {
         message.success("预订成功");
         this.closeModal();
+        // 更新数据
+        this.fetchData();
       },
       err => {
         message.error("预订失败:", err.message);

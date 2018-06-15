@@ -46,6 +46,10 @@ Promise.all([fetch.get(getUrl('brand'), {
   localStorage.setItem('__meeting_device', JSON.stringify(device.data.list));
   localStorage.setItem('__meeting_user_email', userInfo.data.mail);
   localStorage.setItem('__meeting_user_name', userInfo.data.userName);
+  window.userInfo = {
+      name: userInfo.data.userName,
+      mail: userInfo.data.mail
+  };
   ReactDOM.render((
     <Router>
         <Route path="/train" component={Train}/>
