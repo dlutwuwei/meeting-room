@@ -8,11 +8,11 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
     let columns, onDeleteClick, onEditClick;
     const removeCurrent = (delCurrent = () => {}) => {
         confirm({
-            title: '确定删除?',
-            content: '删除后无法恢复',
-            okText: '确定',
+            title: __('确定删除?'),
+            content: __('删除后无法恢复'),
+            okText: __('确定'),
             okType: 'danger',
-            cancelText: '取消',
+            cancelText: __('取消'),
             onOk() {
                 delCurrent();
             },
@@ -29,7 +29,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error(__('删除失败'));
                     });
                 })
             }
@@ -38,37 +38,37 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
             }
             columns = [
                 {
-                    title: '姓名',
+                    title: __('姓名'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '邮箱',
+                    title: __('邮箱'),
                     dataIndex: 'mail',
                 },
                 {
-                    title: '联系方式',
+                    title: __('联系方式'),
                     dataIndex: 'tel',
                 },
                 {
-                    title: '所属区域',
+                    title: __('所属区域'),
                     dataIndex: 'areaName',
                 },
                 {
-                    title: '所属部门',
+                    title: __('所属部门'),
                     dataIndex: 'departmentName',
                 },
                 {
-                    title: '角色',
+                    title: __('角色'),
                     dataIndex: 'roleName',
                 },
                 {
-                    title: '是否启用',
+                    title: __('是否启用'),
                     render: (text, record) => (
                         <Checkbox checked={record.isEnable}></Checkbox>
                     )
                 },
                 {
-                    title: '操作',
+                    title: __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.userId)}><Icon type="form" /></a>
@@ -87,7 +87,7 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error(__('删除失败'));
                     });
                 })
             }
@@ -96,15 +96,15 @@ function getColumns(type, removeFromTable = () => {}, showEditor = () => {}) {
             }
             columns = [
                 {
-                    title: '角色名称',
+                    title: __('角色名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '权限',
+                    title: __('权限'),
                     dataIndex: 'actionNames',
                 },
                 {
-                    title: '操作',
+                    title: __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>

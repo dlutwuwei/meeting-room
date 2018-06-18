@@ -15,22 +15,22 @@ function getBreadcrumb(type) {
     let breadcrumb = null;
     switch(type) {
         case 'device':
-            breadcrumb = <Breadcrumb.Item>设备管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('设备管理')}</Breadcrumb.Item>;
             break;
         case 'brand':
-            breadcrumb = <Breadcrumb.Item>品牌管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('品牌管理')}</Breadcrumb.Item>;
             break;
         case 'division':
-            breadcrumb = <Breadcrumb.Item>部门管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('部门管理')}</Breadcrumb.Item>;
             break;
         case 'admin':
-            breadcrumb = <Breadcrumb.Item>品牌管理员管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('品牌管理员管理')}</Breadcrumb.Item>;
             break;
         case 'classroom':
-            breadcrumb = <Breadcrumb.Item>培训室管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('培训室管理')}</Breadcrumb.Item>;
             break;
         case 'festival':
-            breadcrumb = <Breadcrumb.Item>节假日管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('节假日管理')}</Breadcrumb.Item>;
             break;
     }
     return breadcrumb;
@@ -133,7 +133,7 @@ export default class BasicList extends PureComponent {
             this.setState({
                 loading: false
             });
-            message.error('没有结果')
+            message.error(__('没有结果'))
         });
     }
     removeFromTable = (i) => {
@@ -156,7 +156,7 @@ export default class BasicList extends PureComponent {
         return (
             <div className="">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>培训室管理</Breadcrumb.Item>
+                    <Breadcrumb.Item>{__('培训室管理')}</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 { type === 'festival' && <RangePicker

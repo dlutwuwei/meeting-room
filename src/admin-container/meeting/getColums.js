@@ -9,10 +9,10 @@ function getColumns(type, removeFromTable, showEditor) {
     const removeCurrent = (delCurrent = () => {}) => {
         confirm({
             title: '确定删除?',
-            content: '删除后无法恢复',
-            okText: '确定',
+            content:  __('删除后无法恢复'),
+            okText:  __('确定'),
             okType: 'danger',
-            cancelText: '取消',
+            cancelText:  __('取消'),
             onOk() {
                 delCurrent();
             },
@@ -28,7 +28,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -37,15 +37,15 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '部门名称',
+                    title:  __('部门名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '简码',
+                    title:  __('简码'),
                     dataIndex: 'shortCode',
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => {
                         return (
                             <Fragment>
@@ -66,7 +66,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -75,15 +75,15 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '区域名称',
+                    title:  __('区域名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '简码',
+                    title:  __('简码'),
                     dataIndex: 'shortCode',
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -103,7 +103,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -112,68 +112,68 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '会议室名称',
+                    title:  __('会议室名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '邮箱',
+                    title:  __('邮箱'),
                     dataIndex: 'mail',
                 },
                 {
-                    title: '区域',
+                    title:  __('区域'),
                     dataIndex: 'areaName',
                 },
                 {
-                    title: '部门',
+                    title:  __('部门'),
                     dataIndex: 'departmentName',
                 },
                 {
-                    title: '设备',
+                    title:  __('设备'),
                     dataIndex: 'hasProjector',
                     render: (text, record ) => {
                         const devices = [];
                         if(record.hasProjector) {
-                            devices.push(<Tag>投影仪</Tag>)
+                            devices.push(<Tag >{__('投影仪')}</Tag>)
                         }
                         if(record.hasTV) {
-                            devices.push(<Tag>电视</Tag>)
+                            devices.push(<Tag >{__('电视')}</Tag>)
                         }
                         if(record.hasPhone) {
-                            devices.push(<Tag>电话</Tag>)
+                            devices.push(<Tag >{__('电话')}</Tag>)
                         }
                         if(record.hasWhiteBoard) {
-                            devices.push(<Tag>白板</Tag>)
+                            devices.push(<Tag >{__('白板')}</Tag>)
                         }
                         return devices;
                     }
                 },
                 {
-                    title: '楼层',
+                    title:  __('楼层'),
                     dataIndex: 'floor',
                 },
                 {
-                    title: '大小',
+                    title:  __('大小'),
                     dataIndex: 'capacity',
                 },
                 {
-                    title: '会议室类型',
+                    title:  __('会议室类型'),
                     dataIndex: 'roomType',
                     render: (text) => {
                         return (roomTypes.find(item => item.RoomType == text)||{}).name
                     }
                 },
                 {
-                    title: '设备码',
+                    title:  __('设备码'),
                     dataIndex: 'deviceCode',
                 },
                 {
-                    title: '可预订',
+                    title:  __('可预订'),
                     render: (text, record) => {
                         return <Checkbox checked={record.isEnable}></Checkbox>
                     }
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -187,11 +187,11 @@ function getColumns(type, removeFromTable, showEditor) {
         case 'type':
             columns = [
                 {
-                    title: '会议室类型名称',
+                    title:  __('会议室类型名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '描述',
+                    title:  __('描述'),
                     dataIndex: 'description',
                 }
             ];

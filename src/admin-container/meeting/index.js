@@ -14,16 +14,16 @@ function getBreadcrumb(type) {
     let breadcrumb = null;
     switch(type) {
         case 'area':
-            breadcrumb = <Breadcrumb.Item>区域管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item >{__('区域管理')}</Breadcrumb.Item>;
             break;
         case 'department':
-            breadcrumb = <Breadcrumb.Item>部门管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item >{__('部门管理')}</Breadcrumb.Item>;
             break;
         case 'rooms':
-            breadcrumb = <Breadcrumb.Item>会议室管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item >{__('会议室管理')}</Breadcrumb.Item>;
             break;
         case 'type':
-            breadcrumb = <Breadcrumb.Item>会议室类型管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item >{__('会议室类型管理')}</Breadcrumb.Item>;
             break;
     }
     return breadcrumb;
@@ -116,7 +116,7 @@ export default class BasicList extends PureComponent {
             this.setState({
                 loading: false
             });
-            message.error('没有结果')
+            message.error(__('没有结果'))
         });
     }
     removeFromTable = (i) => {
@@ -131,7 +131,7 @@ export default class BasicList extends PureComponent {
         return (
             <div className="">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
+                    <Breadcrumb.Item >{__('会议室管理')}</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 { type === 'rooms' && <Search

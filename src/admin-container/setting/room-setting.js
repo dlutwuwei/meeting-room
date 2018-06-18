@@ -95,13 +95,13 @@ class RoomSettings extends Component {
                 this.setState({
                     loading: false
                 });
-                message.error('获取设置失败');
+                message.error(__('获取设置失败'));
             })
         }).catch(() => {
             this.setState({
                 loading: false
             });
-            message.error('获取设置失败');
+            message.error(__('获取设置失败'));
         });
     }
 
@@ -125,12 +125,12 @@ class RoomSettings extends Component {
             fetch.post('/api/meetingRoomSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
             }).then(() => {
-                message.success('保存设置成功');
+                message.success(__('保存设置成功'));
                 this.setState({
                     loading: false
                 });
             }).catch(() => {
-                message.error('保存设置失败');
+                message.error(__('保存设置失败'));
                 this.setState({
                     loading: false
                 });
@@ -170,7 +170,7 @@ class RoomSettings extends Component {
                 loading: false
             });
         }).catch(() => {
-            message.error('获取设置失败');
+            message.error(__('获取设置失败'));
             this.setState({
                 loading: false
             });
@@ -226,11 +226,11 @@ class RoomSettings extends Component {
             <Spin spinning={loading}>
                 <div>
                     <Breadcrumb separator=">">
-                        <Breadcrumb.Item>系统设置</Breadcrumb.Item>
-                        <Breadcrumb.Item>会议室设置</Breadcrumb.Item>
+                        <Breadcrumb.Item>{__('系统设置')}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{__('会议室设置')}</Breadcrumb.Item>
                     </Breadcrumb>
                     <Form onSubmit={this.handleSubmit} className="login-form" style={{ marginTop: 30 }}>
-                        <FormItem {...formItemLayout} label="区域">
+                        <FormItem {...formItemLayout} label={__('区域')}>
                             {getFieldDecorator('areaId', {
                                 rules: [{ required: false, message: '' }],
                                 initialValue: selectArea
@@ -240,80 +240,80 @@ class RoomSettings extends Component {
                                 </RadioGroup>
                             )}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="会议室预定最长不超过">
+                        <FormItem {...formItemLayout} label={__('会议室预定最长不超过')}>
                             {getFieldDecorator('maxMeetingHour', {
-                                rules: [{ required: true, message: '请输入时间' }],
+                                rules: [{ required: true, message: __('请输入时间') }],
                             })(
                                 <Input style={{ width: 100, margin: '0 10px 0 0' }} />
                             )}
                             小时
                             {getFieldDecorator('maxMeetingMinutes', {
-                                rules: [{ required: true, message: '请输入时间' }],
+                                rules: [{ required: true, message: __('请输入时间') }],
                             })(
                                 <Input style={{ width: 100, margin: '0 10px' }} />
                             )}
                             分钟
                         </FormItem>
-                        <FormItem {...formItemLayout} label="是否可循环预定">
+                        <FormItem {...formItemLayout} label={__('是否可循环预定')}>
                             {getFieldDecorator('allowRecurrence', {
-                                rules: [{ required: true, message: '请选择是否可循环预定' }],
+                                rules: [{ required: true, message: __('请选择是否可循环预定') }],
                             })(
                                 <RadioGroup>
-                                    <Radio value={true}>是</Radio>
-                                    <Radio value={false}>否</Radio>
+                                    <Radio value={true}>{__('是')}</Radio>
+                                    <Radio value={false}>{__('否')}</Radio>
                                 </RadioGroup>
                             )}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="最大预定天数">
+                        <FormItem {...formItemLayout} label={__('最大预定天数')}>
                             {getFieldDecorator('maxBookingDays', {
-                                rules: [{ required: true, message: '请输入天数' }],
+                                rules: [{ required: true, message: __('请输入天数') }],
                             })(
                                 <Input style={{ width: 100, marginRight: '10px' }} />
                             )}天
                         </FormItem>
-                        <FormItem {...formItemLayout} label="会议签到时间">
+                        <FormItem {...formItemLayout} label={__('会议签到时间')}>
                             {getFieldDecorator('maxCheckInTime', {
-                                rules: [{ required: true, message: '请输入时间' }],
+                                rules: [{ required: true, message: __('请输入时间') }],
                             })(
                                 <Input style={{ width: 100, marginRight: '10px' }} />
                             )}分钟
                         </FormItem>
-                        <FormItem {...formItemLayout} label="超过签到时间自动释放">
+                        <FormItem {...formItemLayout} label={__('超过签到时间自动释放')}>
                             {getFieldDecorator('autoRelease', {
-                                rules: [{ required: true, message: '请选择是否自动释放' }],
+                                rules: [{ required: true, message: __('请选择是否自动释放') }],
                             })(
                                 <RadioGroup>
-                                    <Radio value={true}>是</Radio>
-                                    <Radio value={false}>否</Radio>
+                                    <Radio value={true}>{__('是')}</Radio>
+                                    <Radio value={false}>{__('否')}</Radio>
                                 </RadioGroup>
                             )}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="报故邮箱">
+                        <FormItem {...formItemLayout} label={__('报故邮箱')}>
                             {getFieldDecorator('noticeMail', {
                                 rules: [{ required: true, message: '多个邮箱请用；隔开' }],
                             })(
                                 <Input />
                             )}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="回复消息">
+                        <FormItem {...formItemLayout} label={__('回复消息')}>
                             <Checkbox onChange={(e) => {
                                 this.setState({
                                     responseMsg: e.target.checked
                                 });
-                            }} checked={this.state.responseMsg}>回复会议请求时自动添加以下文本</Checkbox>
+                            }} checked={this.state.responseMsg}>{__('回复会议请求时自动添加以下文本')}</Checkbox>
                             {getFieldDecorator('responseMessage', {
-                                rules: [{ required: false, message: '请写入消息' }],
+                                rules: [{ required: false, message: __('请写入消息') }],
                             })(
                                 <Input.TextArea placeholder="" />
                             )}
                         </FormItem>
-                        <FormItem {...formItemLayout} label="会议室展板背景图片">
+                        <FormItem {...formItemLayout} label={__('会议室展板背景图片')}>
                             <Row>
                                 <Col span={10} className="left">
                                     <div>1. 空闲状态</div>
                                     <RadioGroup onChange={this.handleFreeChange} value={selectFree}>
-                                        <Radio value={true}>默认背景</Radio>
-                                        <Radio value={false}>自定义背景</Radio>
+                                        <Radio value={true}>{__('默认背景')}</Radio>
+                                        <Radio value={false}>{__('自定义背景')}</Radio>
                                     </RadioGroup>
                                     { !selectFree && 
                                         <Upload
@@ -333,8 +333,8 @@ class RoomSettings extends Component {
                                 <Col span={10} className="right">
                                     <div>2. 会议状态</div>
                                     <RadioGroup onChange={this.handleBusyChange} value={selectBusy}>
-                                        <Radio value={true}>默认背景</Radio>
-                                        <Radio value={false}>自定义背景</Radio>
+                                        <Radio value={true}>{__('默认背景')}</Radio>
+                                        <Radio value={false}>{__('自定义背景')}</Radio>
                                     </RadioGroup>
                                     { !selectBusy &&
                                         <Upload
@@ -353,7 +353,7 @@ class RoomSettings extends Component {
                             </Row>
                         </FormItem>
                         <FormItem {...tailFormItemLayout}>
-                            <Button type="primary" onClick={this.handleSubmit}>保存</Button>
+                            <Button type="primary" onClick={this.handleSubmit}>{__('保存')}</Button>
                         </FormItem>
                     </Form>
                 </div>

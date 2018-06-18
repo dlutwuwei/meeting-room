@@ -9,8 +9,8 @@ const path = require('path')
 const isDev = process.env.NODE_ENV != 'production'
 
 var languages = {
-	"en": require('./src/locale/en.json'),
-	"cn": require("./src/locale/cn.json")
+  // "en": require('./src/locale/en.json'),
+  "cn": require("./src/locale/zh-tw.json"),
 };
 
 function chunksSortMode(c1, c2) {
@@ -211,7 +211,7 @@ module.exports = Object.keys(languages).map(lan => {
             allChunks: true
         }),
         new I18nPlugin(
-          languages['cn']
+          languages[lan]
         )
     ].concat(!isDev ? [
         new webpack.HashedModuleIdsPlugin(),

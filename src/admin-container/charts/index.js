@@ -5,34 +5,34 @@ import moment from 'moment';
 const Option = AutoComplete.Option;
 const { RangePicker } = DatePicker;
 
-const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
+const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
 const columns = [{
-    title: '主题',
+    title: __('主题'),
     dataIndex: 'subject'
 }, {
-    title: '开始时间',
+    title: __('开始时间'),
     dataIndex: 'startTime',
     render: (text, record) => {
         return moment(record.startTime*1000).format('YYYY-MM-DD HH:mm');
     }
 },  {
-    title: '结束时间',
+    title: __('结束时间'),
     dataIndex: 'endTime',
     render: (text, record) => {
         return moment(record.endTime*1000).format('YYYY-MM-DD HH:mm');
     }
 }, {
-    title: '楼层',
+    title: __('楼层'),
     dataIndex: 'roomFloor'
 }, {
-    title: '会议室',
+    title: __('会议室'),
     dataIndex: 'roomNames'
 }, {
-    title: '发起人',
+    title: __('发起人'),
     dataIndex: 'userName'
 }, {
-    title: '状态',
+    title: __('状态'),
     key: 'state',
     render: (text, record) => {
         return statusMap[record.state]
@@ -161,13 +161,13 @@ class Charts extends Component {
                             startDate: val.format('YYYY-MM-DD'),
                             endDate: val1.add(1, 'days').format('YYYY-MM-DD')
                         });
-                    }} placeholder={['开始时间', '结束时间']} />
+                    }} placeholder={[__('开始时间'), __('结束时间')]} />
                     <AutoComplete
                         dataSource={userList}
                         style={{ width: 200 }}
                         onSelect={this.handleSelect}
                         onSearch={this.handleSearch}
-                        placeholder="发起人搜索"
+                        placeholder={__("发起人搜索")}
                         onChange={(val) => {
                             this.load(1, {
                                 from: val
@@ -176,7 +176,7 @@ class Charts extends Component {
                     >
                         {children}
                     </AutoComplete>
-                    <Input placeholder="输入房间名称" onChange={(e) => {
+                    <Input placeholder={__('输入房间名称')} onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
@@ -188,12 +188,12 @@ class Charts extends Component {
                     }}/> */}
                 </div>
                 <div className="filter-list">
-                    <Input placeholder="输入楼层" onChange={(e) => {
+                    <Input placeholder={__('输入楼层')} onChange={(e) => {
                         this.load(1, {
                             floor: e.target.value
                         });
                     }}/>
-                    <div><a target="_blank" className="download-link" href={ `/api/report/exportMeetingList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&floor=${floor}&roomName=${roomName}&roomMail=${roomMail}&from=${from}`}>下载报表</a></div>
+                    <div><a target="_blank" className="download-link" href={ `/api/report/exportMeetingList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&floor=${floor}&roomName=${roomName}&roomMail=${roomMail}&from=${from}`}>{__("下载报表")}</a></div>
                     <div></div>
                 </div>
                 <Table

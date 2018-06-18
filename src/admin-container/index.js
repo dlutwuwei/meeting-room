@@ -96,36 +96,36 @@ class Admin extends React.Component {
             theme="dark"
             inlineCollapsed={this.state.collapsed}
         >
-            {!isTrain && (permits['area'] || permits['department'] || permits['meetingRoom'] || permits['meetingType']) && <SubMenu key="sub1" title={<span><Icon type="desktop" /><span>会议室管理</span></span>}>
-                { permits['area'] && <Menu.Item key="1"><Link to="/admin/meeting/area">区域管理</Link></Menu.Item>}
-                { permits['department'] && <Menu.Item key="2"><Link to="/admin/meeting/department">部门管理</Link></Menu.Item>}
-                { permits['meetingRoom'] && <Menu.Item key="3"><Link to="/admin/meeting/rooms">会议室</Link></Menu.Item>}
-                { permits['meetingType'] && <Menu.Item key="4"><Link to="/admin/meeting/type">会议室类型</Link></Menu.Item>}
+            {!isTrain && (permits['area'] || permits['department'] || permits['meetingRoom'] || permits['meetingType']) && <SubMenu key="sub1" title={<span><Icon type="desktop" /><span>{__('会议室管理')}</span></span>}>
+                { permits['area'] && <Menu.Item key="1"><Link to="/admin/meeting/area">{__('区域管理')}</Link></Menu.Item>}
+                { permits['department'] && <Menu.Item key="2"><Link to="/admin/meeting/department">{__('部门管理')}</Link></Menu.Item>}
+                { permits['meetingRoom'] && <Menu.Item key="3"><Link to="/admin/meeting/rooms">{__('会议室')}</Link></Menu.Item>}
+                { permits['meetingType'] && <Menu.Item key="4"><Link to="/admin/meeting/type">{__('会议室类型')}</Link></Menu.Item>}
             </SubMenu>}
-            {isTrain && <SubMenu key="sub4" title={<span><Icon type="folder" /><span>培训室管理</span></span>}>
-                <Menu.Item key="16"><Link to="/admin/classroom/device?isTrain=true">设备管理</Link></Menu.Item>
-                <Menu.Item key="17"><Link to="/admin/classroom/brand?isTrain=true">品牌管理</Link></Menu.Item>
-                <Menu.Item key="18"><Link to="/admin/classroom/division?isTrain=true">部门管理</Link></Menu.Item>
-                <Menu.Item key="19"><Link to="/admin/classroom/admin?isTrain=true">品牌管理员管理</Link></Menu.Item>
-                <Menu.Item key="20"><Link to="/admin/classroom/room?isTrain=true">培训室管理</Link></Menu.Item>
-                <Menu.Item key="21"><Link to="/admin/classroom/festival?isTrain=true">节假日管理</Link></Menu.Item>
+            {isTrain && <SubMenu key="sub4" title={<span><Icon type="folder" /><span>{__('培训室管理')}</span></span>}>
+                <Menu.Item key="16"><Link to="/admin/classroom/device?isTrain=true">{__('设备管理')}</Link></Menu.Item>
+                <Menu.Item key="17"><Link to="/admin/classroom/brand?isTrain=true">{__('品牌管理')}</Link></Menu.Item>
+                <Menu.Item key="18"><Link to="/admin/classroom/division?isTrain=true">{__('部门管理')}</Link></Menu.Item>
+                <Menu.Item key="19"><Link to="/admin/classroom/admin?isTrain=true">{__('品牌管理员管理')}</Link></Menu.Item>
+                <Menu.Item key="20"><Link to="/admin/classroom/room?isTrain=true">{__('培训室管理')}</Link></Menu.Item>
+                <Menu.Item key="21"><Link to="/admin/classroom/festival?isTrain=true">{__('节假日管理')}</Link></Menu.Item>
             </SubMenu>}
-            {!isTrain && (permits['user'] || permits['role']) && <SubMenu key="sub2" title={<span><Icon type="user" /><span>用户管理</span></span>}>
-                { permits['user'] && <Menu.Item key="5"><Link to="/admin/user/list">用户管理</Link></Menu.Item>}
-                { permits['role'] && <Menu.Item key="6"><Link to="/admin/user/role">角色管理</Link></Menu.Item>}
+            {!isTrain && (permits['user'] || permits['role']) && <SubMenu key="sub2" title={<span><Icon type="user" /><span>{__('用户管理')}</span></span>}>
+                { permits['user'] && <Menu.Item key="5"><Link to="/admin/user/list">{__('用户管理')}</Link></Menu.Item>}
+                { permits['role'] && <Menu.Item key="6"><Link to="/admin/user/role">{__('角色管理')}</Link></Menu.Item>}
             </SubMenu>}
-            {!isTrain && (permits['SystemSetting'] || permits['blackList'] || permits['whiteList'] || permits['meetingRoomSetting']) && <SubMenu key="sub3" title={<span><Icon type="setting" /><span>系统设置</span></span>}>
+            {!isTrain && (permits['SystemSetting'] || permits['blackList'] || permits['whiteList'] || permits['meetingRoomSetting']) && <SubMenu key="sub3" title={<span><Icon type="setting" /><span>{__('系统设置')}</span></span>}>
                 { permits['SystemSetting'] && <Menu.Item key="7"><Link to="/admin/setting/exchange">Exchange系统集成</Link></Menu.Item>}
-                { permits['blackList'] && <Menu.Item key="8"><Link to="/admin/setting/blacklist">黑名单</Link></Menu.Item>}
-                { permits['whiteList'] && <Menu.Item key="9"><Link to="/admin/setting/whitelist">白名单</Link></Menu.Item>}
-                { permits['meetingRoomSetting'] && <Menu.Item key="10"><Link to="/admin/setting/roomsetting">会议室设置</Link></Menu.Item>}
+                { permits['blackList'] && <Menu.Item key="8"><Link to="/admin/setting/blacklist">{__('黑名单')}</Link></Menu.Item>}
+                { permits['whiteList'] && <Menu.Item key="9"><Link to="/admin/setting/whitelist">{__('白名单')}</Link></Menu.Item>}
+                { permits['meetingRoomSetting'] && <Menu.Item key="10"><Link to="/admin/setting/roomsetting">{__('会议室设置')}</Link></Menu.Item>}
             </SubMenu>}
-            {!isTrain && permits['meetingManage'] && <Menu.Item key="16"><Link to="/admin/meeting_manage"><Icon type="book" /><span>会议管理</span></Link></Menu.Item>}
-            {!isTrain && permits['report'] && <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>报表分析</span></span>}>
-              <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>会议室报表</span></Link></Menu.Item>
-              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>使用率报表</span></Link></Menu.Item>
+            {!isTrain && permits['meetingManage'] && <Menu.Item key="16"><Link to="/admin/meeting_manage"><Icon type="book" /><span>{__('会议管理')}</span></Link></Menu.Item>}
+            {!isTrain && permits['report'] && <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>{__('报表分析')}</span></span>}>
+              <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>{__('会议室报表')}</span></Link></Menu.Item>
+              <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>{__('使用率报表')}</span></Link></Menu.Item>
             </SubMenu>}
-            {!isTrain && permits['deviceMonitor'] && <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>设备监控</span></Link></Menu.Item>}
+            {!isTrain && permits['deviceMonitor'] && <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>{__('设备监控')}</span></Link></Menu.Item>}
         </Menu>
         </Sider>
         <Layout>

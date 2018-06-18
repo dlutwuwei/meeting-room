@@ -6,22 +6,22 @@ const Option = Select.Option;
 const { RangePicker } = DatePicker;
 
 const columns = [{
-    title: '会议室名称',
+    title: __('会议室名称'),
     dataIndex: 'roomName'
 }, {
-    title: '区域',
+    title: __('区域'),
     dataIndex: 'areaName',
 }, {
-    title: '总预订次数',
+    title: __('总预订次数'),
     dataIndex: 'meetingTimes'
 },  {
-    title: '总预订时长(分钟)',
+    title: __('总预订时长(分钟)'),
     dataIndex: 'meetingTimeLength'
 }, {
-    title: '楼层',
+    title: __('楼层'),
     dataIndex: 'floor'
 }, {
-    title: '使用率',
+    title: __('使用率'),
     key: 'usedRate',
     render: (text, record) => {
         return record.usedRate + '%'
@@ -153,7 +153,7 @@ class Usage extends Component {
                             startDate: val.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
                             endDate: val1.clone().add(1, 'days').hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm')
                         });
-                    }} placeholder={['开始时间', '结束时间']}/>
+                    }} placeholder={[__('开始时间'), __('结束时间')]}/>
                     <Select
                         style={{ width: 120 }}
                         placeholder="请输入区域"
@@ -166,7 +166,7 @@ class Usage extends Component {
                     >
                         { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                     </Select>
-                    <Input placeholder="输入会议室名称" onChange={(e) => {
+                    <Input placeholder={__("输入会议室名称")} onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
@@ -178,12 +178,12 @@ class Usage extends Component {
                     }}/> */}
                 </div>
                 <div className="filter-list">
-                    <Input placeholder="输入楼层" onChange={(e) => {
+                    <Input placeholder={__("输入楼层")} onChange={(e) => {
                         this.load(1, {
                             floor: e.target.value
                         });
                     }}/>
-                    <div><a target="_blank" className="download-link" href={ `/api/report/exportRoomUseRateList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&areaId=${areaId}&floor=${floor}&roomName=${roomName}`}>下载报表</a></div>
+                    <div><a target="_blank" className="download-link" href={ `/api/report/exportRoomUseRateList?token=${localStorage.getItem('__meeting_token')}&startDate=${startDate}&endDate=${endDate}&areaId=${areaId}&floor=${floor}&roomName=${roomName}`}>{__('下载报表')}</a></div>
                     <div />
                 </div>
                 <Table

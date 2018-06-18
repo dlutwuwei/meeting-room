@@ -10,10 +10,10 @@ function getColumns(type, removeFromTable, showEditor) {
     const removeCurrent = (delCurrent = () => {}) => {
         confirm({
             title: '确定删除?',
-            content: '删除后无法恢复',
-            okText: '确定',
+            content:  __('删除后无法恢复'),
+            okText:  __('确定'),
             okType: 'danger',
-            cancelText: '取消',
+            cancelText:  __('取消'),
             onOk() {
                 delCurrent();
             },
@@ -30,7 +30,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -43,15 +43,15 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'brandId'
                 },
                 {
-                    title: '名称',
+                    title:  __('名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '描述',
+                    title:  __('描述'),
                     dataIndex: 'remark',
                 },
                 {
-                    title: '操作',
+                    title:  __('$1'),
                     render: (text, record, index) => {
                         return (
                             <Fragment>
@@ -72,7 +72,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('$1'));
                     });
                 })
             }
@@ -81,15 +81,15 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '名称',
+                    title:  __('名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '描述',
+                    title:  __( __('描述')),
                     dataIndex: 'description',
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -108,7 +108,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -117,11 +117,11 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '名称',
+                    title:  __('名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -140,7 +140,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -149,35 +149,35 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '品牌名称',
+                    title:  __('品牌名称'),
                     dataIndex: 'brandName',
                 },
                 {
-                    title: '姓名',
+                    title:  __('姓名'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '城市',
+                    title:  __('城市'),
                     dataIndex: 'cityNames',
                 },
                 {
-                    title: '邮箱',
+                    title:  __('邮箱'),
                     dataIndex: 'mail',
                 },
                 {
-                    title: '电话',
+                    title:  __('电话'),
                     dataIndex: 'tel',
                 },
                 {
-                    title: '职位',
+                    title:  __('职位'),
                     dataIndex: 'jobPosition',
                 },
                 {
-                    title: '角色',
+                    title:  __('角色'),
                     dataIndex: 'roleName',
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -197,7 +197,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     }).then(() => {
                         removeFromTable(index)
                     }).catch(() => {
-                        message.error('删除失败');
+                        message.error( __('删除失败'));
                     });
                 })
             }
@@ -206,23 +206,23 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '品牌',
+                    title:  __('品牌'),
                     dataIndex: 'brandName',
                 },
                 {
-                    title: '培训室名称',
+                    title:  __('培训室名称'),
                     dataIndex: 'name',
                 },
                 {
-                    title: '城市',
+                    title:  __('城市'),
                     dataIndex: 'cityName'
                 },
                 {
-                    title: '部门',
+                    title:  __('部门'),
                     dataIndex: 'divisionName',
                 },
                 {
-                    title: '设备',
+                    title:  __('设备'),
                     dataIndex: 'deviceNames',
                     render: (item, record) => {
                         const ids = record.deviceIds ? record.deviceIds.split(',') : [];
@@ -230,18 +230,18 @@ function getColumns(type, removeFromTable, showEditor) {
                     }
                 },
                 {
-                    title: '大小',
+                    title:  __('大小'),
                     dataIndex: 'capacity',
                 },
                 {
-                    title: '状态',
+                    title:  __('状态'),
                     dataIndex: 'state',
                     render: (item, record) => {
-                        return ['未锁定', '锁定'][record.state];
+                        return [ __('未锁定'),  __('锁定')][record.state];
                     }
                 },
                 {
-                    title: '操作',
+                    title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
                             <a href="#" style={{color: '#00ddc6'}} onClick={() => onEditClick(index, record.id)}><Icon type="form" /></a>
@@ -255,25 +255,25 @@ function getColumns(type, removeFromTable, showEditor) {
         case 'festival':
             columns = [
                 {
-                    title: '时间',
+                    title:  __('时间'),
                     dataIndex: 'theDate',
                     render: (item) => {
                         return item && new moment(item*1000).format('YYYY-MM-DD');
                     }
                 },
                 {
-                    title: '是否节假日',
+                    title:  __('是否节假日'),
                     dataIndex: 'isFestival',
                     render: (item, record) => {
-                        // return item ? '是' : '否';
+                        // return item ?  __('是') :  __('否');
                         return (<Select defaultValue={''+ (item || false)} onChange={() => {
                             fetch.post(`/api/festival/toggleFestival`, {
                                 token: localStorage.getItem('__meeting_token'),
                                 theDate: new moment(record.theDate*1000).format('YYYY-MM-DD')
                             }).then(() => {
-                                message.info('修改节假日成功')
+                                message.info( __('修改节假日成功'))
                             }).catch(() => {
-                                message.error('修改节假日失败');
+                                message.error( __('修改节假日失败'));
                             });
                         }}>
                             <Option value="true">是</Option>

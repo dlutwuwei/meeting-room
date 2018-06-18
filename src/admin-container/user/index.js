@@ -11,10 +11,10 @@ function getBreadcrumb(type) {
     let breadcrumb = <span/>;
     switch(type) {
         case 'list':
-            breadcrumb = <Breadcrumb.Item>用户管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('用户管理')}</Breadcrumb.Item>;
             break;
         case 'role':
-            breadcrumb = <Breadcrumb.Item>角色管理</Breadcrumb.Item>;
+            breadcrumb = <Breadcrumb.Item>{__('角色管理')}</Breadcrumb.Item>;
             break;
     }
     return breadcrumb;
@@ -125,7 +125,7 @@ export default class BasicList extends PureComponent {
             this.setState({
                 loading: false
             });
-            message.error('没有结果')
+            message.error(__('没有结果'))
         });
     }
     render() {
@@ -134,7 +134,7 @@ export default class BasicList extends PureComponent {
         return (
             <div className="">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>会议室管理</Breadcrumb.Item>
+                    <Breadcrumb.Item>{__('会议室管理')}</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
                 {type === 'list' && <Search

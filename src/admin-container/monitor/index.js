@@ -29,7 +29,7 @@ class Monitor extends Component {
                 data: r.data
             });
         }).catch(() => {
-            message.error('获取会议室监控');
+            message.error(__('获取会议室监控'));
         });
     }
     componentDidMount () {
@@ -51,7 +51,7 @@ class Monitor extends Component {
                     data: r.data
                 });
             }).catch(() => {
-                message.error('获取会议室监控');
+                message.error(__('获取会议室监控'));
             });
         });
         
@@ -61,12 +61,12 @@ class Monitor extends Component {
         return (
             <div className="monitor">
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>设备监控</Breadcrumb.Item>
+                    <Breadcrumb.Item>{__('设备监控')}</Breadcrumb.Item>
                 </Breadcrumb>
                 <div className="monitor-body">
                     <Row style={{marginTop: 20}}>
                         <Col span={2}>
-                            区域:
+                            {__('区域:')}
                         </Col>
                         <Col span={16}>
                             <RadioGroup options={this.state.areas.map(item => item.name)} value={this.state.value} onChange={this.onChange} />
@@ -74,13 +74,13 @@ class Monitor extends Component {
                     </Row>
                     <Row style={{marginTop: 20}}>
                         <Col span={2}>
-                            状态
+                            {__('状态')}
                         </Col>
                         <Col span={16}>
                             <div className="status">
-                                <span className="status-item"><span className="tag free"></span>空闲</span>
-                                <span className="status-item"><span className="tag busy"></span>会议中</span>
-                                <span className="status-item"><span className="tag fault"></span>故障</span>
+                                <span className="status-item"><span className="tag free"></span>{__('空闲')}</span>
+                                <span className="status-item"><span className="tag busy"></span>{__('会议中')}</span>
+                                <span className="status-item"><span className="tag fault"></span>{__('故障')}</span>
                             </div>
                         </Col>
                     </Row>

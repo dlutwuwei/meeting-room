@@ -68,7 +68,7 @@ export default (type, onCreated) => {
                         }).catch(() => {
                             handleModalVisible(false);
                             after && after();
-                            message.error('编辑失败')
+                            message.error(__('编辑失败'))
                         });
                     });
                 };
@@ -77,71 +77,71 @@ export default (type, onCreated) => {
                 const departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
                 return (
                     <CreateModal
-                        title="编辑用户"
+                        title={__('编辑用户')}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="确定"
-                        cancelText="取消"
+                        okText={__('确定')}
+                        cancelText={__('取消')}
                         onCancel={() => handleModalVisible()}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="姓名"
+                            label={__('姓名')}
                         >
                             {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '请输入姓名' }],
+                                rules: [{ required: true, message: __('请输入姓名') }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入姓名" />
+                                <Input placeholder={__('请输入姓名')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="域用户名"
+                            label={__('域用户名')}
                         >
                             {form.getFieldDecorator('userName', {
-                                rules: [{ required: true, message: '请输入域用户名' }],
+                                rules: [{ required: true, message: __('请输入域用户名') }],
                                 initialValue: values.userName
                             })(
-                                <Input placeholder="请输入域用户名" />
+                                <Input placeholder={__('请输入域用户名')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="邮箱"
+                            label={__('邮箱')}
                         >
                             {form.getFieldDecorator('mail', {
-                                rules: [{ required: true, message: '请输入邮箱' }],
+                                rules: [{ required: true, message: __('请输入邮箱') }],
                                 initialValue: values.mail
                             })(
-                                <Input placeholder="请输入邮箱" />
+                                <Input placeholder={__('请输入邮箱')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="联系方式"
+                            label={__('联系方式')}
                         >
                             {form.getFieldDecorator('tel', {
                                 rules: [{ required: false }],
                                 initialValue: values.tel
                             })(
-                                <Input placeholder="请输入联系方式" />
+                                <Input placeholder={__('请输入联系方式')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="角色"
+                            label={__('角色')}
                         >
                             {form.getFieldDecorator('roleId', {
-                                rules: [{ required: true, message: '请选择角色' }],
+                                rules: [{ required: true, message: __('请选择角色') }],
                                 initialValue: '' + (values.roleId || '')
                             })(
-                                <Select style={{ width: 130 }} placeholder="请选择角色" >
+                                <Select style={{ width: 130 }} placeholder={__('请选择角色')} >
                                     {roles.map(item => <Option key={item.id} value={'' + item.id}>{item.name}</Option>)}
                                 </Select>
                             )}
@@ -149,13 +149,13 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="所属区域"
+                            label={__('所属区域')}
                         >
                             {form.getFieldDecorator('areaId', {
-                                rules: [{ required: true, message: '请输入区域' }],
+                                rules: [{ required: true, message: __('请输入区域') }],
                                 initialValue: '' + (values.areaId || '')
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入区域" >
+                                <Select style={{ width: 120 }} placeholder={__('请输入区域')} >
                                     { areas.map((item) => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
@@ -163,13 +163,13 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="所属部门"
+                            label={__('所属部门')}
                         >
                             {form.getFieldDecorator('departmentId', {
-                                rules: [{ required: false, message: '请输入部门' }],
+                                rules: [{ required: false, message: __('请输入部门') }],
                                 initialValue: values.departmentId
                             })(
-                                <Select style={{ width: 120 }} placeholder="请输入部门" >
+                                <Select style={{ width: 120 }} placeholder={__('请输入部门')} >
                                     { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
@@ -177,10 +177,10 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="是否启用"
+                            label={__('是否启用')}
                         >
                             {form.getFieldDecorator('isEnable', {
-                                rules: [{ required: true, message: '请输入是否启用' }],
+                                rules: [{ required: true, message: __('请输入是否启用') }],
                                 initialValue: values.isEnable,
                                 valuePropName: 'checked'
                             })(
@@ -225,23 +225,23 @@ export default (type, onCreated) => {
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? "编辑角色" : "新建角色"}
+                        title={ isEdit ? __('编辑角色') : __('新建角色') }
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="确定"
-                        cancelText="取消"
+                        okText={__('确定')}
+                        cancelText={__('取消')}
                         onCancel={() => handleModalVisible()}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="角色类型"
+                            label={__('角色类型')}
                         >
                             {form.getFieldDecorator('roleType', {
                                 rules: [{ required: true, message: '"请选择类型' }],
                                 initialValue: '' + values.roleType
                             })(
-                                <Select placeholder="请选择类型" style={{width: '100%'}}>
+                                <Select placeholder={__('请选择类型')} style={{width: '100%'}}>
                                     <Option value="1">超级管理员</Option>
                                     <Option value="2">区域管理员</Option>
                                     <Option value="3">部门管理员</Option>
@@ -251,28 +251,28 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="角色名称"
+                            label={__('角色名称')}
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '"请输入名称' }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入角色名称" style={{width: '100%'}}/>
+                                <Input placeholder={__('请输入角色名称')} style={{width: '100%'}}/>
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="权限"
+                            label={__('权限')}
                         >
                             {form.getFieldDecorator('actions', {
-                                rules: [{ required: true, message: '请选择权限' }],
+                                rules: [{ required: true, message: __('请选择权限') }],
                                 initialValue: values.actions ? values.actions.split(',').map(item => ACTION_NAME_MAP[item]).filter(item => !!item) : []
                             })(
                                 <Select
                                     mode="multiple"
                                     style={{ width: '100%' }}
-                                    placeholder="请选择权限"
+                                    placeholder={__('请选择权限')}
                                 >
                                     {actions.map(item => <Option key={item}>{item}</Option>)}
                                 </Select>

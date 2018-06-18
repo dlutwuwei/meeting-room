@@ -6,11 +6,11 @@ const confirm = Modal.confirm;
 
 const removeCurrent = (delCurrent = () => {}) => {
     confirm({
-        title: '确定删除?',
-        content: '删除后无法恢复',
-        okText: '确定',
+        title: __('确定删除?'),
+        content:  __('删除后无法恢复'),
+        okText:  __('确定'),
         okType: 'danger',
-        cancelText: '取消',
+        cancelText: __('取消'),
         onOk() {
             delCurrent();
         },
@@ -58,30 +58,30 @@ class BlackList extends Component {
                 }).then(() => {
                     removeFromTable(index)
                 }).catch(() => {
-                    message.error('删除失败');
+                    message.error( __('删除失败'));
                 });
             })
         }
         return [{
-                title: '用户',
+                title:  __('用户'),
                 dataIndex: 'mail',
             },
             {
-                title: '部门',
+                title:  __('部门'),
                 dataIndex: 'departmentName',
             },
             {
-                title: '区域',
+                title:  __('区域'),
                 dataIndex: 'area',
             },
             {
-                title: '已冻结天数',
+                title:  __('已冻结天数'),
                 render: (val, record) => (
                     <span>{parseInt((new Date().getTime() - record.frozenDate*1000)/3600000/24)}天</span>
                 )
             },
             {
-                title: '操作',
+                title:  __('操作'),
                 render: (_, record, index) => (
                     <Fragment>
                         <a href="#" style={{color: '#ff680d'}} onClick={() => onDeleteClick(index, record.id)}><Icon type="delete"/></a>
@@ -96,8 +96,8 @@ class BlackList extends Component {
         return (
             <div>
                 <Breadcrumb separator=">">
-                    <Breadcrumb.Item>系统设置</Breadcrumb.Item>
-                    <Breadcrumb.Item>黑名单</Breadcrumb.Item>
+                    <Breadcrumb.Item>{__('系统设置')}</Breadcrumb.Item>
+                    <Breadcrumb.Item>{__('黑名单')}</Breadcrumb.Item>
                 </Breadcrumb>
                 <List
                     getColumns={this.getColumns}

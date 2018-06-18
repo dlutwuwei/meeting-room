@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Modal, Input, Button, message, Select, Checkbox } from 'antd';
+import { Form, Modal, Input, Button, message, Select } from 'antd';
 import fetch from 'lib/fetch';
 import RoomForm from './room-form';
 
@@ -75,53 +75,53 @@ export default (type, onCreated) => {
                             after && after();
                             onCreated();
                         }).catch(() => {
-                            message.error('修改失败')
+                            message.error( __('修改失败'))
                             handleModalVisible(false);
                         });
                     });
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? '编辑区域' : '新建区域'}
+                        title={ isEdit ?  __('编辑区域') :  __('新建区域')}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="确认"
-                        cancelText="取消"
+                        okText= {__('确认')}
+                        cancelText= {__('取消')}
                         onCancel={() => handleModalVisible(false)}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="区域名称"
+                            label= {__('区域名称')}
                         >
                             {form.getFieldDecorator('name', {
                                 rules: [{ required: true, message: '"请输入区域名称' }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入区域名称" />
+                                <Input placeholder= {__('请输入区域名称')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="简码"
+                            label= {__('简码')}
                         >
                             {form.getFieldDecorator('shortCode', {
-                                rules: [{ required: true, message: '请输入简码' }],
+                                rules: [{ required: true, message:  __('请输入简码') }],
                                 initialValue: values.shortCode
                             })(
-                                <Input placeholder="请输入简码" />
+                                <Input placeholder= {__('请输入简码')} />
                             )}
                         </FormItem>
                         {/* <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="管理员"
+                            label= {__('管理员')}
                         >
                             {form.getFieldDecorator('admin', {
-                                rules: [{ required: true, message: '请输入管理员用户名' }],
+                                rules: [{ required: true, message:  __('请输入管理员用户名') }],
                             })(
-                                <Input placeholder="请输入管理员用户名" />
+                                <Input placeholder= {__('请输入管理员用户名')} />
                             )}
                         </FormItem> */}
                     </CreateModal>
@@ -145,42 +145,42 @@ export default (type, onCreated) => {
                             after && after();
                             onCreated();
                         }).catch(() => {
-                            message.error('修改失败')
+                            message.error( __('修改失败'))
                             handleModalVisible(false);
                         });
                     });
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? '编辑部门' : '新建部门'}
+                        title={ isEdit ?  __('编辑部门') :  __('新建部门')}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="确认"
-                        cancelText="取消"
+                        okText= {__('确认')}
+                        cancelText= {__('取消')}
                         onCancel={() => handleModalVisible(false)}
                     >
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="部门名称"
+                            label= {__('部门名称')}
                         >
                             {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '请输入名称' }],
+                                rules: [{ required: true, message:  __('请输入名称') }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder="请输入" />
+                                <Input placeholder= {__('请输入')} />
                             )}
                         </FormItem>
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="简码"
+                            label= {__('简码')}
                         >
                             {form.getFieldDecorator('shortCode', {
-                                rules: [{ required: true, message: '请输入简码' }],
+                                rules: [{ required: true, message:  __('请输入简码') }],
                                 initialValue: values.shortCode
                             })(
-                                <Input placeholder="请输入" />
+                                <Input placeholder= {__('请输入')} />
                             )}
                         </FormItem>
                     </CreateModal>
@@ -188,10 +188,10 @@ export default (type, onCreated) => {
             });
         case 'rooms':
             deviceChildren = [];
-            deviceChildren.push(<Option key={'hasTV'}>电视</Option>);
-            deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
-            deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
-            deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
+            deviceChildren.push(<Option key={'hasTV'} >{__('电视')}</Option>);
+            deviceChildren.push(<Option key={'hasPhone'} >{__('电话')}</Option>);
+            deviceChildren.push(<Option key={'hasWhiteBoard'} >{__('白板')}</Option>);
+            deviceChildren.push(<Option key={'hasProjector'} >{__('投影仪')}</Option>);
             areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
             roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
             departments = JSON.parse(localStorage.getItem('__meeting_department') || '[]');
@@ -233,18 +233,18 @@ export default (type, onCreated) => {
                             after && after();
                             onCreated();
                         }).catch(() => {
-                            message.error(isEdit ? '修改失败' : '创建失败')
+                            message.error(isEdit ?  __('修改失败') :  __('创建失败'))
                             // handleModalVisible(false);
                         });
                     });
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? '编辑会议室' : '新建会议室'}
+                        title={ isEdit ?  __('编辑会议室') :  __('新建会议室')}
                         visible={modalVisible}
                         onOk={okHandle}
-                        okText="确定"
-                        cancelText="取消"
+                        okText= {__('确定')}
+                        cancelText= {__('取消')}
                         onCancel={() => handleModalVisible()}
                     >
                         <RoomForm {...props} />

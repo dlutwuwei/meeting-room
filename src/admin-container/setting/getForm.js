@@ -83,7 +83,7 @@ class SearchUser extends Component {
             }).catch(() => {
                 after && after();
                 handleModalVisible(false);
-                message.error('添加失败');
+                message.error(__('添加失败'));
             });
         });
     };
@@ -98,17 +98,17 @@ class SearchUser extends Component {
           });
         return (
             <CreateModal
-                title="新建名单"
+                title={ __('新建名单')}
                 visible={modalVisible}
                 onOk={this.okHandle}
-                okText="确定"
-                cancelText="取消"
+                okText={ __('确定')}
+                cancelText={ __('取消')}
                 onCancel={() => handleModalVisible()}
             >
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="用户"
+                    label={ __('用户')}
                 >
                     {form.getFieldDecorator('mail', {
                         rules: [{ required: true, message: '"请输入名称' }],
@@ -118,7 +118,7 @@ class SearchUser extends Component {
                             style={{ width: 200 }}
                             onSelect={this.onSelect}
                             onSearch={this.handleSearch}
-                            placeholder="输入用户名"
+                            placeholder={ __('输入用户名')}
                         >
                             {children}
                         </AutoComplete>

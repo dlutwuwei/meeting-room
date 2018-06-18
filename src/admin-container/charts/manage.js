@@ -10,7 +10,7 @@ const confirm = Modal.confirm;
 import './charts.less';
 const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
 const today = new moment();
-const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
+const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
 class Usage extends Component {
     state = {
@@ -39,43 +39,43 @@ class Usage extends Component {
         this.load(1, {});
     }
     columns = [{
-        title: '会议主题',
+        title: __('会议主题'),
         dataIndex: 'subject'
     }, {
-        title: '预订人',
+        title: __('预订人'),
         dataIndex: 'userName',
     }, {
-        title: '房间',
+        title: __('房间'),
         dataIndex: 'roomNames'
     }, {
-        title: '楼层',
+        title: __('楼层'),
         dataIndex: 'roomFloor'
     }, {
-        title: '开始时间',
+        title: __('开始时间'),
         dataIndex: 'startTime',
         render: (text) => {
             return moment(text*1000).format('YYYY-MM-DD HH:mm')
         }
     }, {
-        title: '结束时间',
+        title: __('结束时间'),
         dataIndex: 'endTime',
         render: (text) => {
             return moment(text*1000).format('YYYY-MM-DD HH:mm')
         }
     }, {
-        title: '状态',
+        title: __('状态'),
         dataIndex: 'state',
         render: (text, record) => {
-            return record.isComplained ? '已投诉' : statusMap[record.state];
+            return record.isComplained ? __('已投诉') : statusMap[record.state];
         }
     }, {
-        title: '投诉时间',
+        title: __('投诉时间'),
         dataIndex: 'complainTime',
         render: (text) => {
             return text ? moment(text*1000).format('YYYY-MM-DD HH:mm') : '';
         }
     }, {
-        title: '操作',
+        title: __('操作'),
         key: 'option',
         render: (text, record) => {
             return !record.isComplained ? (<div>
@@ -89,14 +89,14 @@ class Usage extends Component {
             id
         };
         confirm({
-            title: '投诉确认',
+            title: __('投诉确认'),
             content: '投诉不可取消，您确认投诉？',
             onOk: () => {
                 fetch.post(`/api/meetingManage/complain?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
-                    message.success('投诉成功');
+                    message.success(__('投诉成功'));
                     localStorage.setItem('__meeting_recurrenceJson', '');
                 }).catch(() => {
-                    message.error('投诉失败');
+                    message.error(__('投诉失败'));
                 });
             },
             onCancel: () => {
@@ -108,14 +108,14 @@ class Usage extends Component {
             id
         }
         confirm({
-            title: '取消会议',
-            content: '强制取消会议',
+            title: __('取消会议'),
+            content: __('强制取消会议'),
             onOk: () => {
                 fetch.post(`/api/meetingManage/cancel?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
-                    message.success('取消成功');
+                    message.success(__('取消成功'));
                     localStorage.setItem('__meeting_recurrenceJson', '');
                 }).catch(() => {
-                    message.error('取消失败');
+                    message.error(__('取消失败'));
                 });
             },
             onCancel: () => {
@@ -197,11 +197,11 @@ class Usage extends Component {
     }
     render() {
         const {
-            startDate,
-            endDate,
-            roomName='',
-            areaId,
-            floor,
+            // startDate,
+            // endDate,
+            // roomName='',
+            // areaId,
+            // floor,
             data, pagination, loading
         } = this.state;
         const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
@@ -213,10 +213,10 @@ class Usage extends Component {
                             startDate: val.clone().hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm'),
                             endDate: val1.clone().add(1, 'days').hours(0).minutes(0).utc().format('YYYY-MM-DD HH:mm')
                         });
-                    }} placeholder={['开始时间', '结束时间']}/>
+                    }} placeholder={[__('开始时间'), __('结束时间')]}/>
                     <Select
                         style={{ width: 120 }}
-                        placeholder="请输入区域"
+                        placeholder={__("请输入区域")}
                         defaultValue={areas[0].id}
                         onChange={(val) => {
                             this.load(1, {
@@ -226,7 +226,7 @@ class Usage extends Component {
                     >
                         { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                     </Select>
-                    <Input placeholder="输入会议室名称" onChange={(e) => {
+                    <Input placeholder={__("输入会议室名称")} onChange={(e) => {
                         this.load(1, {
                             roomName: e.target.value
                         });
@@ -238,7 +238,7 @@ class Usage extends Component {
                     }}/> */}
                 </div>
                 <div className="filter-list">
-                    <Input placeholder="输入楼层" onChange={(e) => {
+                    <Input placeholder={__("输入楼层")} onChange={(e) => {
                         this.load(1, {
                             floor: e.target.value
                         });
