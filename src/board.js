@@ -8,7 +8,7 @@ import * as util from './lib/util';
 
 import './style/board.less';
 
-const statusMap = ['未知', '预定中', '进行中', '已取消', '已结束'];
+const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
 class MeetingBoard extends Component {
     state = {
@@ -67,7 +67,7 @@ class MeetingBoard extends Component {
                 <table className="meeting-table">
                     <thead>
                         <tr>
-                            <th width="14%">Brand</th>
+                            {/* <th width="14%">Brand</th> */}
                             <th width="16%">Meeting</th>
                             <th width="14%">State</th>
                             <th width="14%">Time</th>
@@ -80,7 +80,7 @@ class MeetingBoard extends Component {
                         {loading ? null : [
                             ...data.list.map((item, i) => {
                                 return (<tr key={i+Math.random()}>
-                                    <td>{item.brand}</td>
+                                    {/* <td>{item.brand}</td> */}
                                     <td>{item.meeting}</td>
                                     <td className={classnames({'active': item.state === 0})}>{statusMap[item.state]}</td>
                                     <td>{item.time}</td>

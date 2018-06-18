@@ -6,12 +6,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const path = require('path')
 
-const isDev = process.env.NODE_ENV != 'production'
-
-var languages = {
-  // "en": require('./src/locale/en.json'),
-  "cn": require("./src/locale/zh-tw.json"),
-};
+const isDev = process.env.NODE_ENV != 'production';
 
 function chunksSortMode(c1, c2) {
   let orders = ['lib', 'config', 'app', 'board', 'admin', 'train'];
@@ -21,8 +16,7 @@ function chunksSortMode(c1, c2) {
 }
 
 const mockserver = "http://mt.ig66.com"
-module.exports = Object.keys(languages).map(lan => {
-  return {
+module.exports = {
     entry: {
         config: ['./src/config.js'],
         lib: [ 'babel-polyfill','react', 'react-dom' ],
@@ -34,7 +28,7 @@ module.exports = Object.keys(languages).map(lan => {
     output: {
         publicPath: isDev ? '/' : '/static/',
         path: path.join(__dirname, 'dist'),
-        filename: isDev ? `js/[name]-${lan}.js` : `js/[name]-${lan}.js`
+        filename: isDev ? `js/[name].js` : `js/[name].js`
     },
     devServer: {
         hot: false,
@@ -209,10 +203,7 @@ module.exports = Object.keys(languages).map(lan => {
         new ExtractTextPlugin({
             filename: 'css/app-[contenthash:6].css',
             allChunks: true
-        }),
-        new I18nPlugin(
-          languages[lan]
-        )
+        })
     ].concat(!isDev ? [
         new webpack.HashedModuleIdsPlugin(),
         new UglifyJSPlugin({
@@ -237,4 +228,3 @@ module.exports = Object.keys(languages).map(lan => {
         modules: [ path.resolve(__dirname, 'src/'), 'node_modules']
     }
   };
-});
