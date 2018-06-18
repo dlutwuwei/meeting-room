@@ -1,9 +1,7 @@
 const { getQuery, setCookie, getCookie } = require('./lib/util');
-let locale = getQuery('locale');
+const locale = getQuery('locale') || getCookie('locale') || navigator.language.toLowerCase();
 if(locale) {
     setCookie('locale', locale);
-} else {
-    locale = getCookie('locale') || 'zh-tw';
 }
 
 const languages = require(`./locale/${locale}.json`);
