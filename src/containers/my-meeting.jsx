@@ -150,6 +150,7 @@ class MyMeeting extends Component {
                                     <th>{__('startTime')}</th>
                                     <th>{__('endTime')}</th>
                                     <th>{__('createTime')}</th>
+                                    <th>{__('isRecurrence')}</th>
                                     {type === 1 && <th>{__('operation')}</th>}
                                 </tr>
                             </thead>
@@ -163,6 +164,7 @@ class MyMeeting extends Component {
                                                 <td>{moment.utc(item.startTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
                                                 <td>{moment.utc(item.endTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
                                                 <td>{moment.utc(item.createTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
+                                                <td>{item.isRecurrence ? 'YES': 'NO'}</td>
                                                 {type === 1 && <td className="operation"><span onClick={this.handlEdit.bind(this, i)}>Edit</span>&nbsp;|&nbsp;<span onClick={this.handlCancel.bind(this, i)}>cancel</span></td>}
                                             </tr>
                                         );

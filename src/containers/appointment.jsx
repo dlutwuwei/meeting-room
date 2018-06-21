@@ -124,14 +124,14 @@ class Appointment extends Component {
         const setting = JSON.parse(localStorage.getItem('__meeting_setting') || '{}');
         const duration = data.endTime.diff(data.startTime, 'minutes');
         if(duration > setting.maxMeetingHour*60 + setting.maxMeetingMinutes) {
-          message.error('预定时长超出限制');
+          message.error('預定時長超出限制');
           this.setState({
             loading: false
           });
           return;
         }
         if(setting.maxBookingDays < data.startTime.diff(new moment(), 'days')){
-          message.error(`超出可预订时间范围，只允许预定${setting.maxBookingDays}天内的会议`);
+          message.error(`超出可預訂時間範圍，只允許預定${setting.maxBookingDays}天內的會議`);
           this.setState({
             loading: false
           });
@@ -162,7 +162,7 @@ class Appointment extends Component {
           data.id = this.props.editId;
         }
         confirm({
-          title: '预定须知',
+          title: 'Notice',
           width: 600,
           content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
           onOk: () => {
@@ -185,7 +185,7 @@ class Appointment extends Component {
     })
     const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
     fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
-      message.success('预定成功');
+      message.success('預定成功');
       setTimeout(() => {
         location.href = '/home/mymeeting';
       });
@@ -194,7 +194,7 @@ class Appointment extends Component {
       });
       localStorage.setItem('__meeting_recurrenceJson', '');
     }).catch(() => {
-      message.error('预定失败');
+      message.error('預定失败');
       this.setState({
         loading: false
       });
@@ -329,7 +329,7 @@ class Appointment extends Component {
         });
       });
     }).catch(() => {
-      message.error('获取会议预定信息失败')
+      message.error('獲取會議預定信息失敗')
     })
   }
   render() {

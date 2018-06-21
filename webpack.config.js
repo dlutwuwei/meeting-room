@@ -163,7 +163,7 @@ module.exports = {
             template: 'public/index.html',
             filename: 'index.html',
             chunks: ['lib', 'app', 'config'],
-            title: '会议室预定',
+            title: '會議室預定',
             chunksSortMode,
             inject: true,
             hash: true
@@ -172,7 +172,7 @@ module.exports = {
           template: 'public/index.html',
           filename: 'index-board.html',
           chunks: ['lib', 'board', 'config'],
-          title: '会议室看板',
+          title: '會議室看板',
           chunksSortMode,
           inject: true,
           hash: true
@@ -180,7 +180,7 @@ module.exports = {
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-admin.html',
-          title: '会议室管理',
+          title: '會議室管理',
           chunks: ['lib', 'admin', 'config'],
           chunksSortMode,
           inject: true,

@@ -254,14 +254,14 @@ class Schedule extends Component {
         }
         if (!data.roomMails) {
             Modal.error({
-                title: '没有选择会议室',
+                title: 'No meeting room selected',
             });
         } else if (!data.subject) {
             confirm({
-                title: '没有填写标题，确认发送？',
+                title: 'Not fill in the title, confirmation is sent?',
                 onOk: () => {
                     confirm({
-                        title: '预定须知',
+                        title: 'Notice',
                         width: 600,
                         content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
                         onOk: () => {
@@ -280,7 +280,7 @@ class Schedule extends Component {
             });
         } else {
             confirm({
-                title: '预定须知',
+                title: 'Notice',
                 width: 600,
                 content: <div dangerouslySetInnerHTML={{ __html: setting.responseMessage || '' }} />,
                 onOk: () => {
