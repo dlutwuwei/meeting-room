@@ -28,7 +28,7 @@ class MeetingBoard extends Component {
         }, 20000);
     }
     load() {
-        const pageSize = parseInt((window.innerHeight - window.innerWidth*0.2 - 20)/98);
+        const pageSize = Math.ceil((window.innerHeight - window.innerWidth*0.2*0.33 - 20 -150)/70);
         fetch.get('/api/board/getList', {
             page: this.page,
             area: util.getQuery('area'),
