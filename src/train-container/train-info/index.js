@@ -76,8 +76,8 @@ class TrainList extends Component {
     render: (record) => {
       if(record.state == 0) {
         return (<Fragment>
-            <a href="#" style={{color: '#00ddc6'}} onClick={(e) => this.handleModify(e, record.id)}><Icon type="form" /></a>
-            <Divider type="vertical" />
+            {/* <a href="#" style={{color: '#00ddc6'}} onClick={(e) => this.handleModify(e, record.id)}><Icon type="form" /></a>
+            <Divider type="vertical" /> */}
             <a href="#" style={{color: '#ff680d'}}onClick={(e) => this.handleCancel(e, record.id)}><Icon type="delete"/></a>
         </Fragment>);
       }
@@ -87,7 +87,6 @@ class TrainList extends Component {
     this.load(1, {});
   }
   handleCancel = (e, id) => {
-    debugger
     fetch.post('/api/training/cancel', {
       token: localStorage.getItem("__meeting_token"),
       id
