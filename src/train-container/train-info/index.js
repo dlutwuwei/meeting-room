@@ -17,7 +17,7 @@ class TrainList extends Component {
     loading: false,
     data: [],
     startDate: today.clone().subtract(1, 'months').format('YYYY-MM-DD'),
-    endDate: today.format('YYYY-MM-DD'),
+    endDate: today.clone().add(1, 'months').format('YYYY-MM-DD'),
     floor: '',
     brandId: brands[0].id,
     keyword: '',
@@ -157,7 +157,7 @@ class TrainList extends Component {
     return (
       <div className="sheet">
         <div className="filter-list">
-          <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today]} onChange={([val, val1]) => {
+          <RangePicker defaultValue={[today.clone().subtract(1, 'months'), today.clone().add('1', 'months')]} onChange={([val, val1]) => {
             this.load(1, {
               startDate: val.format('YYYY-MM-DD'),
               endDate: val1.format('YYYY-MM-DD')
