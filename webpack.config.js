@@ -163,7 +163,7 @@ module.exports = {
             template: 'public/index.html',
             filename: 'index.html',
             chunks: ['lib', 'app', 'config'],
-            title: '會議室預定',
+            title: 'MyMeeting Booking',
             chunksSortMode,
             inject: true,
             hash: true
@@ -172,7 +172,7 @@ module.exports = {
           template: 'public/index.html',
           filename: 'index-board.html',
           chunks: ['lib', 'board', 'config'],
-          title: '會議室看板',
+          title: 'MyMeeting Dashboard',
           chunksSortMode,
           inject: true,
           hash: true
@@ -180,7 +180,7 @@ module.exports = {
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-admin.html',
-          title: '會議室管理',
+          title: 'MyMeeting System Management',
           chunks: ['lib', 'admin', 'config'],
           chunksSortMode,
           inject: true,
@@ -189,14 +189,14 @@ module.exports = {
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-train.html',
-          title: '培训室管理',
+          title: 'MyMeeting Training Room',
           chunks: ['lib', 'train', 'config'],
           inject: true
         }),
         new HtmlWebpackPlugin({
           template: 'public/index.html',
           filename: 'index-train.html',
-          title: '培训室管理',
+          title: 'MyMeeting Training Room',
           chunks: ['lib', 'train', 'config'],
           inject: true
         }),
