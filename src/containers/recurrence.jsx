@@ -123,10 +123,11 @@ class Recurrence extends Component {
                 initState = recurrenceJson.yearly;
                 initState.recurrence_pattern = 4;
             }
-            const { startTime, endTime } = props.data;
+            const startTime = moment(recurrenceJson.sartDate + ' ' + recurrenceJson.startTime);
+            const endTime = moment(recurrenceJson.endDate + ' ' + recurrenceJson.endTime);
             this.setState({
-                startTime: startTime ? startTime : new moment(),
-                endTime: endTime ? endTime : new moment(),
+                startTime: recurrenceJson.sartDate ? startTime : new moment(),
+                endTime: recurrenceJson.endDate ? endTime : new moment(),
                 ...initState
             });
         }
@@ -299,7 +300,7 @@ class Recurrence extends Component {
         return pattern;
     }
     handleSubmit = () => {
-        const { startTime, endTime } = this.props.data;
+        // const { startTime, endTime } = this.props.data;
 
         const {
             everyDays,
@@ -320,7 +321,9 @@ class Recurrence extends Component {
             numberOfOccurrences,
             recurrence_pattern,
             timeZone,
-            duration
+            duration,
+            startTime,
+            endTime 
         } = this.state;
 
         let recurrent_parma = {};
