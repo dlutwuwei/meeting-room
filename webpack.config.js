@@ -190,13 +190,7 @@ module.exports = {
           template: 'public/index.html',
           filename: 'index-train.html',
           title: 'MyMeeting Training Room',
-          chunks: ['lib', 'train', 'config'],
-          inject: true
-        }),
-        new HtmlWebpackPlugin({
-          template: 'public/index.html',
-          filename: 'index-train.html',
-          title: 'MyMeeting Training Room',
+          chunksSortMode,
           chunks: ['lib', 'train', 'config'],
           inject: true
         }),

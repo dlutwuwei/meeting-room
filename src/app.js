@@ -13,9 +13,9 @@ import homeReducer from './redux/home-redux';
 import fetch from 'lib/fetch';
 
 import './style/index.css';
-import Home from './containers/home';
-import Topics from './containers/topics';
-import About from './containers/about';
+import Home from './home-container/home';
+import Topics from './home-container/topics';
+import About from './home-container/about';
 import * as util from 'lib/util';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
