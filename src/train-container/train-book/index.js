@@ -647,7 +647,6 @@ export default class Train extends React.Component {
 
     const { isEdit, selected_day } = this.state;
     const { periodOfDay } = this.state.selected_train;
-    debugger
     // formdata无法识别radiobox groupd的值，这里重新赋值
     data.periodOfDay = periodOfDay || selected_day.period;
     if(isEdit) {

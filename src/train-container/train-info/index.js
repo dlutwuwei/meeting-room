@@ -7,7 +7,7 @@ const { RangePicker } = DatePicker;
 
 const statusMap = [__('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
-const period = [__('上午'), __('下午'), __('全天')];
+const period = ['', __('上午'), __('下午'), __('全天')];
 
 const brands = JSON.parse(localStorage.getItem('__meeting_brand') || '[]');
 
