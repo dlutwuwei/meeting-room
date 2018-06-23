@@ -46,13 +46,13 @@ class TrainList extends Component {
   }, {
     title: '是否有茶歇',
     dataIndex: 'teaBreak',
-    render: (record) => {
+    render: (text, record) => {
       return record.teaBreak ? '是' : '否'
     }
   }, {
     title: '是否有午休',
     dataIndex: 'outLunch',
-    render: (record) => {
+    render: (text, record) => {
       return record.outLunch ? '是' : '否'
     }
   }, {
