@@ -161,9 +161,11 @@ class Recurrence extends Component {
         localStorage.setItem('__meeting_timezone', JSON.stringify(val));
     }
     handleDuration = (val) => {
+        const { startTime, endTime } = this.state;
+        const days = endTime.diff(startTime, 'days');
         this.setState({
             duration: val,
-            endTime: this.state.startTime.clone().add(val*30, 'minutes')
+            endTime: startTime.clone().add(days, 'days').add(val*30, 'minutes')
         }, () => {
             // this.props.changeProp('startTime', this.state.startTime);
             // this.props.changeProp('endTime', this.state.endTime);
@@ -522,9 +524,9 @@ class Recurrence extends Component {
                                 });
                             }}>
                                 <Radio value={1}>No end date</Radio>
-                                <Radio value={2}>End after: <Input value={numberOfOccurrences} onChange={(val) => {
+                                <Radio value={2}>End after: <Input value={numberOfOccurrences} onChange={(e) => {
                                     this.setState({
-                                        numberOfOccurrences: val
+                                        numberOfOccurrences: e.target.value
                                     });
                                 }}/> occurrences</Radio>
                                 <Radio value={3}>End by:
