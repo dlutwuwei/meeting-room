@@ -35,7 +35,8 @@ class BlackList extends Component {
             this.setState({
                 data: res.data.list,
                 page: res.data.page,
-                pageSize: res.data.pageSize
+                pageSize: res.data.pageSize,
+                totalPage: res.data.totalPage
             });
         }).catch(() => {
             done && done();
@@ -91,7 +92,7 @@ class BlackList extends Component {
         ];
     }
     render () {
-        const { data, loading, page, pageSize } = this.state;
+        const { data, loading, page, pageSize, totalPage } = this.state;
 
         return (
             <div>
@@ -106,6 +107,7 @@ class BlackList extends Component {
                     fetchData={this.fetchData}
                     page={page}
                     pageSize={pageSize}
+                    totalPage={totalPage}
                     showAdd={false}
                 />
             </div>
