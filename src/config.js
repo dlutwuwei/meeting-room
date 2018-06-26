@@ -8,7 +8,7 @@ let languages;
 try {
     languages = require(`./locale/${locale}.json`);
 } catch(e) {
-    languages = require('en.json');
+    languages = require('./locale/en.json');
 }
 
 window.__ = function(key) {
