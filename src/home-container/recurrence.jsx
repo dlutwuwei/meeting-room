@@ -79,8 +79,8 @@ class Recurrence extends Component {
         visible: false,
         list: [],
         openKeys: [],
-        startTime: moment().hours(9).minutes(0),
-        endTime:  moment().hours(9).minutes(30),
+        startTime: moment(),
+        endTime:  moment(),
         recurrence_pattern: 1,
         recurrence: [],
         duration: 1,
@@ -123,11 +123,11 @@ class Recurrence extends Component {
                 initState = recurrenceJson.yearly;
                 initState.recurrence_pattern = 4;
             }
-            const startTime = moment(recurrenceJson.sartDate + ' ' + recurrenceJson.startTime);
-            const endTime = moment(recurrenceJson.endDate + ' ' + recurrenceJson.endTime);
+            const startTime = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
+            const endTime = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
             this.setState({
-                startTime: recurrenceJson.sartDate ? startTime : new moment(),
-                endTime: recurrenceJson.endDate ? endTime : new moment(),
+                startTime: recurrenceJson.startDate ? startTime : props.data.startTime,
+                endTime: recurrenceJson.endDate ? endTime : props.data.endTime,
                 ...initState
             });
         }
@@ -482,7 +482,7 @@ class Recurrence extends Component {
                         <label htmlFor="" className="rcu-title">Duration:</label>
                         <Select
                             style={{width: 150}}
-                            value={duration}
+                            value={duration.toFixed(2)}
                             onChange={this.handleDuration}
                         >
                             {durationOptions}
