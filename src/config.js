@@ -4,7 +4,12 @@ if(locale) {
     setCookie('locale', locale);
 }
 
-const languages = require(`./locale/${locale}.json`);
+let languages;
+try {
+    languages = require(`./locale/${locale}.json`);
+} catch(e) {
+    languages = require('en.json');
+}
 
 window.__ = function(key) {
     return languages[key] || key;
