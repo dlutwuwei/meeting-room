@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Modal, DatePicker, TimePicker, Checkbox, Radio, Card, message } from 'antd';
+import { Modal, Checkbox, Radio, Card, message } from 'antd';
+import { DatePicker, TimePicker } from 'components/pickers';
+
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
@@ -176,23 +178,24 @@ class Recurrence extends Component {
             const { startTime, endTime } = this.state;
             const date = startTime.dayOfYear();
             if(startTime.isAfter(endTime)) {
+                const hour = startTime.hours()
                 this.setState({
                     startTime: time.clone(),
-                    endTime: endTime.clone().dayOfYear(date + 1)
+                    endTime: endTime.clone().dayOfYear(date + 1).hours(hour)
                 });
             } else {
                 this.setState({
                     startTime: time.clone(),
                 });
             }
-            // this.props.changeProp('startTime', time);
+            this.props.changeProp('startTime', time);
         } else if(type === 'endTime') {
             const date = this.state.startTime.dayOfYear();
             this.setState({
                 endTime: time.clone(),
                 duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             });
-            // this.props.changeProp('endTime', time);
+            this.props.changeProp('endTime', time);
         }
     }
     onPatternChange = (e) => {

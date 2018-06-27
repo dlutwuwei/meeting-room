@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { DatePicker, Form, Spin, message, Modal } from 'antd';
+import { Form, Spin, message, Modal } from 'antd';
+import { DatePicker, TimePicker } from 'components/pickers';
 import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
-import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import fetch from 'lib/fetch';
 import LocationRoom from 'components/location';
@@ -106,7 +106,6 @@ class Appointment extends Component {
     }, 0);
     localStorage.setItem('__meeting_recurrenceJson', '');
   }
-
   openRooms() {
     this.setState({
       showAddRooms: true
@@ -223,6 +222,7 @@ class Appointment extends Component {
     });
   }
   setValues = (props) => {
+    // 修改表单所有值
     const { startTime, endTime, location, receivers, content, subject } = props;
     this.props.form.setFieldsValue({
       startTime,
@@ -456,6 +456,7 @@ class Appointment extends Component {
                 )}
                 {getFieldDecorator('startTime', startTimeConfig)(
                   <TimePicker
+                    format="HH:mm"
                     prefixCls="ant-time-picker"
                     placeholder="Select Time"
                     showSecond={false}
@@ -470,6 +471,7 @@ class Appointment extends Component {
                     }}
                     style={{ verticalAlign: 'middle'}}
                     onChange={(date) => { this.handleTime('startTime',date) }}
+                    allowEmpty={false}
                   />
                 )}
                 {showTimezone && <Select
@@ -498,6 +500,7 @@ class Appointment extends Component {
                 )}
                 {getFieldDecorator('endTime', endTimeConfig)(
                   <TimePicker
+                    format="HH:mm"
                     prefixCls="ant-time-picker"
                     placeholder="Select Time"
                     showSecond={false}
@@ -512,6 +515,7 @@ class Appointment extends Component {
                       });
                     }}
                     onChange={(date) => { this.handleTime('endTime',date) }}
+                    allowEmpty={false}
                   />
                 )}
                 {showTimezone && <Select
@@ -551,7 +555,6 @@ class Appointment extends Component {
   }
 }
 
-const WrappedDynamicRule = Form.create()(Appointment);
 
 // export default WrappedDynamicRule
 
@@ -582,5 +585,7 @@ Appointment.propTypes = {
   form: PropTypes.object.isRequired,
   isEdit: PropTypes.bool
 }
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedDynamicRule);
 
+const WrappedDynamicRule = connect(mapStateToProps, mapDispatchToProps)(Appointment);
+
+export default Form.create()(WrappedDynamicRule);

@@ -1,5 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Table, DatePicker, Input, Select, message, Icon, Divider } from 'antd';
+import { Table, Input, Select, message, Icon, Divider } from 'antd';
+import { DatePicker } from 'components/pickers';
+
 import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = Select.Option;

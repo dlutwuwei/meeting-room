@@ -7,8 +7,9 @@ import moment from 'moment';
 import classnames from 'classNames';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Checkbox, DatePicker, Icon, message, Modal, Select, Spin, Popover } from 'antd';
-import TimePicker from 'rc-time-picker';
+import { Checkbox, Icon, message, Modal, Select, Spin, Popover } from 'antd';
+import { DatePicker, TimePicker } from 'components/pickers';
+
 import PropTypes from 'prop-types';
 
 import '../style/schedule.less';
@@ -514,6 +515,7 @@ class Schedule extends Component {
                                 prefixCls="ant-time-picker"
                                 placeholder="Select Time"
                                 showSecond={false}
+                                format="HH:mm"
                                 value={startTime.zone(offsetUTC)}
                                 hideDisabledOptions={true}
                                 onChange={date => { this.handleTime('startTime', date) }}
@@ -560,6 +562,7 @@ class Schedule extends Component {
                                 style={{ 'marginRight': 10 }}
                             />
                             <TimePicker
+                                format="HH:mm"
                                 prefixCls="ant-time-picker"
                                 placeholder="Select Time"
                                 showSecond={false}
