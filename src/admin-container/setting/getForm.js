@@ -118,7 +118,7 @@ class SearchUser extends Component {
                             style={{ width: 200 }}
                             onSelect={this.onSelect}
                             onSearch={this.handleSearch}
-                            placeholder={ __('输入用户名')}
+                            placeholder={ __('输入用户邮箱查询')}
                         >
                             {children}
                         </AutoComplete>
