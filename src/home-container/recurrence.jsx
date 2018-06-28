@@ -402,6 +402,7 @@ class Recurrence extends Component {
         // 保存信息
         localStorage.setItem('__meeting_recurrenceJson', recurrenceJson);
         this.closeModal();
+        this.props.changeProp('isRecurrence', false)
         this.props.changeProp('isRecurrence', true)
 
     }
@@ -553,7 +554,9 @@ class Recurrence extends Component {
                 </Card>
                 <div className="rcu-item rcu-select">
                     <Button type="primary" size="large" style={{width: 100}} onClick={this.handleSubmit}>OK</Button>
-                    <Button type="info" size="large" style={{width: 100}} onClick={() => { this.closeModal()}}>Cancel</Button>
+                    <Button type="info" size="large" style={{width: 100}} onClick={() => { 
+                        this.closeModal();
+                    }}>Cancel</Button>
                     <Button type="default" size="large" onClick={this.handleCancel}>Remove Recurrence</Button>
                 </div>
             </Modal>

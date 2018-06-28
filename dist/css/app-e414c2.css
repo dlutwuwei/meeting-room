@@ -17318,6 +17318,11 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .ant-form-item-required:before {
   display: none;
+}
+
+.recurrence-notice {
+  color: red;
+  line-height: 20px;
 }/* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 
 /* stylelint-disable no-duplicate-selectors */

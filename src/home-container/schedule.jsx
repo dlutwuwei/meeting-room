@@ -383,11 +383,23 @@ class Schedule extends Component {
             this.onSelectRoom(r.data.list)
         });
     }
+    renderRecurrenceNotice = () => {
+        const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
+        const { endDate, startDate, numberOfOccurrences } = recurence;
+        const title = 'You can not change meeting time,'
+        if(numberOfOccurrences) {
+            return `${title}, recurrence will happen ${numberOfOccurrences} times after ${startDate}`;
+        } else if(recurence.endDate) {
+            return `${title}, recurrence is from ${startDate} to ${endDate}`;
+        } else {
+            return `${title}, recurrence is from ${startDate}`;
+        }
+    }
     render() {
         const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
             timezone } = this.state;
-        const { startTime, endTime, showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList } = this.props;
+        const { startTime, endTime, showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList, isRecurrence } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Spin spinning={this.state.loading}>
@@ -510,6 +522,7 @@ class Schedule extends Component {
                                 value={startTime.zone(offsetUTC)}
                                 className="my-date-picker"
                                 style={{ 'marginRight': 10 }}
+                                disabled={isRecurrence}
                             />
                             <TimePicker
                                 prefixCls="ant-time-picker"
@@ -527,6 +540,7 @@ class Schedule extends Component {
                                         return m % 30 !== 0
                                     });
                                 }}
+                                disabled={isRecurrence}
                             />
                             {showTimezone && <Select
                                 size="default"
@@ -560,6 +574,7 @@ class Schedule extends Component {
                                 value={endTime.zone(offsetUTC)}
                                 className="my-date-picker"
                                 style={{ 'marginRight': 10 }}
+                                disabled={isRecurrence}
                             />
                             <TimePicker
                                 format="HH:mm"
@@ -576,6 +591,7 @@ class Schedule extends Component {
                                         return m % 10 !== 0
                                     });
                                 }}
+                                disabled={isRecurrence}
                                 onChange={(date) => { this.handleTime('endTime',date) }}
                             />
                             {showTimezone && <Select
@@ -597,6 +613,7 @@ class Schedule extends Component {
                                 {this.state.floors.map(item => <Option value={item}>{item}</Option>)}
                             </Select>
                         </div>
+                        <div className="recurrence-notice">{isRecurrence && this.renderRecurrenceNotice()}</div>
                         <div className="item">
                             <div className="status busy">Busy</div>
                             <div className="status out">Out of Office</div>

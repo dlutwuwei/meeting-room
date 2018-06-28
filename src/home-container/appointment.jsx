@@ -340,9 +340,21 @@ class Appointment extends Component {
       message.error('獲取會議預定信息失敗')
     })
   }
+  renderRecurrenceNotice = () => {
+    const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
+    const { endDate, startDate, numberOfOccurrences } = recurence;
+    const title = 'You can not change meeting time,'
+    if(numberOfOccurrences) {
+        return `${title}, recurrence will happen ${numberOfOccurrences} times after ${startDate}`;
+    } else if(recurence.endDate) {
+        return `${title}, recurrence is from ${startDate} to ${endDate}`;
+    } else {
+        return `${title}, recurrence is from ${startDate}`;
+    }
+  }
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { showTimezone, isEdit, startTime, endTime } = this.props;
+    const { showTimezone, isEdit, startTime, endTime, isRecurrence } = this.props;
     const { showAddRooms, showAddAttendees, dataSource, fetching, timezone, showRecurrence } = this.state;
     const offsetUTC = timezone.label.split(' ')[0];
     return (
@@ -460,6 +472,7 @@ class Appointment extends Component {
                     disabledDate={disabledDate}
                     onChange={(date) => { this.handleTime('startTime',date) }}
                     className="my-date-picker"
+                    disabled={isRecurrence}
                   />
                 )}
                 {getFieldDecorator('startTime', startTimeConfig)(
@@ -469,6 +482,7 @@ class Appointment extends Component {
                     placeholder="Select Time"
                     showSecond={false}
                     hideDisabledOptions={true}
+                    disabled={isRecurrence}
                     disabledHours={() => {
                       return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                     }}
@@ -504,6 +518,7 @@ class Appointment extends Component {
                     disabledDate={disabledDate}
                     onChange={(date) => { this.handleTime('endTime',date) }}
                     className="my-date-picker"
+                    disabled={isRecurrence}
                   />
                 )}
                 {getFieldDecorator('endTime', endTimeConfig)(
@@ -513,6 +528,7 @@ class Appointment extends Component {
                     placeholder="Select Time"
                     showSecond={false}
                     hideDisabledOptions={true}
+                    disabled={isRecurrence}
                     disabledHours={() => {
                       return [0, 1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 21, 22, 23];
                     }}
@@ -537,6 +553,7 @@ class Appointment extends Component {
                   {children}
                 </Select>}
               </FormItem>
+              <div className="recurrence-notice">{isRecurrence && this.renderRecurrenceNotice()}</div>
               <div className="item">
                 {getFieldDecorator('content', {
                   initialValue: '',
