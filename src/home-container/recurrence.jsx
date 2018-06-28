@@ -6,7 +6,7 @@ import Button from 'components/button';
 import Select from 'components/select';
 import Input from 'components/input';
 import moment from 'moment';
-import { generateOptions } from 'lib/util';
+import { generateOptions, dispatchEvent} from 'lib/util';
 import fetch from 'lib/fetch';
 import PropTypes from 'prop-types';
 import Timezone from '../constant/timezone';
@@ -15,7 +15,6 @@ import '../style/recurrence.less';
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
-
 const children = [];
 const zones = Object.keys(Timezone);
 for (let i = 0; i < zones.length; i++) {
@@ -188,14 +187,20 @@ class Recurrence extends Component {
                     startTime: time.clone(),
                 });
             }
-            this.props.changeProp('startTime', time);
+            dispatchEvent('dataChange', {
+                key: 'startTime',
+                value: time
+            });
         } else if(type === 'endTime') {
             const date = this.state.startTime.dayOfYear();
             this.setState({
                 endTime: time.clone(),
                 duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             });
-            this.props.changeProp('endTime', time);
+            dispatchEvent('dataChange', {
+                key: 'endTime',
+                value: time
+            });
         }
     }
     onPatternChange = (e) => {
@@ -485,7 +490,7 @@ class Recurrence extends Component {
                         <label htmlFor="" className="rcu-title">Duration:</label>
                         <Select
                             style={{width: 150}}
-                            value={duration.toFixed(2)}
+                            value={duration}
                             onChange={this.handleDuration}
                         >
                             {durationOptions}

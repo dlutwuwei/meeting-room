@@ -8,6 +8,7 @@ import moment from 'moment';
 import fetch from 'lib/fetch';
 import LocationRoom from 'components/location';
 import { connect } from 'react-redux';
+
 import AddRooms from './addRooms';
 import Timezone from '../constant/timezone';
 import { bindActionCreators } from 'redux';
@@ -105,6 +106,13 @@ class Appointment extends Component {
       this.setValues(this.props);
     }, 0);
     localStorage.setItem('__meeting_recurrenceJson', '');
+    document.addEventListener('dataChange', (e) => {
+      const { key, value } = e.data;
+      this.props.actions.changeProp(key, value);
+      this.props.form.setFieldsValue({
+        [key]: value
+      });
+    });
   }
   openRooms() {
     this.setState({

@@ -42,9 +42,17 @@ function getCookie(cname)
   return "";
 }
 
+function dispatchEvent(event, data) {
+    var evt = document.createEvent('HTMLEvents');
+    evt.initEvent(event, true, true);
+    evt.data = data;
+    document.dispatchEvent(evt);
+}
+
 export {
     generateOptions,
     getQuery,
     setCookie,
-    getCookie
+    getCookie,
+    dispatchEvent
 }
