@@ -187,19 +187,19 @@ class Recurrence extends Component {
                     startTime: time.clone(),
                     endTime: endTime.clone().dayOfYear(date + 1).hours(hour)
                 }, () => {
-                    dispatchEvent('timeChange', {
-                        key: 'startTime',
-                        value: time
-                    });
+                    // dispatchEvent('timeChange', {
+                    //     key: 'startTime',
+                    //     value: time
+                    // });
                 });
             } else {
                 this.setState({
                     startTime: time.clone(),
                 }, () => {
-                    dispatchEvent('timeChange', {
-                        key: 'startTime',
-                        value: time
-                    });
+                    // dispatchEvent('timeChange', {
+                    //     key: 'startTime',
+                    //     value: time
+                    // });
                 });
             }
         } else if(type === 'endTime') {
