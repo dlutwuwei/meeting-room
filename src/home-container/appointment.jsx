@@ -106,8 +106,12 @@ class Appointment extends Component {
       this.setValues(this.props);
     }, 0);
     localStorage.setItem('__meeting_recurrenceJson', '');
-    document.addEventListener('dataChange', (e) => {
-      const { key, value } = e.data;
+    document.addEventListener('timeChange', (e) => {
+      let { key, value } = e.data;
+      if(value._isAMomentObject) {
+        const day = this.props[key].dayOfYear();
+        value = value.clone().dayOfYear(day);
+      }
       this.props.actions.changeProp(key, value);
       this.props.form.setFieldsValue({
         [key]: value

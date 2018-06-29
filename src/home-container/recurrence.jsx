@@ -124,11 +124,15 @@ class Recurrence extends Component {
                 initState = recurrenceJson.yearly;
                 initState.recurrence_pattern = 4;
             }
-            const startTime = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
-            const endTime = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
+
+            const startTime1 = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
+            const endTime1 = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
+            const { startTime, endTime } = this.state;
+            const day1 = startTime.dayOfYear();
+            const day2 = endTime.dayOfYear()
             this.setState({
-                startTime: recurrenceJson.startDate ? startTime : props.data.startTime,
-                endTime: recurrenceJson.endDate ? endTime : props.data.endTime,
+                startTime: recurrenceJson.startDate ? startTime1 : props.data.startTime.clone().dayOfYear(day1),
+                endTime: recurrenceJson.endDate ? endTime1 : props.data.endTime.clone().dayOfYear(day2),
                 ...initState
             });
         }
@@ -173,6 +177,7 @@ class Recurrence extends Component {
         });
     }
     handleTime = (type, time) => {
+        
         if(type === 'startTime') {
             const { startTime, endTime } = this.state;
             const date = startTime.dayOfYear();
@@ -181,26 +186,34 @@ class Recurrence extends Component {
                 this.setState({
                     startTime: time.clone(),
                     endTime: endTime.clone().dayOfYear(date + 1).hours(hour)
+                }, () => {
+                    dispatchEvent('timeChange', {
+                        key: 'startTime',
+                        value: time
+                    });
                 });
             } else {
                 this.setState({
                     startTime: time.clone(),
+                }, () => {
+                    dispatchEvent('timeChange', {
+                        key: 'startTime',
+                        value: time
+                    });
                 });
             }
-            dispatchEvent('dataChange', {
-                key: 'startTime',
-                value: time
-            });
         } else if(type === 'endTime') {
             const date = this.state.startTime.dayOfYear();
             this.setState({
                 endTime: time.clone(),
                 duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
+            }, () => {
+                dispatchEvent('timeChange', {
+                    key: 'endTime',
+                    value: time
+                });
             });
-            dispatchEvent('dataChange', {
-                key: 'endTime',
-                value: time
-            });
+           
         }
     }
     onPatternChange = (e) => {

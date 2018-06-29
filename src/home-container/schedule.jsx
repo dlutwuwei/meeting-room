@@ -386,7 +386,7 @@ class Schedule extends Component {
     renderRecurrenceNotice = () => {
         const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
         const { endDate, startDate, numberOfOccurrences } = recurence;
-        const title = 'You can not change meeting time,'
+        const title = 'You can not change meeting time'
         if(numberOfOccurrences) {
             return `${title}, recurrence will happen ${numberOfOccurrences} times after ${startDate}`;
         } else if(recurence.endDate) {
@@ -398,8 +398,8 @@ class Schedule extends Component {
     render() {
         const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
-            timezone } = this.state;
-        const { startTime, endTime, showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList, isRecurrence } = this.props;
+            timezone, startTime, endTime } = this.state;
+        const {showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList, isRecurrence } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Spin spinning={this.state.loading}>
