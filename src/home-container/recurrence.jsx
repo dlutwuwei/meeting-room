@@ -102,14 +102,26 @@ class Recurrence extends Component {
         endType: 1,
         numberOfOccurrences: 1,
     }
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(nextProps) {
         this.setState({
-            visible: props.visible
+            visible: nextProps.visible
         });
+        // 更新时间
+        if(nextProps.visible) {
+            const { startTime, endTime } = this.state;
+            const day1 = startTime.dayOfYear();
+            const day2 = endTime.dayOfYear()
+            this.setState({
+                visible: nextProps.visible,
+                startTime: nextProps.data.startTime.clone().dayOfYear(day1),
+                endTime: nextProps.data.endTime.clone().dayOfYear(day2),
+            });
+        }
     }
     componentDidMount () {
         this.search();
         if(this.props.visible && this.props.isEdit) {
+            // 第一次打开，加载初始值
             this.initValues();
         }
     }
