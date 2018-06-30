@@ -9,6 +9,8 @@ class DatePicker extends Component {
     }
 }
 
+DatePicker.RangePicker = Date.RangePicker;
+
 class TimePicker extends Component {
     render () {
         return (
