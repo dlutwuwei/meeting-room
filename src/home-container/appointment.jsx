@@ -106,16 +106,18 @@ class Appointment extends Component {
       this.setValues(this.props);
     }, 0);
     localStorage.setItem('__meeting_recurrenceJson', '');
-    document.addEventListener('timeChange', (e) => {
+    document.addEventListener('dataChange', (e) => {
       let { key, value } = e.data;
       if(value._isAMomentObject) {
         const day = this.props[key].dayOfYear();
         value = value.clone().dayOfYear(day);
       }
-      this.props.actions.changeProp(key, value);
-      this.props.form.setFieldsValue({
-        [key]: value
-      });
+      if(value) {
+        this.props.actions.changeProp(key, value);
+        this.props.form.setFieldsValue({
+          [key]: value
+        });
+      }
     });
   }
   openRooms() {
@@ -347,7 +349,7 @@ class Appointment extends Component {
   renderRecurrenceNotice = () => {
     const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
     const { endDate, startDate, numberOfOccurrences } = recurence;
-    const title = 'You can not change meeting time,'
+    const title = 'You can not change meeting time'
     if(numberOfOccurrences) {
         return `${title}, recurrence will happen ${numberOfOccurrences} times after ${startDate}`;
     } else if(recurence.endDate) {
@@ -577,6 +579,7 @@ class Appointment extends Component {
             visible={showRecurrence}
             onClose={() => this.setState({ showRecurrence: false})}
             data={this.state.data}
+            isEdit={isEdit}
             changeProp={this.props.actions.changeProp}
         />
       </Spin>

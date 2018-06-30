@@ -27,8 +27,8 @@ class Nav extends Component {
     }
     openRecurrence() {
        this.setState({
-           showRecurrence: true
-       });
+            showRecurrence: true
+        });
     }
     handleImportant = (type) => {
         if(type == this.state.important) {

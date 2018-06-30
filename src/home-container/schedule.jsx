@@ -398,8 +398,18 @@ class Schedule extends Component {
     render() {
         const { data, date, showAddRooms,
             showAddAttendees, left, right, top,
-            timezone, startTime, endTime } = this.state;
-        const {showTimezone, locationOptions, receiverOptions,  roomsCheckedList, attendeesCheckedList, isRecurrence } = this.props;
+            timezone
+        } = this.state;
+        const {
+            showTimezone,
+            locationOptions,
+            receiverOptions,
+            roomsCheckedList,
+            attendeesCheckedList,
+            isRecurrence,
+            startTime,
+            endTime
+        } = this.props;
         const offsetUTC = timezone.label.split(' ')[0];
         return (
             <Spin spinning={this.state.loading}>

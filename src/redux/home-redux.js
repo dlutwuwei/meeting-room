@@ -38,7 +38,8 @@ const appointment = {
   attendeesCheckedList: [],
   roomsCheckedList: [],
   isRecurrence: false,
-  recurrenceJson: ''
+  recurrenceJson: '',
+  recurrence_pattern: 1
 }
 function appointmentReducer(state = appointment, action) {
   switch(action.type) {

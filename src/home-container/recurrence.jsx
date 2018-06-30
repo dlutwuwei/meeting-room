@@ -80,8 +80,8 @@ class Recurrence extends Component {
         visible: false,
         list: [],
         openKeys: [],
-        startTime: moment(),
-        endTime:  moment(),
+        startTime: this.props.data.startTime || moment(),
+        endTime:  this.props.data.endTime || moment(),
         recurrence_pattern: 1,
         recurrence: [],
         duration: 1,
@@ -106,36 +106,44 @@ class Recurrence extends Component {
         this.setState({
             visible: props.visible
         });
-        if(props.visible) {
-            let initState = {};
-
-            // 显示保存的值
-            const recurrenceJson = props.data.recurrenceJson || JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
-            if(recurrenceJson.daily) {
-                initState = recurrenceJson.daily;
-                initState.recurrence_pattern = 1;
-            } else if(recurrenceJson.weekly) {
-                initState = recurrenceJson.weekly;
-                initState.recurrence_pattern = 2;
-            } else if(recurrenceJson.monthly) {
-                initState = recurrenceJson.monthly;
-                initState.recurrence_pattern = 3;
-            } else if(recurrenceJson.yearly) {
-                initState = recurrenceJson.yearly;
-                initState.recurrence_pattern = 4;
-            }
-
-            const startTime1 = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
-            const endTime1 = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
-            const { startTime, endTime } = this.state;
-            const day1 = startTime.dayOfYear();
-            const day2 = endTime.dayOfYear()
-            this.setState({
-                startTime: recurrenceJson.startDate ? startTime1 : props.data.startTime.clone().dayOfYear(day1),
-                endTime: recurrenceJson.endDate ? endTime1 : props.data.endTime.clone().dayOfYear(day2),
-                ...initState
-            });
+    }
+    componentDidMount () {
+        this.search();
+        if(this.props.visible && this.props.isEdit) {
+            this.initValues();
         }
+    }
+    
+    initValues() {
+        let initState = {};
+        const props = this.props;
+        // 显示保存的值
+        initState.recurrence_pattern = this.state.recurrence_pattern;
+        const recurrenceJson = props.data.recurrenceJson || JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
+        if(recurrenceJson.daily) {
+            initState = recurrenceJson.daily;
+            initState.recurrence_pattern = 1;
+        } else if(recurrenceJson.weekly) {
+            initState = recurrenceJson.weekly;
+            initState.recurrence_pattern = 2;
+        } else if(recurrenceJson.monthly) {
+            initState = recurrenceJson.monthly;
+            initState.recurrence_pattern = 3;
+        } else if(recurrenceJson.yearly) {
+            initState = recurrenceJson.yearly;
+            initState.recurrence_pattern = 4;
+        }
+
+        const startTime1 = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
+        const endTime1 = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
+        const { startTime, endTime } = this.state;
+        const day1 = startTime.dayOfYear();
+        const day2 = endTime.dayOfYear()
+        this.setState({
+            startTime: recurrenceJson.startDate ? startTime1 : props.data.startTime.clone().dayOfYear(day1),
+            endTime: recurrenceJson.endDate ? endTime1 : props.data.endTime.clone().dayOfYear(day2),
+            ...initState
+        });
     }
     search(startTime, endTime, equipment, capacity) {
         fetch.get('/api/meeting/getRooms', {
@@ -149,9 +157,6 @@ class Recurrence extends Component {
                 list: r.data.list
             });
         });
-    }
-    componentDidMount() {
-        this.search();
     }
     closeModal() {
         this.setState({
@@ -187,19 +192,19 @@ class Recurrence extends Component {
                     startTime: time.clone(),
                     endTime: endTime.clone().dayOfYear(date + 1).hours(hour)
                 }, () => {
-                    // dispatchEvent('timeChange', {
-                    //     key: 'startTime',
-                    //     value: time
-                    // });
+                    dispatchEvent('dataChange', {
+                        key: 'startTime',
+                        value: time
+                    });
                 });
             } else {
                 this.setState({
                     startTime: time.clone(),
                 }, () => {
-                    // dispatchEvent('timeChange', {
-                    //     key: 'startTime',
-                    //     value: time
-                    // });
+                    dispatchEvent('dataChange', {
+                        key: 'startTime',
+                        value: time
+                    });
                 });
             }
         } else if(type === 'endTime') {
@@ -208,7 +213,7 @@ class Recurrence extends Component {
                 endTime: time.clone(),
                 duration: time.clone().dayOfYear(date).diff(this.state.startTime, 'minutes')/30
             }, () => {
-                dispatchEvent('timeChange', {
+                dispatchEvent('dataChange', {
                     key: 'endTime',
                     value: time
                 });
@@ -217,9 +222,10 @@ class Recurrence extends Component {
         }
     }
     onPatternChange = (e) => {
-        this.setState({
-            recurrence_pattern: e.target.value
-        });
+        // this.setState({
+        //     recurrence_pattern: e.target.value
+        // });
+        this.props.changeProp('recurrence_pattern', e.target.value);
     }
     renderPattern(recurrence_pattern) {
         let pattern;
@@ -342,13 +348,12 @@ class Recurrence extends Component {
             yearType,
             endType,
             numberOfOccurrences,
-            recurrence_pattern,
             timeZone,
             duration,
             startTime,
             endTime 
         } = this.state;
-
+        const { recurrence_pattern } = this.props.data;
         let recurrent_parma = {};
         switch(recurrence_pattern) {
             case 1:
@@ -425,21 +430,12 @@ class Recurrence extends Component {
         this.closeModal();
         this.props.changeProp('isRecurrence', false)
     }
-    render () {
-        const { visible, timezone, startTime, endTime, duration, recurrence_pattern, endType, numberOfOccurrences } = this.state;
+    renderMain = () => {
+        const { timezone, startTime, endTime, duration, endType, numberOfOccurrences } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
-        return (
-            <Modal
-            title="Add Recurrence"
-            style={{ top: 20 }}
-            visible={visible}
-            width={600}
-            onOk={() => this.closeModal()}
-            onCancel={() => this.closeModal()}
-            footer={null}
-            wrapClassName="add-recurrence-container"
-            >
-                <Card className="my-card" title={"Appointment Time"} bordered={false}>
+        const { recurrence_pattern } = this.props.data;
+        return <div>
+            <Card className="my-card" title={"Appointment Time"} bordered={false}>
                     <div className="rcu-item">
                         <label htmlFor="" className="rcu-title">Start Time:</label>
                         <TimePicker
@@ -514,7 +510,7 @@ class Recurrence extends Component {
                 <Card className="my-card" title={'Recurrence Pattern'} bordered={false}>
                     <div className="section">
                         <div className="section-left">
-                            <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={this.state.recurrence_pattern}>
+                            <RadioGroup className="my-radio-group" onChange={this.onPatternChange} value={recurrence_pattern}>
                                 <Radio value={1}>Daily</Radio>
                                 <Radio value={2}>Weekly</Radio>
                                 <Radio value={3}>Monthly</Radio>
@@ -572,6 +568,22 @@ class Recurrence extends Component {
                     }}>Cancel</Button>
                     <Button type="default" size="large" onClick={this.handleCancel}>Remove Recurrence</Button>
                 </div>
+        </div>
+    }
+    render () {
+        const { visible } = this.state;
+        return (
+            <Modal
+            title="Add Recurrence"
+            style={{ top: 20 }}
+            visible={visible}
+            width={600}
+            onOk={() => this.closeModal()}
+            onCancel={() => this.closeModal()}
+            footer={null}
+            wrapClassName="add-recurrence-container"
+            >
+                {visible && this.renderMain()}
             </Modal>
         )
     }
