@@ -107,53 +107,55 @@ class Recurrence extends Component {
             visible: nextProps.visible
         });
         // 更新时间
-        if(nextProps.visible) {
+        if(nextProps.visible && !nextProps.isEdit) {
+            // edit状态下，不使用redux的值
             const { startTime, endTime } = this.state;
             const day1 = startTime.dayOfYear();
             const day2 = endTime.dayOfYear()
             this.setState({
                 visible: nextProps.visible,
                 startTime: nextProps.data.startTime.clone().dayOfYear(day1),
-                endTime: nextProps.data.endTime.clone().dayOfYear(day2),
+                endTime: nextProps.data.endTime.clone().dayOfYear(day2)
             });
         }
     }
     componentDidMount () {
         this.search();
-        if(this.props.visible && this.props.isEdit) {
+        if(this.props.isEdit) {
             // 第一次打开，加载初始值
             this.initValues();
         }
     }
-    
+    getRecurrencePattern = (recurrenceJson) => {
+        let pattern = 1;
+        if(recurrenceJson.daily) {
+            pattern = 1;
+        } else if(recurrenceJson.weekly) {
+            pattern = 2;
+        } else if(recurrenceJson.monthly) {
+            pattern = 3;
+        } else if(recurrenceJson.yearly) {
+            pattern = 4;
+        }
+        return pattern;
+    }
     initValues() {
         let initState = {};
         const props = this.props;
         // 显示保存的值
         initState.recurrence_pattern = this.state.recurrence_pattern;
         const recurrenceJson = props.data.recurrenceJson || JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
-        if(recurrenceJson.daily) {
-            initState = recurrenceJson.daily;
-            initState.recurrence_pattern = 1;
-        } else if(recurrenceJson.weekly) {
-            initState = recurrenceJson.weekly;
-            initState.recurrence_pattern = 2;
-        } else if(recurrenceJson.monthly) {
-            initState = recurrenceJson.monthly;
-            initState.recurrence_pattern = 3;
-        } else if(recurrenceJson.yearly) {
-            initState = recurrenceJson.yearly;
-            initState.recurrence_pattern = 4;
-        }
+        initState.recurrence_pattern = this.getRecurrencePattern(recurrenceJson);
 
-        const startTime1 = moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime);
-        const endTime1 = moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime);
+       
         const { startTime, endTime } = this.state;
         const day1 = startTime.dayOfYear();
-        const day2 = endTime.dayOfYear()
+        const day2 = endTime.dayOfYear();
+        const startTime1 = recurrenceJson.startDate ? moment(recurrenceJson.startDate + ' ' + recurrenceJson.startTime) : moment();
+        const endTime1 = recurrenceJson.endDate ? moment((recurrenceJson.endDate || props.data.endTime.format('YYYY-MM-DD')) + ' ' + recurrenceJson.endTime) : moment();
         this.setState({
-            startTime: recurrenceJson.startDate ? startTime1 : props.data.startTime.clone().dayOfYear(day1),
-            endTime: recurrenceJson.endDate ? endTime1 : props.data.endTime.clone().dayOfYear(day2),
+            startTime: recurrenceJson.startDate ? startTime1 : (props.data.startTime || moment()).clone().dayOfYear(day1),
+            endTime: recurrenceJson.endDate ? endTime1 : (props.data.endTime || moment()).clone().dayOfYear(day2),
             ...initState
         });
     }
@@ -234,9 +236,6 @@ class Recurrence extends Component {
         }
     }
     onPatternChange = (e) => {
-        // this.setState({
-        //     recurrence_pattern: e.target.value
-        // });
         this.props.changeProp('recurrence_pattern', e.target.value);
     }
     renderPattern(recurrence_pattern) {
@@ -445,8 +444,8 @@ class Recurrence extends Component {
     renderMain = () => {
         const { timezone, startTime, endTime, duration, endType, numberOfOccurrences } = this.state;
         const offsetUTC = timezone.label.split(' ')[0];
-        const { recurrence_pattern } = this.props.data;
-        return <div>
+        const { recurrence_pattern = 1 } = this.props.data;
+        return <div key={Math.random()}>
             <Card className="my-card" title={"Appointment Time"} bordered={false}>
                     <div className="rcu-item">
                         <label htmlFor="" className="rcu-title">Start Time:</label>
@@ -595,7 +594,7 @@ class Recurrence extends Component {
             footer={null}
             wrapClassName="add-recurrence-container"
             >
-                {visible && this.renderMain()}
+                {this.renderMain()}
             </Modal>
         )
     }

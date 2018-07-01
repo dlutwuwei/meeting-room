@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, Modal, Table, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
+import _ from 'lodash'
 const Option = AutoComplete.Option;
 
 class AddAttendees extends Component {
@@ -87,7 +88,7 @@ class AddAttendees extends Component {
                     dataSource={dataSource}
                     style={{ width: 200 }}
                     onSelect={this.onSelect}
-                    onSearch={this.handleSearch}
+                    onSearch={_.debounce(this.handleSearch, 800)}
                     placeholder="input here"
                     labelInValue
                 >

@@ -8,6 +8,7 @@ import moment from 'moment';
 import fetch from 'lib/fetch';
 import LocationRoom from 'components/location';
 import { connect } from 'react-redux';
+import _ from 'lodash'
 
 import AddRooms from './addRooms';
 import Timezone from '../constant/timezone';
@@ -120,6 +121,16 @@ class Appointment extends Component {
       }
     });
   }
+  componentWillReceiveProps (nextProps) {
+    if(this.props.recurrence_pattern !== nextProps.recurrence_pattern) {
+      const data = this.state.data;
+      data.recurrence_pattern = nextProps.recurrence_pattern;
+      this.setState({
+        data
+      });
+    }
+  }
+  
   openRooms() {
     this.setState({
       showAddRooms: true
@@ -335,6 +346,7 @@ class Appointment extends Component {
       const { startTime, endTime } = r.data;
       r.data.startTime = moment(startTime*1000);
       r.data.endTime = moment(endTime*1000);
+
       this.setState({
         data: r.data
       }, () => {
@@ -418,7 +430,7 @@ class Appointment extends Component {
                     notFoundContent={fetching ? <Spin size="small" /> : null}
                     filterOption={false}
                     onSelect={this.handleRecevierSelect}
-                    onSearch={this.handleSearch}
+                    onSearch={_.debounce(this.handleSearch, 800)}
                     onDeselect={this.handelDeselect}
                   >
                     {dataSource.map((item, i) => <Option key={i} value={item.mail} title={item.id}>{item.mail}</Option>)}
