@@ -386,15 +386,24 @@ class Schedule extends Component {
     renderRecurrenceNotice = () => {
         const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
         const { endDate, startDate, numberOfOccurrences } = recurence;
-        const title = 'You can not change meeting time'
-        if(numberOfOccurrences) {
-            return `${title}, recurrence will happen ${numberOfOccurrences} times after ${startDate}`;
-        } else if(recurence.endDate) {
-            return `${title}, recurrence is from ${startDate} to ${endDate}`;
-        } else {
-            return `${title}, recurrence is from ${startDate}`;
+        let pattern = '';
+        if(recurence.daily) {
+            pattern = `Occurs every ${recurence.daily.everyWorkDay ? 'work day' : 'day'}`;
+        } else if(recurence.weekly) {
+            pattern = `Occurs every ${recurence.weekly.everyWeeks} weeks`;
+        } else if(recurence.monthly) {
+            pattern = `Occurs every month`;
+        } else if(recurence.yearly) {
+            pattern = `Occurs every year`;
         }
-    }
+        if(numberOfOccurrences) {
+            return `${pattern}, effective ${numberOfOccurrences} times after ${startDate}`;
+        } else if(recurence.endDate) {
+            return `${pattern}, effective ${startDate} util ${endDate}`;
+        } else {
+            return `${pattern}, effective ${startDate}`;
+        }
+      }
     render() {
         const { data, date, showAddRooms,
             showAddAttendees, left, right, top,

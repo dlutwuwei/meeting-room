@@ -364,7 +364,7 @@ class Recurrence extends Component {
             startTime,
             endTime 
         } = this.state;
-        const { recurrence_pattern } = this.props.data;
+        const { recurrence_pattern } = this.state;
         let recurrent_parma = {};
         switch(recurrence_pattern) {
             case 1:
