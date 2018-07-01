@@ -361,6 +361,9 @@ class Appointment extends Component {
   renderRecurrenceNotice = () => {
     const recurence = JSON.parse(localStorage.getItem('__meeting_recurrenceJson') || '{}');
     const { endDate, startDate, numberOfOccurrences } = recurence;
+    if(!startDate) {
+      return '';
+    }
     let pattern = '';
     if(recurence.daily) {
         pattern = `Occurs every ${recurence.daily.everyWorkDay ? 'work day' : 'day'}`;
