@@ -104,7 +104,8 @@ class Recurrence extends Component {
     }
     componentWillReceiveProps(nextProps) {
         this.setState({
-            visible: nextProps.visible
+            visible: nextProps.visible,
+            recurrence_pattern: nextProps.data.recurrence_pattern
         });
         // 更新时间
         if(nextProps.visible && !nextProps.isEdit) {
