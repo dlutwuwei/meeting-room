@@ -106,7 +106,6 @@ class Appointment extends Component {
     setTimeout(() => {
       this.setValues(this.props);
     }, 0);
-    localStorage.setItem('__meeting_recurrenceJson', '');
     document.addEventListener('dataChange', (e) => {
       let { key, value } = e.data;
       if(value._isAMomentObject) {
