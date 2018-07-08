@@ -299,7 +299,8 @@ class Schedule extends Component {
     sendAppointment(data) {
         this.setState({
             loading: true
-        })
+        });
+        data.timezoneId = JSON.parse(localStorage.getItem('__meeting_timezone')).key;
         fetch.post(`/api/meeting/add?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
             message.success('预定成功');
             this.setState({

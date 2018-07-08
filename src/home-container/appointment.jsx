@@ -206,6 +206,7 @@ class Appointment extends Component {
     this.setState({
         loading: true
     })
+    data.timezoneId = JSON.parse(localStorage.getItem('__meeting_timezone')).key;
     const url = this.props.isEdit ? '/api/meeting/update' : '/api/meeting/add'
     fetch.post(`${url}?token=${localStorage.getItem('__meeting_token') || ''}`, data).then(() => {
       message.success('預定成功');
