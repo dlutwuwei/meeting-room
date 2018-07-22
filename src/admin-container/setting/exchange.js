@@ -35,6 +35,9 @@ class Exchange extends Component {
             token: localStorage.getItem('__meeting_token'),
             areaId
         }).then((r) => {
+            if(r.data.areaId === 0) {
+                r.data.areaId = areaId;
+            }
             this.props.form.setFieldsValue(r.data);
         }).catch(() => {
             message.error(__('获取设置失败'));
