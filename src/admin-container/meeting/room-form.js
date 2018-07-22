@@ -76,37 +76,37 @@ class Room extends Component {
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="会议室名称"
+                    label={__('会议室名称')}
                 >
                     {form.getFieldDecorator('name', {
-                        rules: [{ required: true, message: '请输入会议室名称' }],
+                        rules: [{ required: true, message: __('请输入会议室名称') }],
                         initialValue: values.name
                     })(
-                        <Input placeholder="请输入会议室名称" />
+                        <Input placeholder={__('请输入会议室名称')} />
                     )}
                 </FormItem>
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="邮箱"
+                    label={__("邮箱")}
                 >
                     {form.getFieldDecorator('mail', {
-                        rules: [{ required: true, message: '请输入邮箱' }],
+                        rules: [{ required: true, message: __('请输入邮箱') }],
                         initialValue: values.mail
                     })(
-                        <Input placeholder="请输入邮箱" />
+                        <Input placeholder={__('请输入邮箱')} />
                     )}
                 </FormItem>
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="所属区域"
+                    label={__("所属区域")}
                 >
                     {form.getFieldDecorator('areaId', {
-                        rules: [{ required: true, message: '请输入区域' }],
+                        rules: [{ required: true, message: __('请输入区域') }],
                         initialValue: values.areaId
                     })(
-                        <Select style={{ width: 120 }} placeholder="请输入区域" >
+                        <Select style={{ width: 120 }} placeholder={__("请输入区域")} >
                             { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                         </Select>
                     )}
@@ -114,16 +114,16 @@ class Room extends Component {
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="设备"
+                    label={__("设备")}
                 >
                     {form.getFieldDecorator('devices', {
-                        rules: [{ required: false, message: '请输入设备' }],
+                        rules: [{ required: false, message: __('请选择设备') }],
                         initialValue: devices
                     })(
                         <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="请选择设备"
+                            placeholder={__('请选择设备')}
                         >
                             {deviceChildren}
                         </Select>
@@ -132,37 +132,37 @@ class Room extends Component {
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="楼层"
+                    label={__('楼层')}
                 >
                     {form.getFieldDecorator('floor', {
-                        rules: [{ required: true, message: '请输入楼层' }],
+                        rules: [{ required: true, message: __('请输入楼层') }],
                         initialValue: values.floor
                     })(
-                        <Input placeholder="请输入楼层" />
+                        <Input placeholder={__('请输入楼层')} />
                     )}
                 </FormItem>
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="大小"
+                    label={__('大小')}
                 >
                     {form.getFieldDecorator('capacity', {
-                        rules: [{ required: true, message: '请输入容量' }],
+                        rules: [{ required: true, message: __('请输入容量') }],
                         initialValue: values.capacity
                     })(
-                        <Input placeholder="请输入容量" />
+                        <Input placeholder={__("请输入容量")} />
                     )}
                 </FormItem>
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="会议室类型"
+                    label={__('会议室类型')}
                 >
                     {form.getFieldDecorator('roomType', {
                         rules: [{ required: true, message: '请输入类型' }],
                         initialValue: values.roomType
                     })(
-                        <Select style={{ width: 120 }} placeholder="请输入类型" onChange={(val) => {
+                        <Select style={{ width: 120 }} placeholder={__('请输入类型')} onChange={(val) => {
                             this.setState({
                                 showOnlyUsers: val === 2 || val === 3
                             });
@@ -174,7 +174,7 @@ class Room extends Component {
                 {this.state.showOnlyUsers && <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="预留给"
+                    label={__('预留给')}
                 >
                     {form.getFieldDecorator('onlyForUsers', {
                         initialValue: values.onlyForUsers ? values.onlyForUsers.split(',') : [],
@@ -186,9 +186,9 @@ class Room extends Component {
                     })(
                         <Select
                             style={{ width: '100%' }}
-                            mode="multiple"
-                            placeholder="请输入预留用户"
-                            notFoundContent={this.state.fetching ? <Spin size="small" /> : null}
+                            mode={__('multiple')}
+                            placeholder={__('请输入预留用户')}
+                            notFoundContent={this.state.fetching ? <Spin size='small' /> : null}
                             filterOption={false}
                             onSelect={this.handleRecevierSelect}
                             onSearch={this.handleSearch}
@@ -201,13 +201,13 @@ class Room extends Component {
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="所属部门"
+                    label={__('所属部门')}
                 >
                     {form.getFieldDecorator('departmentId', {
                         rules: [{ required: false, message: '请输入部门' }],
                         initialValue: values.departmentId
                     })(
-                        <Select style={{ width: 120 }} placeholder="请输入部门" >
+                        <Select style={{ width: 120 }} placeholder={__('请输入部门')} >
                             { departments.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                         </Select>
                     )}
@@ -215,19 +215,19 @@ class Room extends Component {
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="设备码"
+                    label={__('设备码')}
                 >
                     {form.getFieldDecorator('deviceCode', {
                         rules: [{ required: false, message: '请输入设备码' }],
                         initialValue: values.deviceCode
                     })(
-                        <Input placeholder="请输入设备码" />
+                        <Input placeholder={__('请输入设备码')} />
                     )}
                 </FormItem>
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
-                    label="可预订"
+                    label={__('可预订')}
                 >
                     {form.getFieldDecorator('isEnable', {
                         rules: [{ required: false, message: '请输入' }],

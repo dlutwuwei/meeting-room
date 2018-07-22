@@ -96,7 +96,7 @@ export default (type, onCreated) => {
                             after && after();
                             onCreated();
                         }).catch(() => {
-                            message.error('修改失败')
+                            message.error(__('修改失败'));
                             handleModalVisible(false);
                         });
                     });

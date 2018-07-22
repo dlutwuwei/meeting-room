@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Breadcrumb, message, Select } from 'antd';
+import { Form, Input, Button, Breadcrumb, message, Radio } from 'antd';
 import fetch from 'lib/fetch';
+const RadioGroup = Radio.Group;
 
 const FormItem = Form.Item;
 
@@ -27,13 +28,17 @@ const formItemLayout = {
     },
   };
 class Exchange extends Component {
+    constructor() {
+        super();
+        this.areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+    }
     componentDidMount () {
         this.fetchExchangeSetting();
     }
-    fetchExchangeSetting (areaId = 0) {
+    fetchExchangeSetting (areaId) {
         fetch.get('/api/systemSetting/getSetting', {
             token: localStorage.getItem('__meeting_token'),
-            areaId
+            areaId: areaId || this.areas[0].id
         }).then((r) => {
             if(r.data.areaId === 0) {
                 r.data.areaId = areaId;
@@ -58,13 +63,12 @@ class Exchange extends Component {
             });
         });
     }
-    handleArea = (areaId) => {
-        this.fetchExchangeSetting(areaId)
+    handleArea = (e) => {
+        this.fetchExchangeSetting(e.target.value)
     }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
-
+        const areasOptions = this.areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>))
         return (
             <div>
                 <Breadcrumb separator=">">
@@ -78,11 +82,11 @@ class Exchange extends Component {
                     >
                         {getFieldDecorator('areaId', {
                             rules: [{ required: true, message: __("请选择区域") }],
-                            initialValue: ''
+                            initialValue: +this.areas[0].id
                         })(
-                            <Select style={{ width: 120 }} placeholder={__("请选择区域")} onChange={this.handleArea}>
-                                { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
-                            </Select>
+                            <RadioGroup onChange={this.handleArea}>
+                                {areasOptions}
+                            </RadioGroup>
                         )}
                     </FormItem>
                     <FormItem {...formItemLayout} label={__("exchange协议")}>
