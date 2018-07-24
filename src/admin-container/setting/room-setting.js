@@ -83,8 +83,8 @@ class RoomSettings extends Component {
                 this.setState({
                     imageUrl1: r.data.bgForFree,
                     imageUrl2: r.data.bgForBusy,
-                    selectFree: r.data.isDefaultBgForFree,
-                    selectBusy: r.data.isDefaultBgForBusy,
+                    selectFree: !!r.data.isDefaultBgForFree,
+                    selectBusy: !!r.data.isDefaultBgForBusy,
                     responseMsg: r.data.responseMessage,
                     loading: false
                 });
@@ -161,10 +161,10 @@ class RoomSettings extends Component {
             this.setState({
                 imageUrl1: r.data.bgForFree,
                 imageUrl2: r.data.bgForBusy,
-                responseMsg: r.data.responseMessage
+                responseMsg: r.data.responseMessage,
+                selectBusy: !!r.data.isDefaultBgForBusy,
+                selectFree: !!r.data.isDefaultBgForFree
             });
-            delete r.data.bgForBusy;
-            delete r.data.bgForFree;
             this.props.form.setFieldsValue(r.data);
             this.setState({
                 loading: false
