@@ -53,9 +53,9 @@ class CreateModal extends Component {
 }
 
 export default (type, onCreated) => {
-    const brands = JSON.parse(localStorage.getItem('__meeting_brand')|| '[]');
-    const divisions = JSON.parse(localStorage.getItem('__meeting_division'));
-    const devices = JSON.parse(localStorage.getItem('__meeting_device'));
+    const brands = JSON.parse(localStorage.getItem('__train_brand')|| '[]');
+    const divisions = JSON.parse(localStorage.getItem('__train_division'));
+    const devices = JSON.parse(localStorage.getItem('__train_device'));
 
     let areas = [
         {
@@ -77,6 +77,7 @@ export default (type, onCreated) => {
             name: __('普通管理员')
         }
     ];
+
     switch (type) {
         case 'device':
             return Form.create()((props) => {
@@ -237,7 +238,9 @@ export default (type, onCreated) => {
                                 rules: [{ required: true, message: __('请输入名称') }],
                                 initialValue: values.brandId
                             })(
-                                <Input placeholder={__('请输入')} />
+                                <Select style={{ width: 120 }}>
+                                    {brands.map(item => <Option value={item.id}>{item.name}</Option>)}
+                                </Select>
                             )}
                         </FormItem>
                         <FormItem
@@ -583,7 +586,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('remark', {
                                 rules: [{ required: false, message: __('请输入备注') }],
-                                initialValue: values.remark
+                                initialValue: values.remark || ''
                             })(
                                 <Input placeholder={__('请输入备注')} />
                             )}

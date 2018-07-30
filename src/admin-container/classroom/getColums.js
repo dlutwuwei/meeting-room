@@ -51,7 +51,7 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'remark',
                 },
                 {
-                    title:  __('$1'),
+                    title:  __('操作'),
                     render: (text, record, index) => {
                         return (
                             <Fragment>
@@ -177,6 +177,13 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'roleName',
                 },
                 {
+                    title:  __('状态'),
+                    dataIndex: 'state',
+                    render: (text, record) => {
+                        return record.state === 1 ? '正常' : '禁用';
+                    }
+                },
+                {
                     title:  __('操作'),
                     render: (text, record, index) => (
                         <Fragment>
@@ -232,6 +239,18 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title:  __('大小'),
                     dataIndex: 'capacity',
+                },
+                {
+                    title:  __('面积'),
+                    dataIndex: 'area',
+                },
+                {
+                    title:  __('价格'),
+                    dataIndex: 'price',
+                },
+                {
+                    title:  __('楼层'),
+                    dataIndex: 'floor',
                 },
                 {
                     title:  __('状态'),

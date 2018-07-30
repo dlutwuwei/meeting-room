@@ -85,9 +85,9 @@ export default class BasicList extends PureComponent {
                 }), fetch.get(this.getUrl('device'), {
                     token: localStorage.getItem('__meeting_token')
                 })]).then(([brand, division, device ]) => {
-                    localStorage.setItem('__meeting_brand', JSON.stringify(brand.data.list));
-                    localStorage.setItem('__meeting_division', JSON.stringify(division.data.list));
-                    localStorage.setItem('__meeting_device', JSON.stringify(device.data.list));
+                    localStorage.setItem('__train_brand', JSON.stringify(brand.data.list));
+                    localStorage.setItem('__train_division', JSON.stringify(division.data.list));
+                    localStorage.setItem('__train_device', JSON.stringify(device.data.list));
 
                     this.setState({
                         data: res.data.length ? res.data: res.data.list,

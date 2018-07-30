@@ -593,6 +593,7 @@ export default class Train extends React.Component {
   renderModal() {
     const { showModal, isEdit} = this.state;
     const { room_info, train_info, user_info } = this.formInfo;
+
     const room_dom = (
       <div className="room-container">
         <div className="form-header">培训室信息:</div>
