@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Select, Checkbox, Spin } from 'antd';
+import { Form, Input, Select, Checkbox, Spin, message, Icon, Upload } from 'antd';
 import fetch from 'lib/fetch';
 
 const FormItem = Form.Item;
@@ -10,6 +10,24 @@ deviceChildren.push(<Option key={'hasTV'}>电视</Option>);
 deviceChildren.push(<Option key={'hasPhone'}>电话</Option>);
 deviceChildren.push(<Option key={'hasWhiteBoard'}>白板</Option>);
 deviceChildren.push(<Option key={'hasProjector'}>投影仪</Option>);
+
+function getBase64(img, callback) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+    const isJPG = file.type === 'image/png';
+    if (!isJPG) {
+        message.error('You can only upload PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 5;
+    if (!isLt2M) {
+        message.error('Image must smaller than 5MB!');
+    }
+    return isJPG && isLt2M;
+}
 
 class Room extends Component {
     state = {
@@ -58,6 +76,31 @@ class Room extends Component {
           });
         });
       }
+    handleChange = (type, info) => {
+        if (info.file.status === 'uploading') {
+            this.setState({ loading: true });
+            return;
+          }
+          if (info.file.status === 'done') {
+            const image = info.file.response.data;
+            if(type === 'free') {
+                this.setState({
+                    loading1: false,
+                    imageUrl1: image
+                })
+            } else {
+              this.setState({
+                  loading2: false,
+                  imageUrl2: image
+              });
+            }
+            // Get this url from response in real world.
+            getBase64(info.file.originFileObj, () => this.setState({
+              // [type === 'free' ? 'imageUrl1' : 'imageUrl2' ]: imageUrl,
+              loading: false,
+            }));
+          }
+    }
     render () {
         const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
         const roomTypes = JSON.parse(localStorage.getItem('__meeting_type') || '[]');
@@ -71,6 +114,19 @@ class Room extends Component {
             }
         });
 
+        const { loading1, loading2, imageUrl1 = values.bgForFree, imageUrl2 = values.bgForBusy } = this.state;
+        const uploadButton1 = (
+            <div>
+                <Icon type={loading1 ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">Upload</div>
+            </div>
+        );
+        const uploadButton2 = (
+            <div>
+                <Icon type={loading2 ? 'loading' : 'plus'} />
+                <div className="ant-upload-text">Upload</div>
+            </div>
+        );
         return (
             <div>
                 <FormItem
@@ -235,6 +291,50 @@ class Room extends Component {
                         valuePropName: 'checked'
                     })(
                         <Checkbox></Checkbox>
+                    )}
+                </FormItem>
+                <FormItem
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 15 }}
+                    label={__('会议室空闲时')}
+                >
+                    {form.getFieldDecorator('bgForFree', {
+                        rules: [{ required: false, message: '请输入' }],
+                        initialValue: values.bgForFree,
+                    })(
+                        <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action={`/api/meetingRoomSetting/uploadbg?token=${localStorage.getItem('__meeting_token')}`}
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleChange.bind(this, 'free')}
+                            >
+                            {(imageUrl1 && imageUrl1 !== 'null') ? <img src={imageUrl1} alt="" /> : uploadButton1}
+                        </Upload>
+                    )}
+                </FormItem>
+                <FormItem
+                    labelCol={{ span: 5 }}
+                    wrapperCol={{ span: 15 }}
+                    label={__('会议室忙碌时')}
+                >
+                    {form.getFieldDecorator('bgForBusy', {
+                        rules: [{ required: false, message: '请输入' }],
+                        initialValue: values.bgForBusy,
+                    })(
+                        <Upload
+                            name="avatar"
+                            listType="picture-card"
+                            className="avatar-uploader"
+                            showUploadList={false}
+                            action={`/api/meetingRoomSetting/uploadbg?token=${localStorage.getItem('__meeting_token')}`}
+                            beforeUpload={beforeUpload}
+                            onChange={this.handleChange.bind(this, 'busy')}
+                            >
+                            {(imageUrl2 && imageUrl2 !== 'null') ? <img src={imageUrl2} alt="" /> : uploadButton2}
+                        </Upload>
                     )}
                 </FormItem>
             </div>

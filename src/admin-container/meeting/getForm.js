@@ -213,6 +213,12 @@ export default (type, onCreated) => {
                             fieldsValue.id = values.id;
                             // fieldsValue.areaId = values.areaId;
                         }
+                        if(fieldsValue.bgForFree && fieldsValue.bgForFree!=='null') {
+                            fieldsValue.bgForFree = fieldsValue.bgForFree.file.response.data;
+                        }
+                        if(fieldsValue.bgForBusy && fieldsValue.bgForBusy!=='null') {
+                            fieldsValue.bgForBusy = fieldsValue.bgForBusy.file.response.data;
+                        }
                         if(fieldsValue.onlyForUsers) {
                             fieldsValue.onlyForUsers = fieldsValue.onlyForUsers.join(',');
                         }
