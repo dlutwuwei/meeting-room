@@ -18183,6 +18183,16 @@ circle:nth-child(12n + 12) {
 .avatar-uploader .ant-upload img {
   width: 128px;
   height: 128px;
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.image-wrapper button {
+  position: absolute;
+  left: 0;
+  top: 0;
 }.list-container {
   margin-top: 20px;
 }

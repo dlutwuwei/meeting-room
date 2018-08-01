@@ -61,7 +61,6 @@ export default class BasicList extends PureComponent {
         }, {
             signal: abortCtl.signal
         }).then(res => {
-            done && done();
             if(type === 'rooms') {
                 // 会议室信息展示需要
                 Promise.all([fetch.get(this.getUrl('area'), {
@@ -80,6 +79,7 @@ export default class BasicList extends PureComponent {
                         pageSize: res.data.pageSize,
                         totalPage: res.data.totalPage
                     });
+                    done && done();
                 });
             } else {
                 this.setState({
@@ -88,6 +88,7 @@ export default class BasicList extends PureComponent {
                     pageSize: res.data.pageSize,
                     totalPage: res.data.totalPage,
                 });
+                done && done();
             }
         }).catch(() => {
             done && done();

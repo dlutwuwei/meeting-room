@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Select, Checkbox, Spin, message, Icon, Upload } from 'antd';
+import { Form, Input, Select, Checkbox, Spin, message, Icon, Upload, Button } from 'antd';
 import fetch from 'lib/fetch';
 
 const FormItem = Form.Item;
@@ -311,8 +311,16 @@ class Room extends Component {
                             beforeUpload={beforeUpload}
                             onChange={this.handleChange.bind(this, 'free')}
                             >
-                            {(imageUrl1 && imageUrl1 !== 'null') ? <img src={imageUrl1} alt="" /> : uploadButton1}
+                            {(imageUrl1 && imageUrl1 !== 'null') ? <div><img src={imageUrl1} alt="" /><Button size="small" onClick={(e) => {
+                                e.stopPropagation();
+                                this.setState({ imageUrl1: null });
+                                form.setFieldsValue({
+                                    bgForFree: ''
+                                });
+                            }}>{__('删除')}</Button></div> : uploadButton1}
+        
                         </Upload>
+                        // <Button size="small" onClick={() => {this.setState({ imageUrl1: null })}} >{__('删除')}</Button>
                     )}
                 </FormItem>
                 <FormItem
@@ -333,7 +341,14 @@ class Room extends Component {
                             beforeUpload={beforeUpload}
                             onChange={this.handleChange.bind(this, 'busy')}
                             >
-                            {(imageUrl2 && imageUrl2 !== 'null') ? <img src={imageUrl2} alt="" /> : uploadButton2}
+                            {(imageUrl2 && imageUrl2 !== 'null') ? <div><img src={imageUrl2} alt="" /><Button size="small" onClick={(e) => {
+                                e.stopPropagation();
+                                this.setState({ imageUrl2: null });
+                                form.setFieldsValue({
+                                    bgForBusy: ''
+                                });
+                            }}>{__('删除')}</Button></div> : uploadButton2}
+                            
                         </Upload>
                     )}
                 </FormItem>
