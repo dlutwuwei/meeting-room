@@ -4557,6 +4557,12 @@ circle:nth-child(12n + 12) {
   display: block;
 }
 
+.meeting-board-container .meeting-subject {
+  overflow: hidden;
+  max-width: 500px;
+  text-overflow: ellipsis;
+}
+
 .meeting-board-container .meeting-sub-logo {
   width: 20%;
 }

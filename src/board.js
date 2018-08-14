@@ -23,9 +23,9 @@ class MeetingBoard extends Component {
     page=1
     componentDidMount() {
         this.load();
-        this.timer = setInterval(() => {
-            this.load();
-        }, 20000);
+        // this.timer = setInterval(() => {
+        //     this.load();
+        // }, 20000);
     }
     load() {
         const pageSize = Math.ceil((window.innerHeight - window.innerWidth*0.2*0.33 - 20 -150)/70);
@@ -68,12 +68,12 @@ class MeetingBoard extends Component {
                     <thead>
                         <tr>
                             {/* <th width="14%">Brand</th> */}
-                            <th width="16%">Meeting</th>
-                            <th width="14%">State</th>
-                            <th width="14%">Time</th>
-                            <th width="14%">Floor</th>
-                            <th width="14%">Room</th>
-                            <th width="14%">Organizer</th>
+                            <th>Meeting</th>
+                            <th>State</th>
+                            <th>Time</th>
+                            <th>Floor</th>
+                            <th>Room</th>
+                            <th>Organizer</th>
                         </tr>
                     </thead>
                     <QueueAnim component="tbody">
@@ -81,7 +81,7 @@ class MeetingBoard extends Component {
                             ...data.list.map((item, i) => {
                                 return (<tr key={i+Math.random()}>
                                     {/* <td>{item.brand}</td> */}
-                                    <td>{item.meeting}</td>
+                                    <td><div className="meeting-subject">{item.meeting}</div></td>
                                     <td className={classnames({'active': item.state === 0})}>{statusMap[item.state]}</td>
                                     <td>{item.time}</td>
                                     <td>{item.floor}</td>
