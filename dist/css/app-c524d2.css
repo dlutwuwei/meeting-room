@@ -4559,8 +4559,10 @@ circle:nth-child(12n + 12) {
 
 .meeting-board-container .meeting-subject {
   overflow: hidden;
-  max-width: 500px;
+  max-width: 600px;
   text-overflow: ellipsis;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .meeting-board-container .meeting-sub-logo {
