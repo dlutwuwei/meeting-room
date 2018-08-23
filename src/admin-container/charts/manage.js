@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Input, Select, Modal, message } from 'antd';
+import { Table, DatePicker, Input, Select, Modal, message, AutoComplete } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
+import _ from 'lodash';
+
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
 const confirm = Modal.confirm;
@@ -182,14 +184,20 @@ class Usage extends Component {
         this.setState({
             fetching: true
         });
-        fetch.get('/api/meeting/getAttenders', {
-            keyword: value,
+        fetch.get('/api/user/getList', {
+            keyword: value || '',
             token: localStorage.getItem('__meeting_token') || ''
         }).then((r) => {
+            r.data.list.unshift({
+                userName: '不限',
+                mail: 'all',
+                userId: 'undefined'
+            });
             this.setState({
                 userList: r.data.list.map(item => ({
                     name: item.userName,
-                    mail: item.mail
+                    mail: item.mail,
+                    id: item.userId
                 })),
                 fetching: false
             });
@@ -202,9 +210,12 @@ class Usage extends Component {
             // roomName='',
             // areaId,
             // floor,
-            data, pagination, loading
+            data, pagination, loading, userList
         } = this.state;
         const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
+        const children = userList.map((item, i) => {
+            return <Option value={'' + item.id} key={i}>{item.name}</Option>;
+        });
         return (
             <div>
                 <div className="filter-list">
@@ -243,7 +254,21 @@ class Usage extends Component {
                             floor: e.target.value
                         });
                     }}/>
-                    <div />
+                    <AutoComplete
+                        dataSource={userList}
+                        style={{ width: 200 }}
+                        onSelect={(val) => {
+                            this.load(1, {
+                                userId: val.key
+                            });
+                        }}
+                        onFocus={_.debounce(this.handleSearch, 200)}
+                        onSearch={_.debounce(this.handleSearch, 800)}
+                        placeholder={__('查找用户')}
+                        labelInValue
+                    >
+                        {children}
+                    </AutoComplete>
                     <div />
                 </div>
                 <Table

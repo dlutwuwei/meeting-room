@@ -55,7 +55,6 @@ export default (type, onCreated) => {
                         if (err) return;
                         if(values.userId){
                             fieldsValue.id = values.userId;
-                            fieldsValue.userName = values.userName;
                         }
                         before && before();
                         fetch.post(isEdit ? '/api/user/update' : '/api/user/add', {
