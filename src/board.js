@@ -24,9 +24,9 @@ class MeetingBoard extends Component {
     page=1
     componentDidMount() {
         this.load();
-        // this.timer = setInterval(() => {
-        //     this.load();
-        // }, 20000);
+        this.timer = setInterval(() => {
+            this.load();
+        }, 20000);
     }
     load() {
         const pageSize = Math.ceil((window.innerHeight - window.innerWidth*0.2*0.33 - 20 -150)/70);
