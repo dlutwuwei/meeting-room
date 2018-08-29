@@ -13,6 +13,7 @@ const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消
 class MeetingBoard extends Component {
     state = {
         loading: true,
+        currentTime: new Date().toLocaleString(),
         data: {
             list: [],
             page: 1,
@@ -42,7 +43,8 @@ class MeetingBoard extends Component {
             setTimeout(() => {
                 this.setState({
                     loading: false,
-                    data: r.data
+                    data: r.data,
+                    currentTime: new Date().toLocaleString()
                 });
             }, 500);
         }).catch(() => {
@@ -56,7 +58,7 @@ class MeetingBoard extends Component {
         })
     }
     render () {
-        const { data, loading } = this.state;
+        const { data, loading, currentTime } = this.state;
         return (
             <div className="meeting-board-container">
                 <div className="meeting-header">
@@ -93,7 +95,7 @@ class MeetingBoard extends Component {
                     </QueueAnim>
                 </table>
                 <div className="meeting-footer">
-                        <span>Last Update:</span><span>{new Date().toLocaleString()}</span>
+                        <span>Last Update:</span><span>{currentTime}</span>
                 </div>
             </div>
         )
