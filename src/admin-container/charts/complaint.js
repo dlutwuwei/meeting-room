@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Input, Select, AutoComplete } from 'antd';
+import { Table, Input, Select, AutoComplete, Modal } from 'antd';
 import fetch from 'lib/fetch';
 import _ from 'lodash';
 
@@ -32,15 +32,27 @@ class Complaint extends Component {
         this.load(1, {});
     }
     columns = [{
-        title: __('投诉人'),
+        title: __('被投诉人'),
         dataIndex: 'userName'
     }, {
         title: __('邮箱'),
         dataIndex: 'mail',
     }, {
-        title: __('投诉次数'),
+        title: __('被投诉次数'),
         dataIndex: 'count'
+    }, {
+        title: __('操作'),
+        dataIndex: 'endTime',
+        render: (text, record) => {
+            return <a onClick={this.handleView.bind(null, record.userId, record.userName)}>{__('查看')}</a>;
+        }
     }]
+    handleView = (userId, userName) => {
+        Modal.info({
+            title: <span>{__('被投诉人')}:{userName}</span>,
+            content: <Table />
+        });
+    }
     load(page, params) {
         let {
             areaId,
