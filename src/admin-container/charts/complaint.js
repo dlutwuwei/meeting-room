@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Input, Select, AutoComplete, Modal } from 'antd';
 import fetch from 'lib/fetch';
 import _ from 'lodash';
+import ComplaintList from './complaint-list';
 
 const Option = Select.Option;
 
@@ -49,8 +50,9 @@ class Complaint extends Component {
     }]
     handleView = (userId, userName) => {
         Modal.info({
-            title: <span>{__('被投诉人')}:{userName}</span>,
-            content: <Table />
+            title: <span>{__('被投诉人')}: {userName}</span>,
+            content: <ComplaintList userId={userId}/>,
+            width: 800
         });
     }
     load(page, params) {
@@ -174,7 +176,7 @@ class Complaint extends Component {
                         }}
                         onFocus={_.debounce(this.handleSearch, 200)}
                         onSearch={_.debounce(this.handleSearch, 800)}
-                        placeholder={__('选择投诉人')}
+                        placeholder={__('选择被投诉人')}
                         labelInValue
                     >
                         {children}
