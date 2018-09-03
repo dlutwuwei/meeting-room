@@ -264,7 +264,7 @@ class Usage extends Component {
                         }}
                         onFocus={_.debounce(this.handleSearch, 200)}
                         onSearch={_.debounce(this.handleSearch, 800)}
-                        placeholder={__('查找用户')}
+                        placeholder={__('选择预定人')}
                         labelInValue
                     >
                         {children}

@@ -7,6 +7,7 @@ import Setting from './setting';
 import Charts from './charts';
 import Usage from './charts/Usage'
 import Manage from './charts/manage'
+import Complaint from './charts/complaint';
 import Monitor from './monitor';
 import Classroom from './classroom'
 import PropTypes from 'prop-types';
@@ -38,7 +39,9 @@ const KEY_MAP = {
   '/admin/classroom/festival': '21',
   '/admin/charts/rooms': '13',
   '/admin/charts/usage': '15',
-  '/admin/meeting_manage': '16'
+  '/admin/meeting_manage': '16',
+  '/admin/charts/complaint': '17'
+
 }
 
 const isTrain = util.getQuery('isTrain');
@@ -62,6 +65,8 @@ const KEY_OPEN = {
   '/admin/classroom/festival': 'sub4',
   '/admin/charts/rooms': 'sub5',
   '/admin/charts/usage': 'sub5',
+  '/admin/charts/complaint': 'sub5'
+
 }
 
 const actions = localStorage.getItem('__meeting_user_actions') || '';
@@ -124,6 +129,7 @@ class Admin extends React.Component {
             {!isTrain && permits['report'] && <SubMenu key="sub5" title={<span><Icon type="pie-chart" /><span>{__('报表分析')}</span></span>}>
               <Menu.Item key="13"><Link to="/admin/charts/rooms"><Icon type="database" /><span>{__('会议室报表')}</span></Link></Menu.Item>
               <Menu.Item key="15"><Link to="/admin/charts/usage"><Icon type="table" /><span>{__('使用率报表')}</span></Link></Menu.Item>
+              <Menu.Item key="17"><Link to="/admin/charts/complaint"><Icon type="exclamation-circle" /><span>{__('投诉记录')}</span></Link></Menu.Item>
             </SubMenu>}
             {!isTrain && permits['deviceMonitor'] && <Menu.Item key="14"><Link to="/admin/monitor"><Icon type="dot-chart" /><span>{__('设备监控')}</span></Link></Menu.Item>}
         </Menu>
@@ -145,6 +151,7 @@ class Admin extends React.Component {
             <Route path={`${match.url}/setting/`} component={Setting}/>
             <Route path={`${match.url}/charts/usage`} component={Usage}/>
             <Route path={`${match.url}/charts/rooms`} component={Charts}/>
+            <Route path={`${match.url}/charts/complaint`} component={Complaint}/>
             <Route path={`${match.url}/monitor`} component={Monitor}/>
           </Content>
         </Layout>
