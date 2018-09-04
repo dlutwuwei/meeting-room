@@ -30,6 +30,7 @@ fetch.get('/api/public/getCurrentUserInfo', {
   localStorage.setItem('__meeting_user_name', r.data.userName);
   localStorage.setItem('__meeting_reminder', '');
   localStorage.setItem('__meeting_showas', '');
+  localStorage.setItem('__meeting_private', false);
   localStorage.setItem('__meeting_important', '');
   localStorage.setItem('__meeting_recurrenceJson', '');
   fetch.get('/api/meeting/getRoomSetting', {
