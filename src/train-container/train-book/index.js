@@ -8,7 +8,8 @@ import {
   Select,
   Input,
   Icon,
-  Checkbox
+  Checkbox,
+  Spin
 } from "antd";
 const { RangePicker } = DatePicker;
 const Option = Select.Option;
@@ -66,6 +67,7 @@ class FormItem extends React.Component {
           value={value}
           name={name}
           ref={ref}
+          disabled={readOnly}
           className="right"
           onChange={e => onChange(name, e.target.value)}
         />
@@ -189,7 +191,8 @@ export default class Train extends React.Component {
       brandMap: {},
       divisionMap: {},
       showModal: false,
-      form_info: {}
+      form_info: {},
+      loading: false
     };
     // 获取所有品牌
     Fetch.get(URL.train_brand_list, {
@@ -416,6 +419,9 @@ export default class Train extends React.Component {
     this.fetchData();
   }
   fetchData(range = [moment(), moment().add(1, 'week')]) {
+    this.setState({
+      loading: true
+    });
     Fetch.get(URL.train_book_list, {
       token: localStorage.getItem("__meeting_token"),
       startDate: range[0].format(dateFormat),
@@ -423,6 +429,7 @@ export default class Train extends React.Component {
     }).then(result => {
       const data = result.data;
       this.setState({
+        loading: false,
         train_list: [...data.mine, ...data.others]
       });
     }).catch(() => {
@@ -483,6 +490,7 @@ export default class Train extends React.Component {
     this.fetchData([start, end]);
   }
   renderTable() {
+    const { loading } = this.state;
     return (
       <div className="table-container">
         <div className="date-pick">
@@ -494,7 +502,7 @@ export default class Train extends React.Component {
           />
           <Icon type="double-right" className="week-btn next-week" onClick={this.nextWeek} />
         </div>
-        <div className="book-table-container">{this.renderBookTable()}</div>
+        <div className="book-table-container">{ loading ? <Spin className="train-loading"/> : this.renderBookTable()}</div>
       </div>
     );
   }
@@ -610,6 +618,10 @@ export default class Train extends React.Component {
         ))}
       </div>
     );
+    if(isEdit) {
+      // 不允许修改预定时间
+      train_info[4].readOnly = true;
+    }
     const train_dom = (
       <div className="train-contaienr">
         <div className="form-header">培训信息:</div>
@@ -658,13 +670,17 @@ export default class Train extends React.Component {
       ...data
     }).then(
       () => {
-        message.success("预订成功");
+        message.success(isEdit ? __("修改成功") : __("预订成功"));
         this.closeModal();
         // 更新数据
         this.fetchData();
       },
       err => {
-        message.error("预订失败:", err.message);
+        if(err.code === 20011) {
+          message.error(__("预定时间冲突"), err.message);
+        } else {
+          message.error(isEdit ? __('修改失败') : __("预订失败"), err.message);
+        }
       }
     );
   };
