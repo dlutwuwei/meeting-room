@@ -10842,6 +10842,7 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .train-container .stage-container .table-container .book-table-container {
   margin-top: 20px;
+  text-align: center;
 }
 
 .train-container .stage-container .table-container .book-table-container .book-table table {
@@ -10927,6 +10928,10 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .train-modal-container .form-item .item-right .ant-select {
   width: 100%;
+}
+
+.train-loading {
+  margin-top: 20px;
 }.filter-list {
   display: -webkit-box;
   display: -webkit-flex;
