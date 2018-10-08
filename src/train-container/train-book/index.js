@@ -36,6 +36,7 @@ const colorMap = {
 };
 
 import "./index.less";
+
 const dateFormat = "YYYY-MM-DD";
 class FormItem extends React.Component {
   render() {
@@ -119,7 +120,7 @@ function EditCell(props) {
   const { lockState, isAllowMeBooking } = record;
   let am_status = AVALIABLE;
   let pm_status = AVALIABLE;
-  if (lockState) {
+  if (lockState !== 1) {
     am_status = LOCKED;
     pm_status = LOCKED;
   }
@@ -144,7 +145,18 @@ function EditCell(props) {
       <span
         style={am_style}
         onClick={() => {
-          if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+          if(lockState === 2){
+            Modal.confirm({
+              title: __('解锁培训室'),
+              onOk: () => {
+                onClick({
+                  date: moment(1000 * theDate).format(dateFormat),
+                  period: 1,
+                  id: morningId
+                });
+              }
+            })
+          } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
               onClick({
                 date: moment(1000 * theDate).format(dateFormat),
                 period: 1,
@@ -160,7 +172,18 @@ function EditCell(props) {
       <span
         style={pm_style}
         onClick={() => {
-          if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+          if(lockState === 2){
+            Modal.confirm({
+              title: __('解锁培训室'),
+              onOk: () => {
+                onClick({
+                  date: moment(1000 * theDate).format(dateFormat),
+                  period: 2,
+                  id: afternoonId
+                })
+              }
+            })
+          } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
             onClick({
               date: moment(1000 * theDate).format(dateFormat),
               period: 2,
@@ -428,6 +451,11 @@ export default class Train extends React.Component {
       endDate: range[1].format(dateFormat)
     }).then(result => {
       const data = result.data;
+      if(data.mine) {
+        data.mine.forEach(item => {
+          item.isMine = true;
+        })
+      }
       this.setState({
         loading: false,
         train_list: [...data.mine, ...data.others]
