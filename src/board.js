@@ -67,9 +67,11 @@ class MeetingBoard extends Component {
                 </div>
                 {/* {loading && <Spin size="large" />} */}
                 <table className="meeting-table">
+                    <colgroup>
+                        <col span="1" width="30%" />
+                    </colgroup>
                     <thead>
                         <tr>
-                            {/* <th width="14%">Brand</th> */}
                             <th>Meeting</th>
                             <th>State</th>
                             <th>Time</th>
