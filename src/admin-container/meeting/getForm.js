@@ -2,8 +2,16 @@ import React, { Component } from 'react'
 import { Form, Modal, Input, Button, message, Select } from 'antd';
 import fetch from 'lib/fetch';
 import RoomForm from './room-form';
+import Timezone from '../../constant/timezone';
 
 const Option = Select.Option;
+
+const children = [];
+const zones = Object.keys(Timezone);
+for (let i = 0; i < zones.length; i++) {
+  const zone = Timezone[zones[i]]
+  children.push(<Option key={i} value={zones[i]}>{zone}</Option>);
+}
 
 const FormItem = Form.Item;
 
@@ -95,7 +103,7 @@ export default (type, onCreated) => {
                             label= {__('区域名称')}
                         >
                             {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: '"请输入区域名称' }],
+                                rules: [{ required: true, message: '请输入区域名称' }],
                                 initialValue: values.name
                             })(
                                 <Input placeholder= {__('请输入区域名称')} />
@@ -111,6 +119,35 @@ export default (type, onCreated) => {
                                 initialValue: values.shortCode
                             })(
                                 <Input placeholder= {__('请输入简码')} />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label= {__('时区名称')}
+                        >
+                            {form.getFieldDecorator('timezone', {
+                                rules: [{ required: true, message:  __('请选择时区') }],
+                                initialValue: values.timezone
+                            })(
+                                <Select
+                                    placeholder= {__('请选择时区')}
+                                    style={{ width: '100%' }}
+                                >
+                                    {children}
+                                </Select>
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label= {__('约定失败提示')}
+                        >
+                            {form.getFieldDecorator('failedTip', {
+                                rules: [{ required: true, message:  __('请输入失败提示') }],
+                                initialValue: values.failedTip
+                            })(
+                                <Input placeholder= {__('请输入失败提示')} />
                             )}
                         </FormItem>
                         {/* <FormItem
