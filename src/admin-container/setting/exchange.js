@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Breadcrumb, message, Radio } from 'antd';
+import { Form, Input, Button, Breadcrumb, message, Radio, Select } from 'antd';
 import fetch from 'lib/fetch';
 const RadioGroup = Radio.Group;
 
+const Option = Select.Option;
 const FormItem = Form.Item;
 
 const formItemLayout = {
@@ -28,6 +29,9 @@ const formItemLayout = {
     },
   };
 class Exchange extends Component {
+    state = {
+        officeInterfaceType: ''
+    }
     constructor() {
         super();
         this.areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
@@ -43,6 +47,9 @@ class Exchange extends Component {
             if(r.data.areaId === 0) {
                 r.data.areaId = areaId;
             }
+            this.setState({
+                officeInterfaceType: r.data.officeInterfaceType
+            });
             this.props.form.setFieldsValue(r.data);
         }).catch(() => {
             message.error(__('获取设置失败'));
@@ -68,7 +75,81 @@ class Exchange extends Component {
     }
     render() {
         const { getFieldDecorator } = this.props.form;
-        const areasOptions = this.areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>))
+        const areasOptions = this.areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>));
+        const { officeInterfaceType } = this.state;
+        const ewsRequired = officeInterfaceType === 'EWS';
+        const mgRequired = officeInterfaceType === 'Microsoft Graph';
+        const list = <div>
+                <div style={{ display: officeInterfaceType === 'EWS' ? 'block': 'none'}}>
+                    <FormItem {...formItemLayout} label={__("exchange协议")}>
+                        {getFieldDecorator('o365Address', {
+                            initialValue: '',
+                            rules: [{ required: ewsRequired, message: 'Please input protocol!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={__("office365 Url")}>
+                        {getFieldDecorator('adAddress', {
+                            rules: [{ required: ewsRequired, message: 'Please input server ip!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('账号')}>
+                        {getFieldDecorator('oUserName', {
+                            rules: [{ required: ewsRequired, message: 'Please input your account name!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('密码')}>
+                        {getFieldDecorator('oPassword', {
+                            rules: [{ required: ewsRequired, message: 'Please input your Password!' }],
+                        })(
+                            <Input type="password" />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('描述')}>
+                        {getFieldDecorator('description', {
+                            rules: [{ required: false, message: 'Please input your description!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                </div>
+                <div style={{ display: officeInterfaceType === 'Microsoft Graph' ? 'block': 'none'}}>
+                    <FormItem {...formItemLayout} label={ __('通知邮箱')}>
+                        {getFieldDecorator('noticeMail', {
+                            rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                        <FormItem {...formItemLayout} label={ __('Client ID')}>
+                        {getFieldDecorator('clientId', {
+                            rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('Client Secret')}>
+                        {getFieldDecorator('clientSecret', {
+                            rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('Tenant ID')}>
+                        {getFieldDecorator('tenantId', {
+                            rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                </div>
+            </div>
+
         return (
             <div>
                 <Breadcrumb separator=">">
@@ -89,49 +170,25 @@ class Exchange extends Component {
                             </RadioGroup>
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label={__("exchange协议")}>
-                        {getFieldDecorator('o365Address', {
-                            initialValue: '',
-                            rules: [{ required: true, message: 'Please input protocol!' }],
-                        })(
-                            <Input />
+                    <FormItem
+                        {...formItemLayout}
+                        label="Office接入类型"
+                    >
+                        {getFieldDecorator('officeInterfaceType', {
+                                initialValue: '',
+                                rules: [{ required: true, message: 'Please input protocol!' }],
+                            })(
+                            <Select onSelect={(value) => {
+                                this.setState({
+                                    officeInterfaceType: value
+                                })
+                            }}>
+                                <Option value="EWS">EWS</Option>
+                                <Option value="Microsoft Graph">Microsoft Graph</Option>
+                            </Select>
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label={__("AD链接")}>
-                        {getFieldDecorator('adAddress', {
-                            rules: [{ required: true, message: 'Please input server ip!' }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem {...formItemLayout} label={ __('通知邮箱')}>
-                        {getFieldDecorator('noticeMail', {
-                            rules: [{ required: true, message: 'Please input your notice mail!' }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem {...formItemLayout} label={ __('账号')}>
-                        {getFieldDecorator('oUserName', {
-                            rules: [{ required: true, message: 'Please input your account name!' }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
-                    <FormItem {...formItemLayout} label={ __('密码')}>
-                        {getFieldDecorator('oPassword', {
-                            rules: [{ required: true, message: 'Please input your Password!' }],
-                        })(
-                            <Input type="password" />
-                        )}
-                    </FormItem>
-                    <FormItem {...formItemLayout} label={ __('描述')}>
-                        {getFieldDecorator('description', {
-                            rules: [{ required: false, message: 'Please input your description!' }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
+                    {list}
                     <FormItem {...tailFormItemLayout}>
                         {/*<Button type="primary" htmlType="submit" style={{marginRight: 10}}>链接</Button>*/}
                         <Button type="primary" htmlType="button" onClick={this.handleSubmit}>{__('保存')}</Button>
