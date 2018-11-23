@@ -104,6 +104,13 @@ class Exchange extends Component {
                             <Input />
                         )}
                     </FormItem>
+                    <FormItem {...formItemLayout} label={ __('通知邮箱')}>
+                        {getFieldDecorator('noticeMail', {
+                            rules: [{ required: true, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
                     <FormItem {...formItemLayout} label={ __('账号')}>
                         {getFieldDecorator('oUserName', {
                             rules: [{ required: true, message: 'Please input your account name!' }],
