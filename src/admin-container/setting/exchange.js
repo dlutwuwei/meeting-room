@@ -81,7 +81,7 @@ class Exchange extends Component {
         const mgRequired = officeInterfaceType === 'Microsoft Graph';
         const list = <div>
                 <div style={{ display: officeInterfaceType === 'EWS' ? 'block': 'none'}}>
-                    <FormItem {...formItemLayout} label={__("exchange协议")}>
+                    <FormItem {...formItemLayout} label={__("Office 365Url")}>
                         {getFieldDecorator('o365Address', {
                             initialValue: '',
                             rules: [{ required: ewsRequired, message: 'Please input protocol!' }],
@@ -89,15 +89,9 @@ class Exchange extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label={__("office365 Url")}>
-                        {getFieldDecorator('adAddress', {
-                            rules: [{ required: ewsRequired, message: 'Please input server ip!' }],
-                        })(
-                            <Input />
-                        )}
-                    </FormItem>
                     <FormItem {...formItemLayout} label={ __('账号')}>
                         {getFieldDecorator('oUserName', {
+                            initialValue: '',
                             rules: [{ required: ewsRequired, message: 'Please input your account name!' }],
                         })(
                             <Input />
@@ -105,6 +99,7 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label={ __('密码')}>
                         {getFieldDecorator('oPassword', {
+                            initialValue: '',
                             rules: [{ required: ewsRequired, message: 'Please input your Password!' }],
                         })(
                             <Input type="password" />
@@ -112,6 +107,7 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label={ __('描述')}>
                         {getFieldDecorator('description', {
+                            initialValue: '',
                             rules: [{ required: false, message: 'Please input your description!' }],
                         })(
                             <Input />
@@ -121,6 +117,7 @@ class Exchange extends Component {
                 <div style={{ display: officeInterfaceType === 'Microsoft Graph' ? 'block': 'none'}}>
                     <FormItem {...formItemLayout} label={ __('通知邮箱')}>
                         {getFieldDecorator('noticeMail', {
+                            initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
@@ -128,6 +125,7 @@ class Exchange extends Component {
                     </FormItem>
                         <FormItem {...formItemLayout} label={ __('Client ID')}>
                         {getFieldDecorator('clientId', {
+                            initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
@@ -135,6 +133,7 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label={ __('Client Secret')}>
                         {getFieldDecorator('clientSecret', {
+                            initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
@@ -142,6 +141,7 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label={ __('Tenant ID')}>
                         {getFieldDecorator('tenantId', {
+                            initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
@@ -168,6 +168,13 @@ class Exchange extends Component {
                             <RadioGroup onChange={this.handleArea}>
                                 {areasOptions}
                             </RadioGroup>
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={__("AD链接")}>
+                        {getFieldDecorator('adAddress', {
+                            rules: [{ required: ewsRequired, message: 'Please input server ip!' }],
+                        })(
+                            <Input />
                         )}
                     </FormItem>
                     <FormItem
