@@ -172,7 +172,7 @@ class Exchange extends Component {
                     </FormItem>
                     <FormItem {...formItemLayout} label={__("AD链接")}>
                         {getFieldDecorator('adAddress', {
-                            rules: [{ required: ewsRequired, message: 'Please input server ip!' }],
+                            rules: [{ required: true, message: 'Please input server ip!' }],
                         })(
                             <Input />
                         )}
