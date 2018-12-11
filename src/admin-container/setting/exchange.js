@@ -78,7 +78,7 @@ class Exchange extends Component {
         const areasOptions = this.areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>));
         const { officeInterfaceType } = this.state;
         const ewsRequired = officeInterfaceType === 'EWS';
-        const mgRequired = officeInterfaceType === 'Microsoft Graph';
+        const mgRequired = officeInterfaceType === 'MicrosoftGraph';
         const list = <div>
                 <div style={{ display: officeInterfaceType === 'EWS' ? 'block': 'none'}}>
                     <FormItem {...formItemLayout} label={__("Office 365Url")}>
