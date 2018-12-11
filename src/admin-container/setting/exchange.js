@@ -191,7 +191,7 @@ class Exchange extends Component {
                                 })
                             }}>
                                 <Option value="EWS">EWS</Option>
-                                <Option value="Microsoft Graph">Microsoft Graph</Option>
+                                <Option value="MicrosoftGraph">Microsoft Graph</Option>
                             </Select>
                         )}
                     </FormItem>
