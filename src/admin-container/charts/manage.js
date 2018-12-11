@@ -10,7 +10,6 @@ const confirm = Modal.confirm;
 
 
 import './charts.less';
-const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
 const today = new moment();
 const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
@@ -26,7 +25,7 @@ class Usage extends Component {
         roomMail: '',
         from: '',
         floor: '',
-        areaId: areas[0].id,
+        areaId: JSON.parse(localStorage.getItem('__meeting_areas') || '[]')[0].id,
         pagination:{
             position: 'bottom',
             pageSize: 10,

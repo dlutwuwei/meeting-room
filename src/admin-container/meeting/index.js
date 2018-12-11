@@ -62,7 +62,7 @@ export default class BasicList extends PureComponent {
             signal: abortCtl.signal
         }).then(res => {
             if(type === 'rooms') {
-                // 会议室信息展示需要
+                // 会议室信息展示需要, 更新最新数据
                 Promise.all([fetch.get(this.getUrl('area'), {
                     token: localStorage.getItem('__meeting_token')
                 }), fetch.get(this.getUrl('department'), {
