@@ -180,6 +180,11 @@ class Usage extends Component {
             from: val,
         });
     }
+    hanldeUserSelect = (val) => {
+        this.load(1, {
+            userName:val.key 
+        });
+    }
     handleSearch = (value) => {
         this.setState({
             fetching: true
@@ -214,7 +219,7 @@ class Usage extends Component {
         } = this.state;
         const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
         const children = userList.map((item, i) => {
-            return <Option value={'' + item.id} key={i}>{item.name}</Option>;
+            return <Option value={'' + item.name} key={i}>{item.name}</Option>;
         });
         return (
             <div>
@@ -257,12 +262,9 @@ class Usage extends Component {
                     <AutoComplete
                         dataSource={userList}
                         style={{ width: 200 }}
-                        onSelect={(val) => {
-                            this.load(1, {
-                                userId: val.key
-                            });
-                        }}
+                        onSelect={this.hanldeUserSelect}
                         onFocus={_.debounce(this.handleSearch, 200)}
+                        onBlur={this.hanldeUserSelect}
                         onSearch={_.debounce(this.handleSearch, 800)}
                         placeholder={__('选择预定人')}
                         labelInValue
