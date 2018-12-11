@@ -69,11 +69,7 @@ const KEY_OPEN = {
 
 }
 
-const actions = localStorage.getItem('__meeting_user_actions') || '';
-const permits = {};
-actions.split(',').forEach(item => {
-  permits[item] = true;
-});
+
 
 class Admin extends React.Component {
   state = {
@@ -86,6 +82,11 @@ class Admin extends React.Component {
   }
   render() {
     const { match, location } = this.props;
+    const actions = localStorage.getItem('__meeting_user_actions') || '';
+    const permits = {};
+    actions.split(',').forEach(item => {
+      permits[item] = true;
+    });
     return (
       <Layout className="admin-container">
         <Sider

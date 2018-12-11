@@ -54,7 +54,7 @@ fetch.get('/api/public/getCurrentUserInfo', {
               <Route path="/admin" component={Admin}/>
           </Router>
         ), document.getElementById('root'));
-      }, 0);
+      }, 100);
   });
 
 });
