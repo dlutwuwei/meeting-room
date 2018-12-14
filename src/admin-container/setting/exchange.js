@@ -114,7 +114,7 @@ class Exchange extends Component {
                         )}
                     </FormItem>
                 </div>
-                <div style={{ display: officeInterfaceType === 'Microsoft Graph' ? 'block': 'none'}}>
+                <div style={{ display: officeInterfaceType === 'MicrosoftGraph' ? 'block': 'none'}}>
                     <FormItem {...formItemLayout} label={ __('通知邮箱')}>
                         {getFieldDecorator('noticeMail', {
                             initialValue: '',
