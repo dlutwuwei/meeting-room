@@ -130,8 +130,8 @@ class Schedule extends Component {
                         user_list = user_data.map(item => {
                             const startTime = moment(item.startTime*1000);
                             const endTime = moment(item.endTime*1000);
-                            const start = startTime.hours()*2 + parseInt(startTime.minutes()/30);
-                            const end = endTime.hours()*2 + parseInt(endTime.minutes()/30) - 1;
+                            const start = startTime.hours()*2 + Math.ceil(startTime.minutes()/30);
+                            const end = endTime.hours()*2 + Math.ceil(endTime.minutes()/30) - 1;
                             // console.log(item.mail, start, end, startTime, endTime);
                             return ({
                                 status: item.showAs,
