@@ -21,8 +21,6 @@ function getUrl(type) {
           return '/api/department/getList';
       case 'area':
           return '/api/area/getList';
-      case 'rooms':
-          return '/api/meetingRoom/getList';
       case 'type':
           return '/api/meetingRoom/getRoomTypes';
   }

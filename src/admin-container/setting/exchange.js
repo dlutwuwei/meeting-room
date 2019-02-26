@@ -78,7 +78,9 @@ class Exchange extends Component {
         const areasOptions = this.areas.map(item  => (<Radio value={item.id}>{item.name}</Radio>));
         const { officeInterfaceType } = this.state;
         const ewsRequired = officeInterfaceType === 'EWS';
-        const mgRequired = officeInterfaceType === 'MicrosoftGraph';
+        const oauthRequired = officeInterfaceType === 'EwsOauth';
+        const mgRequired = officeInterfaceType === 'MicrosoftGraph' || oauthRequired;
+
         const list = <div>
                 <div style={{ display: officeInterfaceType === 'EWS' ? 'block': 'none'}}>
                     <FormItem {...formItemLayout} label={__("Office 365Url")}>
@@ -114,7 +116,7 @@ class Exchange extends Component {
                         )}
                     </FormItem>
                 </div>
-                <div style={{ display: officeInterfaceType === 'MicrosoftGraph' ? 'block': 'none'}}>
+                <div style={{ display: officeInterfaceType === 'MicrosoftGraph' || officeInterfaceType === 'EwsOauth'  ? 'block': 'none'}}>
                     <FormItem {...formItemLayout} label={ __('通知邮箱')}>
                         {getFieldDecorator('noticeMail', {
                             initialValue: '',
@@ -143,6 +145,14 @@ class Exchange extends Component {
                         {getFieldDecorator('tenantId', {
                             initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                        })(
+                            <Input />
+                        )}
+                    </FormItem>
+                    <FormItem {...formItemLayout} label={ __('Redirect URI')}>
+                        {getFieldDecorator('redirectUri', {
+                            initialValue: '',
+                            rules: [{ required: oauthRequired, message: 'Please input redirect uri' }],
                         })(
                             <Input />
                         )}
@@ -192,6 +202,7 @@ class Exchange extends Component {
                             }}>
                                 <Option value="EWS">EWS</Option>
                                 <Option value="MicrosoftGraph">Microsoft Graph</Option>
+                                <Option value="EwsOauth">EWS OAuth</Option>
                             </Select>
                         )}
                     </FormItem>
