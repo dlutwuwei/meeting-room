@@ -33,7 +33,8 @@ class Exchange extends Component {
     state = {
         officeInterfaceType: '',
         data: {},
-        visible: false
+        visible: false,
+        authrizationUrl: ''
     }
     constructor() {
         super();
@@ -69,10 +70,11 @@ class Exchange extends Component {
             }
             fetch.post('/api/systemSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
-            }).then(() => {
+            }).then((res) => {
                 if(this.state.officeInterfaceType === 'EwsOauth') {
                     this.setState({
-                        visible: true
+                        visible: true,
+                        authrizationUrl: res.data.authrizationUrl
                     });
                 } else {
                     message.success( __('保存设置成功'));
@@ -83,7 +85,7 @@ class Exchange extends Component {
         });
     }
     handleOk = () => {
-        window.Clipboard.copy(this.state.data.redirectUrl);
+        window.Clipboard.copy(this.state.authrizationUrl);
         this.setState({
             visible: false
         });
@@ -248,7 +250,7 @@ class Exchange extends Component {
                     onCancel={this.handleCancel}
                 >
                     <p>请复制下面的链接使用会议管理员账号登陆进行授权</p>
-                    <p>{this.state.data.redirectUrl}</p>
+                    <p style={{ wordBreak: 'break-word'}}>{this.state.authrizationUrl}</p>
                 </Modal>
             </div>
                 )
