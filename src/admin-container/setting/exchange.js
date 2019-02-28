@@ -51,13 +51,11 @@ class Exchange extends Component {
             if(r.data.areaId === 0) {
                 r.data.areaId = areaId;
             }
+            this.props.form.setFieldsValue(r.data);
             this.setState({
+                data: r.data,
                 officeInterfaceType: r.data.officeInterfaceType
             });
-            this.setState({
-                data: r.data
-            });
-            this.props.form.setFieldsValue(r.data);
         }).catch(() => {
             message.error(__('获取设置失败'));
         });
@@ -142,14 +140,14 @@ class Exchange extends Component {
                     </FormItem>
                 </div>
                 <div style={{ display: officeInterfaceType === 'MicrosoftGraph' || officeInterfaceType === 'EwsOauth'  ? 'block': 'none'}}>
-                    {officeInterfaceType === 'MicrosoftGraph' && <FormItem {...formItemLayout} label={ __('通知邮箱')}>
+                    <FormItem {...formItemLayout} label={ __('通知邮箱')} style={{ display: officeInterfaceType === 'MicrosoftGraph'? 'block': 'none'}}>
                         {getFieldDecorator('noticeMail', {
                             initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
                         )}
-                    </FormItem>}
+                    </FormItem>
                     <FormItem {...formItemLayout} label={ __('Client ID')}>
                         {getFieldDecorator('clientId', {
                             initialValue: '',
@@ -174,14 +172,14 @@ class Exchange extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    {officeInterfaceType === 'EwsOauth' && <FormItem {...formItemLayout} label={ __('Redirect URI')}>
+                    <FormItem {...formItemLayout} label={ __('Redirect URI')} style={{ display: officeInterfaceType === 'EwsOauth'?'block': 'none'}}>
                         {getFieldDecorator('redirectUrl', {
                             initialValue: '',
                             rules: [{ required: oauthRequired, message: 'Please input redirect uri' }],
                         })(
                             <Input disabled />
                         )}
-                    </FormItem>}
+                    </FormItem>
                 </div>
             </div>
 
