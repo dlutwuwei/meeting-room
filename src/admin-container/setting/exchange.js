@@ -51,10 +51,14 @@ class Exchange extends Component {
             if(r.data.areaId === 0) {
                 r.data.areaId = areaId;
             }
-            this.props.form.setFieldsValue(r.data);
             this.setState({
                 data: r.data,
+            });
+            this.setState({
                 officeInterfaceType: r.data.officeInterfaceType
+            }, () => {
+                delete r.data.o365Protocol;
+                this.props.form.setFieldsValue(r.data);
             });
         }).catch(() => {
             message.error(__('获取设置失败'));
@@ -102,7 +106,7 @@ class Exchange extends Component {
         const { officeInterfaceType } = this.state;
         const ewsRequired = officeInterfaceType === 'EWS';
         const oauthRequired = officeInterfaceType === 'EwsOauth';
-        const mgRequired = officeInterfaceType === 'MicrosoftGraph' || oauthRequired;
+        const mgRequired = officeInterfaceType === 'MicrosoftGraph';
 
         const list = <div>
                 <div style={{ display: officeInterfaceType === 'EWS' ? 'block': 'none'}}>
@@ -143,7 +147,7 @@ class Exchange extends Component {
                     <FormItem {...formItemLayout} label={ __('通知邮箱')} style={{ display: officeInterfaceType === 'MicrosoftGraph'? 'block': 'none'}}>
                         {getFieldDecorator('noticeMail', {
                             initialValue: '',
-                            rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
+                            rules: [{ required: mgRequired && !oauthRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
                         )}
