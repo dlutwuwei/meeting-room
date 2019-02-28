@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Breadcrumb, message, Radio, Select } from 'antd';
+import { Form, Input, Button, Breadcrumb, message, Radio, Select, Modal } from 'antd';
 import fetch from 'lib/fetch';
+
 const RadioGroup = Radio.Group;
 
 const Option = Select.Option;
@@ -30,7 +31,9 @@ const formItemLayout = {
   };
 class Exchange extends Component {
     state = {
-        officeInterfaceType: ''
+        officeInterfaceType: '',
+        data: {},
+        visible: false
     }
     constructor() {
         super();
@@ -50,6 +53,9 @@ class Exchange extends Component {
             this.setState({
                 officeInterfaceType: r.data.officeInterfaceType
             });
+            this.setState({
+                data: r.data
+            });
             this.props.form.setFieldsValue(r.data);
         }).catch(() => {
             message.error(__('获取设置失败'));
@@ -64,10 +70,27 @@ class Exchange extends Component {
             fetch.post('/api/systemSetting/saveSetting?token=' + localStorage.getItem('__meeting_token'), {
                 ...fieldsValue
             }).then(() => {
-                message.success( __('保存设置成功'));
+                if(this.state.officeInterfaceType === 'EwsOauth') {
+                    this.setState({
+                        visible: true
+                    });
+                } else {
+                    message.success( __('保存设置成功'));
+                }
             }).catch(() => {
                 message.error( __('保存设置失败'));
             });
+        });
+    }
+    handleOk = () => {
+        window.Clipboard.copy(this.state.data.redirectUrl);
+        this.setState({
+            visible: false
+        });
+    }
+    handleCancel = () => {
+        this.setState({
+            visible: false
         });
     }
     handleArea = (e) => {
@@ -149,14 +172,14 @@ class Exchange extends Component {
                             <Input />
                         )}
                     </FormItem>
-                    <FormItem {...formItemLayout} label={ __('Redirect URI')}>
-                        {getFieldDecorator('redirectUri', {
+                    {officeInterfaceType === 'EwsOauth' && <FormItem {...formItemLayout} label={ __('Redirect URI')}>
+                        {getFieldDecorator('redirectUrl', {
                             initialValue: '',
                             rules: [{ required: oauthRequired, message: 'Please input redirect uri' }],
                         })(
                             <Input />
                         )}
-                    </FormItem>
+                    </FormItem>}
                 </div>
             </div>
 
@@ -198,6 +221,10 @@ class Exchange extends Component {
                             <Select onSelect={(value) => {
                                 this.setState({
                                     officeInterfaceType: value
+                                }, () => {
+                                    const data = { ...this.state.data };
+                                    delete data.officeInterfaceType;
+                                    this.props.form.setFieldsValue(data);
                                 })
                             }}>
                                 <Option value="EWS">EWS</Option>
@@ -212,6 +239,17 @@ class Exchange extends Component {
                         <Button type="primary" htmlType="button" onClick={this.handleSubmit}>{__('保存')}</Button>
                     </FormItem>
                 </Form>
+                <Modal
+                    title="保存成功"
+                    visible={this.state.visible}
+                    onOk={this.handleOk}
+                    okText="复制"
+                    cancelText="取消"
+                    onCancel={this.handleCancel}
+                >
+                    <p>请复制下面的链接使用会议管理员账号登陆进行授权</p>
+                    <p>{this.state.data.redirectUrl}</p>
+                </Modal>
             </div>
                 )
             }

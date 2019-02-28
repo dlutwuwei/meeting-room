@@ -11,6 +11,7 @@
     "rc-queue-anim": "^1.4.1",
     "rc-time-picker": "^3.2.1",
     "react": "^16.2.0",
+    "react-clipboard.js": "^2.0.3",
     "react-dom": "^16.2.0",
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
