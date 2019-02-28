@@ -142,15 +142,15 @@ class Exchange extends Component {
                     </FormItem>
                 </div>
                 <div style={{ display: officeInterfaceType === 'MicrosoftGraph' || officeInterfaceType === 'EwsOauth'  ? 'block': 'none'}}>
-                    <FormItem {...formItemLayout} label={ __('通知邮箱')}>
+                    {officeInterfaceType === 'MicrosoftGraph' && <FormItem {...formItemLayout} label={ __('通知邮箱')}>
                         {getFieldDecorator('noticeMail', {
                             initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
                         })(
                             <Input />
                         )}
-                    </FormItem>
-                        <FormItem {...formItemLayout} label={ __('Client ID')}>
+                    </FormItem>}
+                    <FormItem {...formItemLayout} label={ __('Client ID')}>
                         {getFieldDecorator('clientId', {
                             initialValue: '',
                             rules: [{ required: mgRequired, message: 'Please input your notice mail!' }],
@@ -179,7 +179,7 @@ class Exchange extends Component {
                             initialValue: '',
                             rules: [{ required: oauthRequired, message: 'Please input redirect uri' }],
                         })(
-                            <Input />
+                            <Input disabled />
                         )}
                     </FormItem>}
                 </div>
