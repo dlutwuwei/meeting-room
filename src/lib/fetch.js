@@ -15,7 +15,6 @@ const defGetOpts = {
 
 const defPostOpts = {
     headers: {
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'Accept': 'application/json'
     }
 }
@@ -42,6 +41,7 @@ function request(method, url, data, opts) {
     if(data instanceof FormData) {
       query = data;
     } else {
+      defPostOpts['Content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8',
       finalData = Object.assign(
         isGet ? { _: Date.now() } : {},
         data

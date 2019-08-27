@@ -285,71 +285,26 @@ class Usage extends Component {
     const file = e.target.files[0];
     const data = new FormData();
     data.append('file', file);
-
-    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-
-    xhr.addEventListener('readystatechange', function() {
-      if (this.readyState === 4) {
-        console.log(this.responseText);
-      }
-    });
     const {startDate, endDate, roomName, roomMail, from, floor} = this.state;
-
-    xhr.open(
-      'POST',
-      `/api/meetingManage/importMeeting?token=${localStorage.getItem(
-        '__meeting_token'
-      ) ||
-        ''}&startDate=${startDate}&endDate=${endDate}&roomMail=${roomMail}&roomName=${roomName}&from=${from}&floor=${floor}`
-    );
-    xhr.setRequestHeader('Accept', '*/*');
-    xhr.setRequestHeader('Cache-Control', 'no-cache');
-
-    xhr.send(data);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === xhr.DONE) {
+    fetch
+      .post(
+        `/api/meetingManage/importMeeting?token=${localStorage.getItem(
+          '__meeting_token'
+        ) ||
+          ''}&startDate=${startDate}&endDate=${endDate}&roomMail=${roomMail}&roomName=${roomName}&from=${from}&floor=${floor}`,
+        data,
+        {}
+      )
+      .then(() => {
         target.value = '';
-        if (xhr.status === 200) {
-          try {
-            const data = JSON.parse(xhr.response);
-            if (data.code === 0) {
-              // 请求成功
-              message.success(__('上传文件成功'));
-            } else {
-              message.error(__('上传文件失败'));
-            }
-          } catch (e) {
-            message.error(__('上传文件失败'));
-          }
-        } else {
-          // 请求失败
-          message.error(__('上传文件失败'));
-        }
-      }
-    };
-    // fetch
-    //   .post(
-    //     `/api/meetingManage/importMeeting?token=${localStorage.getItem(
-    //       '__meeting_token'
-    //     ) ||
-    //       ''}&startDate=${startDate}&endDate=${endDate}&roomMail=${roomMail}&roomName=${roomName}&from=${from}&floor=${floor}`,
-    //     data,
-    //     {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //       },
-    //     }
-    //   )
-    //   .then(() => {
-    //     target.value = '';
-    //     message.success(__('上传文件成功'));
-    //   })
-    //   .catch(err => {
-    //     console.error(err);
-    //     target.value = '';
-    //     message.error(__('上传文件失败'));
-    //   });
+        this.load(1, {});
+        message.success(__('上传文件成功'));
+      })
+      .catch(err => {
+        console.error(err);
+        target.value = '';
+        message.error(__('上传文件失败'));
+      });
   };
   importMeetings = () => {
     if (this.fileInput) {
