@@ -51,7 +51,6 @@ export default class BasicList extends PureComponent {
             page,
             pageSize
         }).then(res => {
-            done && done();
             if(type === 'list') {
                 Promise.all([fetch.get(this.getUrl('area'), {
                     token: localStorage.getItem('__meeting_token')
@@ -69,6 +68,8 @@ export default class BasicList extends PureComponent {
                         pageSize: res.data.pageSize,
                         totalPage: res.data.totalPage
                     });
+                    done && done();
+
                 });
             } else if(type === 'role') {
                 // role拉取所有权限
@@ -82,6 +83,7 @@ export default class BasicList extends PureComponent {
                         pageSize: res.data.pageSize,
                         totalPage: res.data.totalPage,
                     });
+                    done && done();
                 });
             } else {
                 this.setState({
@@ -90,8 +92,8 @@ export default class BasicList extends PureComponent {
                     pageSize: res.data.pageSize,
                     totalPage: res.data.totalPage,
                 });
+                done && done();
             }
-
         }).catch(() => {
             done && done();
             this.setState({
