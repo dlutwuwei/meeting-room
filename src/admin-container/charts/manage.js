@@ -209,22 +209,38 @@ class Usage extends Component {
     }
     exportMeetings = () => {
       const { startDate, endDate, roomName, roomMail, from, floor } = this.state;
-      fetch.get('/api/meetingManage/exportMeetingList', {
-          token: localStorage.getItem('__meeting_token') || '',
-          startDate,
-          endDate,
-          roomMail,
-          roomName,
-          from,
-          floor
-      }).then(() => {
-        // todo: 生成execl csv
+      const url = `/api/meetingManage/exportMeetingList?token=${localStorage.getItem('__meeting_token') || ''}&startDate=${startDate}&endDate=${endDate}&roomMail=${roomMail}&roomName=${roomName}&from=${from}&floor=${floor}`;
+      window.open(url, '_blank');
+      // fetch.get('/api/meetingManage/exportMeetingList', {
+      //     token: localStorage.getItem('__meeting_token') || '',
+      //     startDate,
+      //     endDate,
+      //     roomMail,
+      //     roomName,
+      //     from,
+      //     floor
+      // }).then(() => {
+      //   // todo: 生成execl csv
 
-      });
+      // });
     }
-    handleFileChange(e) {
+    handleFileChange = (e) => {
       const file = e.target.files[0];
-      // todo: 处理文件内容
+      const data = new FormData()
+      data.append('file', file);
+      const { startDate, endDate, roomName, roomMail, from, floor } = this.state;
+      fetch.post(`/api/meetingManage/importMeeting?token=${localStorage.getItem('__meeting_token') || ''}&startDate=${startDate}&endDate=${endDate}&roomMail=${roomMail}&roomName=${roomName}&from=${from}&floor=${floor}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
+      }).then((res) => {
+        e.target.value = ''
+        message.success(__('上传成功'))
+      }).catch((err) => {
+        console.error(err);
+        e.target.value = ''
+        message.error(__('上传失败'))
+      })
     }
     importMeetings = () => {
       if(this.fileInput) {
@@ -305,7 +321,13 @@ class Usage extends Component {
                     dataSource={data}
                     pagination={pagination}
                 />
-                <input ref={ref => this.fileInput = ref} type="file" style={{display: 'none'}} onChange={this.handleFileChange} accept="image/*"/>
+                <input
+                  ref={ref => this.fileInput = ref}
+                  type="file"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  style={{display: 'none'}}
+                  onChange={this.handleFileChange}
+                />
             </div>
         )
     }

@@ -47,7 +47,7 @@ module.exports = {
               changeOrigin: true,
               bypass: function(req, res, proxyOptions) {
                 console.log(req.url)
-                if (req.headers.accept.indexOf('html') !== -1) {
+                if (req.headers.accept.indexOf('html') !== -1 && req.url.indexOf('exportMeetingList') === -1) {
                   if(req.url.startsWith('/board')) {
                     return '/index-board.html';
                   } else if (req.url.startsWith('/admin')) {

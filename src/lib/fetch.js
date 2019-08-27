@@ -38,13 +38,17 @@ let popFlag = false;
 
 function request(method, url, data, opts) {
     const isGet = method === 'get'
-
-    const finalData = Object.assign(
+    let finalData, query;
+    if(data instanceof FormData) {
+      query = data;
+    } else {
+      finalData = Object.assign(
         isGet ? { _: Date.now() } : {},
         data
-    );
+      );
+      query = toQueryString(finalData)
+    }
 
-    const query = toQueryString(finalData)
 
     const finalUrl = isGet ? url + '?' + query : url
     const finalOpts = Object.assign(
