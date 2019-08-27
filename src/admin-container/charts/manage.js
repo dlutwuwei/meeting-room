@@ -63,6 +63,9 @@ class Usage extends Component {
     {
       title: __('会议主题'),
       dataIndex: 'subject',
+      render: text => {
+        return <span dangerouslySetInnerHTML={{__html: text}}></span>
+      },
     },
     {
       title: __('预订人'),
