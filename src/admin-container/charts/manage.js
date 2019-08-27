@@ -225,6 +225,7 @@ class Usage extends Component {
       // });
     }
     handleFileChange = (e) => {
+      const target = e.target;
       const file = e.target.files[0];
       const data = new FormData()
       data.append('file', file);
@@ -233,13 +234,13 @@ class Usage extends Component {
         headers: {
           "Content-Type": "multipart/form-data",
         }
-      }).then((res) => {
-        e.target.value = ''
-        message.success(__('上传成功'))
+      }).then(() => {
+        target.value = ''
+        message.success(__('上传文件成功'))
       }).catch((err) => {
         console.error(err);
-        e.target.value = ''
-        message.error(__('上传失败'))
+        target.value = ''
+        message.error(__('上传文件失败'))
       })
     }
     importMeetings = () => {
