@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, DatePicker, Input, Select, Modal, message, AutoComplete } from 'antd';
+import { Table, DatePicker, Input, Select, Modal, message, AutoComplete, Button } from 'antd';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 import _ from 'lodash';
@@ -181,7 +181,7 @@ class Usage extends Component {
     }
     hanldeUserSelect = (val) => {
         this.load(1, {
-            userName:val.key 
+            userName:val.key
         });
     }
     handleSearch = (value) => {
@@ -206,6 +206,30 @@ class Usage extends Component {
                 fetching: false
             });
         });
+    }
+    exportMeetings = () => {
+      const { startDate, endDate, roomName, roomMail, from, floor } = this.state;
+      fetch.get('/api/meetingManage/exportMeetingList', {
+          token: localStorage.getItem('__meeting_token') || '',
+          startDate,
+          endDate,
+          roomMail,
+          roomName,
+          from,
+          floor
+      }).then(() => {
+        // todo: 生成execl csv
+
+      });
+    }
+    handleFileChange(e) {
+      const file = e.target.files[0];
+      // todo: 处理文件内容
+    }
+    importMeetings = () => {
+      if(this.fileInput) {
+        this.fileInput.click();
+      }
     }
     render() {
         const {
@@ -270,7 +294,10 @@ class Usage extends Component {
                     >
                         {children}
                     </AutoComplete>
-                    <div />
+                    <div className="filter-list">
+                      <Button onClick={this.exportMeetings} type="primary">导出会议</Button>
+                      <Button onClick={this.importMeetings} type="primary">导入会议</Button>
+                    </div>
                 </div>
                 <Table
                     loading={loading}
@@ -278,6 +305,7 @@ class Usage extends Component {
                     dataSource={data}
                     pagination={pagination}
                 />
+                <input ref={ref => this.fileInput = ref} type="file" style={{display: 'none'}} onChange={this.handleFileChange} accept="image/*"/>
             </div>
         )
     }
