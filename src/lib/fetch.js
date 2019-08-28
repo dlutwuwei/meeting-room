@@ -13,11 +13,7 @@ const defGetOpts = {
     }
 }
 
-const defPostOpts = {
-    headers: {
-        'Accept': 'application/json'
-    }
-}
+
 
 function toQueryString(obj) {
     return obj ? Object.keys(obj).map(function (key) {
@@ -38,10 +34,15 @@ let popFlag = false;
 function request(method, url, data, opts) {
     const isGet = method === 'get'
     let finalData, query;
+    const defPostOpts = {
+      headers: {
+          'Accept': 'application/json'
+      }
+    }
     if(data instanceof FormData) {
       query = data;
     } else {
-      defPostOpts['Content-type'] = 'application/x-www-form-urlencoded; charset=UTF-8',
+      defPostOpts.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8',
       finalData = Object.assign(
         isGet ? { _: Date.now() } : {},
         data

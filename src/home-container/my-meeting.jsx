@@ -45,7 +45,7 @@ class MyMeeting extends Component {
             });
         }
     }
-    
+
     handlCancel = (i) => {
         Modal.confirm({
             title: 'Are you sure to cancel the meeting?',
@@ -87,7 +87,7 @@ class MyMeeting extends Component {
                 isRecurrence: r.data.isRecurrence
             });
         });
-        
+
     }
     handleChange = (page) => {
         this.search(this.state.type, page);
@@ -159,7 +159,7 @@ class MyMeeting extends Component {
                                     data.map((item, i) => {
                                         return (
                                             <tr>
-                                                <td>{item.subject}</td>
+                                                <td><span dangerouslySetInnerHTML={{__html: item.subject}}></span></td>
                                                 <td>{item.roomNames}</td>
                                                 <td>{moment.utc(item.startTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>
                                                 <td>{moment.utc(item.endTime*1000).local().format('YYYY-MM-DD HH:mm')}</td>

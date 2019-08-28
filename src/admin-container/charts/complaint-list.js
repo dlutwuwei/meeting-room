@@ -13,7 +13,10 @@ class CompliantList extends Component {
     }
     columns = [{
         title: __('会议主题'),
-        dataIndex: 'subject'
+        dataIndex: 'subject',
+        render: text => {
+          return <span dangerouslySetInnerHTML={{__html: text}}></span>
+        },
     }, {
         title: __('会议室'),
         dataIndex: 'roomNames',
