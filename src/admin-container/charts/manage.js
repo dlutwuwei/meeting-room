@@ -225,17 +225,9 @@ class Usage extends Component {
         });
       });
   }
-  handleSelect = val => {
-    this.setState({
-      attendees: val,
-    });
-    this.load(1, {
-      from: val,
-    });
-  };
   hanldeUserSelect = val => {
     this.load(1, {
-      userName: val.key,
+      from: val.key,
     });
   };
   handleSearch = value => {
@@ -329,7 +321,7 @@ class Usage extends Component {
     const areas = JSON.parse(localStorage.getItem('__meeting_areas') || '[]');
     const children = userList.map((item, i) => {
       return (
-        <Option value={'' + item.name} key={i}>
+        <Option value={'' + item.mail} key={i}>
           {item.name}
         </Option>
       );
