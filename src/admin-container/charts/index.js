@@ -9,7 +9,10 @@ const statusMap = [__('未知'), __('预定中'), __('进行中'), __('已取消
 
 const columns = [{
     title: __('主题'),
-    dataIndex: 'subject'
+    dataIndex: 'subject',
+    render: text => {
+      return <span dangerouslySetInnerHTML={{__html: text}}></span>
+    },
 }, {
     title: __('开始时间'),
     dataIndex: 'startTime',
@@ -148,7 +151,7 @@ class Charts extends Component {
             roomMail='',
             from='',
             floor='',
-            data, pagination, loading, userList 
+            data, pagination, loading, userList
         } = this.state;
         const children = userList.map((item, i) => {
             return <Option value={item.mail} key={i}>{item.name}</Option>;
