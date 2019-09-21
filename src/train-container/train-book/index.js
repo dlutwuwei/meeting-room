@@ -9,9 +9,11 @@ import {
   Input,
   Icon,
   Checkbox,
-  Spin
+  Spin,
+  Tooltip,
+  Popover
 } from "antd";
-const { RangePicker } = DatePicker;
+const { RangePicker, WeekPicker } = DatePicker;
 const Option = Select.Option;
 import Fetch from "../../lib/fetch";
 import classnames from "classnames";
@@ -140,62 +142,73 @@ function EditCell(props) {
   const pm_style = {
     backgroundColor: colorMap[pm_status]
   };
+  const content = (
+    <div>
+      <p>名称：{record.roomName}</p>
+      <p>楼层：{record.floor}层</p>
+      <p>容量：{record.capacity}人</p>
+      <p>品牌：{record.brandName}</p>
+      <p>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
+    </div>
+  );
   return (
-    <div className="book-day">
-      <span
-        style={am_style}
-        onClick={() => {
-          if(lockState === 2){
-            Modal.confirm({
-              title: __('解锁培训室'),
-              onOk: () => {
+    <Popover content={content} title="培训室详情">
+      <div className="book-day">
+        <span
+          style={am_style}
+          onClick={() => {
+            if(lockState === 2){
+              Modal.confirm({
+                title: __('解锁培训室'),
+                onOk: () => {
+                  onClick({
+                    date: moment(1000 * theDate).format(dateFormat),
+                    period: 1,
+                    id: morningId
+                  });
+                }
+              })
+            } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
                 onClick({
                   date: moment(1000 * theDate).format(dateFormat),
                   period: 1,
                   id: morningId
                 });
-              }
-            })
-          } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+            }
+          }}
+          className="book-am"
+        >
+          {morningReservationName}
+        </span>
+        <div className="divider" />
+        <span
+          style={pm_style}
+          onClick={() => {
+            if(lockState === 2){
+              Modal.confirm({
+                title: __('解锁培训室'),
+                onOk: () => {
+                  onClick({
+                    date: moment(1000 * theDate).format(dateFormat),
+                    period: 2,
+                    id: afternoonId
+                  })
+                }
+              })
+            } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
               onClick({
                 date: moment(1000 * theDate).format(dateFormat),
-                period: 1,
-                id: morningId
-              });
-          }
-        }}
-        className="book-am"
-      >
-        {morningReservationName}
-      </span>
-      <div className="divider" />
-      <span
-        style={pm_style}
-        onClick={() => {
-          if(lockState === 2){
-            Modal.confirm({
-              title: __('解锁培训室'),
-              onOk: () => {
-                onClick({
-                  date: moment(1000 * theDate).format(dateFormat),
-                  period: 2,
-                  id: afternoonId
-                })
-              }
-            })
-          } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
-            onClick({
-              date: moment(1000 * theDate).format(dateFormat),
-              period: 2,
-              id: afternoonId
-            })
-          }
-        }}
-        className="book-pm"
-      >
-        {afternoonReservationName}
-      </span>
-    </div>
+                period: 2,
+                id: afternoonId
+              })
+            }
+          }}
+          className="book-pm"
+        >
+          {afternoonReservationName}
+        </span>
+      </div>
+    </Popover>
   );
 }
 
@@ -203,7 +216,10 @@ export default class Train extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      range: [moment(), moment().add(7, "days")],
+      range: [
+        moment().week(moment().week()).startOf('week').add(1, 'day'),
+        moment().week(moment().week()).endOf('week').add(1, 'day')
+      ],
       train_list: [],
       selected_train: {},
       selected_day: {
@@ -439,9 +455,9 @@ export default class Train extends React.Component {
     this.fetchData(date);
   };
   componentDidMount() {
-    this.fetchData();
+    this.fetchData(this.state.range);
   }
-  fetchData(range = [moment(), moment().add(1, 'week')]) {
+  fetchData(range) {
     this.setState({
       loading: true
     });
@@ -523,16 +539,26 @@ export default class Train extends React.Component {
       <div className="table-container">
         <div className="date-pick">
           <Icon type="double-left" className="week-btn next-week" onClick={this.preWeek}/>
-          <RangePicker
+          <WeekPicker
             format={dateFormat}
-            value={this.state.range}
-            disabled
+            value={this.state.range[0]}
+            disabledDate={(date) => date.isBefore(moment())}
+            onChange={this.handleWeekChange}
           />
+          <span>至</span>
+          <span>{this.state.range[1].format('YYYY-MM-DD')}</span>
           <Icon type="double-right" className="week-btn next-week" onClick={this.nextWeek} />
         </div>
         <div className="book-table-container">{ loading ? <Spin className="train-loading"/> : this.renderBookTable()}</div>
       </div>
     );
+  }
+  handleWeekChange = (value) => {
+    this.setState({
+      range: [value, value.clone().add(1, 'weeks')]
+    })
+    this.fetchData([value, value.clone().add(1, 'weeks')]);
+
   }
   showBookModal = (selected_day, record) => {
     if(selected_day.id) {
@@ -562,6 +588,7 @@ export default class Train extends React.Component {
   };
   renderBookTable() {
     const range = this.getRange().map((x, idx) => {
+      const disable = moment(x).isBefore(moment())
       return {
         title: x,
         dataIndex: `scheduleList.${idx}`,
@@ -571,7 +598,13 @@ export default class Train extends React.Component {
             <EditCell
               text={text}
               record={record}
-              onClick={pick_day => this.showBookModal(pick_day, record)}
+              onClick={pick_day => {
+                if(!disable) {
+                  this.showBookModal(pick_day, record)
+                } else {
+                  message.error('已经过期，不可预定')
+                }
+              }}
             />
           );
         }
@@ -588,7 +621,10 @@ export default class Train extends React.Component {
         title: "培训室",
         dataIndex: "roomName",
         width: 100,
-        fixed: "left"
+        fixed: "left",
+        render: (value, item) => { 
+          return <Tooltip title={item.desciption}>{value}</Tooltip>
+        }
       },
       {
         title: "楼层",
@@ -701,7 +737,7 @@ export default class Train extends React.Component {
         message.success(isEdit ? __("修改成功") : __("预订成功"));
         this.closeModal();
         // 更新数据
-        this.fetchData();
+        this.fetchData(this.state.range);
       },
       err => {
         if(err.code === 20011) {
