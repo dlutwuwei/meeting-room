@@ -5,9 +5,10 @@
 		"transform-function-bind",
 		"babel-plugin-add-module-exports",
 		["import", {
-			"libraryName": "antd",
-			"style": true
-			}
+        "libraryName": "antd",
+        "libraryDirectory": "lib",   // default: lib
+        "style": true
+      },
 		]
 	]
 }

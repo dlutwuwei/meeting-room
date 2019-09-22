@@ -92,7 +92,7 @@ class MeetingBoard extends Component {
                                     <td>{item.room}</td>
                                     <td>{item.organizer}</td>
                                 </tr>);
-                            }) 
+                            })
                         ]}
                     </QueueAnim>
                 </table>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Breadcrumb, message, DatePicker } from 'antd';
+import { Breadcrumb, message, DatePicker, Calendar } from 'antd';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 import fetch from 'lib/fetch';
@@ -8,6 +8,7 @@ import List from '../list';
 import getForm from './getForm';
 import getColumns from './getColums';
 import { AbortController } from 'lib/abort-controller';
+import FullCalendar from './fullCalendar';
 
 const abortCtl = new AbortController();
 
@@ -150,6 +151,12 @@ export default class BasicList extends PureComponent {
             this.fetchData();
         });
     }
+    onPanelChange = () => {
+
+    }
+    onSelect = () => {
+
+    }
     render() {
         const { data, loading, page, pageSize, totalPage } = this.state;
         const type = this.props.match.params.type;
@@ -159,15 +166,15 @@ export default class BasicList extends PureComponent {
                     <Breadcrumb.Item>{__('培训室管理')}</Breadcrumb.Item>
                     {getBreadcrumb(type)}
                 </Breadcrumb>
-                { type === 'festival' && <RangePicker
+                {/* { type === 'festival' && <RangePicker
                     className="festival-range"
                     defaultValue={[moment(), moment().add(1, 'months')]}
                     onChange={this.handleRange}
                     disabledDate={(currentDate) => {
                         return currentDate.isBefore(new moment()) || currentDate.isAfter(new moment().add(1, 'months'))
                     }}
-                /> }
-                <List
+                /> } */}
+                { type !== 'festival' && <List
                     getColumns={getColumns.bind(this, type, this.removeFromTable.bind(this))}
                     // columns={getColumns(type, this.removeFromTable.bind(this))}
                     data={data}
@@ -183,7 +190,13 @@ export default class BasicList extends PureComponent {
                     })}
                     pagination={type!== 'festival'}
                     showAdd={type !== 'type' && type !== 'festival'}
-                />
+                />}
+                {type === 'festival' && <FullCalendar 
+                    data={data}
+                    onSelect={this.onSelect}
+                    fetchData={this.fetchData}
+                    onPanelChange={this.onPanelChange}
+                />}
             </div>
         );
     }
