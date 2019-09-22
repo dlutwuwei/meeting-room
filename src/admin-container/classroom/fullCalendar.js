@@ -15,34 +15,35 @@ class FullCalendar extends Component {
         return <div style={{ padding: 10 }}>{i + 1}月</div>
     }
     onDateSelect = (date) => {
+        const isFestival = this.state.data[date.forat('YYYY-MM-DD')];
       Modal.confirm({
-        title: `设置${date.format('YYYY-MM-DD')}为节假日?`,
+        title: isFestival ? `取消${date.format('YYYY-MM-DD')}为节假日?` : `设置${date.format('YYYY-MM-DD')}为节假日?`,
         content: '',
         okText: '确定',
         cancelText: '取消',
         onOk: () => {
-          this.setFestival(date)
+          this.setFestival(date, isFestival)
         },
         onCancel() {
 
         },
       });
     }
-    dateCellRender = (date) => {
+    dateCellRender = (date, i) => {
         const time = date.format('YYYY-MM-DD');
-        if(this.state.data[time]) {
+        if(this.state.data[time] && date.month() === i) {
             return <div className="isFestival"></div>
         }
     }
-    setFestival = (date) => {
+    setFestival = (date, isFestival) => {
         fetch.post(`/api/festival/toggleFestival`, {
             token: localStorage.getItem('__meeting_token'),
             theDate: date.format('YYYY-MM-DD')
         }).then(() => {
           this.props.fetchData()
-            message.info( __('修改节假日成功'))
+            message.info(isFestival ? __('取消节假日成功') : __('增加节假日成功'))
         }).catch(() => {
-            message.error( __('修改节假日失败'));
+            message.error( __('设置节假日失败'));
         });
     }
     componentDidMount () {
@@ -70,7 +71,7 @@ class FullCalendar extends Component {
                     value={moment().month(i)}
                     onSelect={this.onDateSelect}
                     onPanelChange={this.onPanelChange}
-                    dateCellRender={this.dateCellRender}
+                    dateCellRender={(date) => this.dateCellRender(date, i)}
                 ></Calendar>)}
             </div>
         )

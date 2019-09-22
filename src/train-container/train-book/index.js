@@ -152,20 +152,25 @@ function EditCell(props) {
     </div>
   );
   return (
-    <Popover content={content} title="培训室详情">
+    <Popover content={content} placement="topLeft" title="培训室详情">
       <div className="book-day">
         <span
           style={am_style}
           onClick={() => {
             if(lockState === 2){
               Modal.confirm({
-                title: __('解锁培训室'),
+                title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
+                okText: '确定',
+                cancelText: '取消',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
                     period: 1,
                     id: morningId
                   });
+                },
+                onCancel: () => {
+                  record.lockState = 1
                 }
               })
             } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
@@ -186,13 +191,18 @@ function EditCell(props) {
           onClick={() => {
             if(lockState === 2){
               Modal.confirm({
-                title: __('解锁培训室'),
+                title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
+                okText: '确定',
+                cancelText: '取消',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
                     period: 2,
                     id: afternoonId
                   })
+                },
+                onCancel: () => {
+                  record.lockState = 1
                 }
               })
             } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
