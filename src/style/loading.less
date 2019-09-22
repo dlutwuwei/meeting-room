@@ -12,22 +12,23 @@
     left: 0;
     margin: auto;
     text-align: center;
+    svg {
+      height: 120px;
+      width: 120px;
+      margin: 0 2em 2em;
+      overflow: visible;
+      /*   border: 1px solid red; */
+    }
   }
-  
-  svg {
-    height: 120px;
-    width: 120px;
-    margin: 0 2em 2em;
-    overflow: visible;
-    /*   border: 1px solid red; */
-  }
-  
+
+
+
   .g-circles {
     -webkit-transform: scale(0.9) translate(7px, 7px);
     -ms-transform: scale(0.9) translate(7px, 7px);
     transform: scale(0.9) translate(7px, 7px);
   }
-  
+
   circle {
     fill: dodgerblue;
     fill-opacity: 0;
@@ -82,22 +83,22 @@
     -webkit-animation-delay: -1.2s;
     animation-delay: -1.2s;
   }
-  
+
   @-webkit-keyframes opacity {
     3% {
       fill-opacity: 1;
     }
-  
+
     75% {
       fill-opacity: 0;
     }
   }
-  
+
   @keyframes opacity {
     3% {
       fill-opacity: 1;
     }
-  
+
     75% {
       fill-opacity: 0;
     }
@@ -114,4 +115,3 @@
       transform: scale(0.75);
     }
   }
-  
