@@ -15,9 +15,9 @@ class FullCalendar extends Component {
         return <div style={{ padding: 10 }}>{i + 1}月</div>
     }
     onDateSelect = (date) => {
-        const isFestival = this.state.data[date.forat('YYYY-MM-DD')];
+        const isFestival = this.state.data[date.format('YYYY-MM-DD')];
       Modal.confirm({
-        title: isFestival ? `取消${date.format('YYYY-MM-DD')}为节假日?` : `设置${date.format('YYYY-MM-DD')}为节假日?`,
+        title: isFestival ? `取消设置${date.format('YYYY-MM-DD')}为节假日?` : `设置${date.format('YYYY-MM-DD')}为节假日?`,
         content: '',
         okText: '确定',
         cancelText: '取消',
