@@ -22,9 +22,9 @@ const EditForm = Form.create({ name: 'form_in_modal' })(
                 rules: [{ required: true, message: '输入会议主题' }],
               })(<Input />)}
             </Form.Item>
-            {/* <Form.Item label="备注">
-              {getFieldDecorator('description')(<Input type="textarea" />)}
-            </Form.Item> */}
+            <Form.Item label="备注">
+              {getFieldDecorator('remark')(<Input type="textarea" />)}
+            </Form.Item>
           </Form>
         </Modal>
       );

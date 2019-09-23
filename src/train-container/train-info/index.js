@@ -66,6 +66,9 @@ class TrainList extends Component {
   }, {
     title: '价格',
     dataIndex: 'price'
+  },{
+    title: '备注',
+    dataIndex: 'remark'
   }, {
     title: '日期',
     render: (record) => {
@@ -111,7 +114,7 @@ class TrainList extends Component {
       const { form } = this.formRef.props;
       form.setFieldsValue({
         subject: item.subject,
-        description: item.description || ''
+        remark: item.remark || ''
       })
     })
   }
