@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react'
-import { Table, Input, Select, message, Icon, Divider } from 'antd';
+import { Table, Input, Select, message, Icon, Divider, Modal, Form } from 'antd';
 import { DatePicker } from 'components/pickers';
-
+import EditForm from './edit';
 import fetch from 'lib/fetch';
 import moment from 'moment';
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
+import * as URL from "../url";
 
 const statusMap = [__('预定中'), __('进行中'), __('已取消'), __('已结束')];
 
@@ -31,7 +32,9 @@ class TrainList extends Component {
       onChange: (page) => {
         this.load(page, {})
       }
-    }
+    },
+    visible: false,
+    target_id: 0
   }
   columns = [{
     title: '品牌',
@@ -78,9 +81,9 @@ class TrainList extends Component {
     render: (record) => {
       if(record.state == 0) {
         return (<Fragment>
-            {/* <a href="#" style={{color: '#00ddc6'}} onClick={(e) => this.handleModify(e, record.id)}><Icon type="form" /></a>
-            <Divider type="vertical" /> */}
-            <a href="#" style={{color: '#ff680d'}}onClick={(e) => this.handleCancel(e, record.id)}><Icon type="delete"/></a>
+            <a href="#" style={{color: '#00ddc6'}} onClick={(e) => this.handleModify(e, record.id)}><Icon type="form" /></a>
+            <Divider type="vertical" />
+            <a href="#" style={{color: '#ff680d'}} onClick={(e) => this.handleCancel(e, record.id)}><Icon type="delete"/></a>
         </Fragment>);
       }
     }
@@ -99,7 +102,18 @@ class TrainList extends Component {
     });
   }
   handleModify = (e, id) => {
-
+    const item = this.state.data.find(item => item.id === id)
+    this.setState({
+      visible: true,
+      target_id: id,
+      room_id: item.trainingRoomId
+    }, () => {
+      const { form } = this.formRef.props;
+      form.setFieldsValue({
+        subject: item.subject,
+        description: item.description || ''
+      })
+    })
   }
   load(page, params) {
     let {
@@ -147,6 +161,30 @@ class TrainList extends Component {
       });
     })
   }
+  closeModal = () => {
+    this.setState({
+      visible: false
+    })
+  }
+  saveFormRef = formRef => {
+    this.formRef = formRef;
+  }
+  handleCreate = () => {
+    const { form } = this.formRef.props;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      fetch.post(URL.train_update, {
+        token: localStorage.getItem("__meeting_token"),
+        id: this.state.target_id,
+        roomId: this.state.room_id,
+        ...values
+      }).then(() => {
+        this.setState({ visible: false })
+      })
+    });
+  };
   render() {
     const {
       // startDate,
@@ -201,6 +239,12 @@ class TrainList extends Component {
           columns={this.columns}
           dataSource={data}
           pagination={pagination}
+        />
+        <EditForm
+          wrappedComponentRef={this.saveFormRef}
+          visible={this.state.visible}
+          onCancel={this.closeModal}
+          onCreate={this.handleCreate}
         />
       </div>
     )

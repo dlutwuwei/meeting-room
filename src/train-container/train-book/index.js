@@ -40,7 +40,7 @@ const colorMap = {
 import "./index.less";
 
 const dateFormat = "YYYY-MM-DD";
-class FormItem extends React.Component {
+export class FormItem extends React.Component {
   render() {
     const {
       type = "value",
@@ -106,6 +106,7 @@ class FormItem extends React.Component {
     );
   }
 }
+
 function EditCell(props) {
   const { text, onClick, record } = props;
   if (text == null) {
@@ -361,6 +362,7 @@ export default class Train extends React.Component {
       label: x,
       value: x
     }));
+    const newSubject = (subject || '').replace(`${divisionName||''}-${brandName}-`, '')
     const train_info = [
       {
         name: "brandName",
@@ -379,7 +381,7 @@ export default class Train extends React.Component {
       {
         name: "subject",
         label: "培训主题",
-        value: subject
+        value: `${divisionName||''}-${brandName || ''}-${newSubject||''}`,
       },
       {
         name: "date",
