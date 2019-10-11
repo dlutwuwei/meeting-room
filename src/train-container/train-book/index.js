@@ -156,9 +156,10 @@ function EditCell(props) {
           onClick={() => {
             if (lockState === 2) {
               Modal.confirm({
-                title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
-                okText: '确定',
-                cancelText: '取消',
+                title: __('解锁培训室'),
+                okText: '预定',
+                closable: true,
+                cancelText: lockState !== 1 ? '解锁' : '锁定',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
