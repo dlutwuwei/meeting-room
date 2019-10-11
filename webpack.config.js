@@ -20,9 +20,9 @@ module.exports = {
     entry: {
         config: ['./src/config.js'],
         lib: [ 'babel-polyfill','react', 'react-dom' ],
-        app: ['./src/app.js'],
-        board: ['./src/board.js'],
-        admin: ['./src/admin.js'],
+        // app: ['./src/app.js'],
+        // board: ['./src/board.js'],
+        // admin: ['./src/admin.js'],
         train: ['./src/train.js']
     },
     output: {

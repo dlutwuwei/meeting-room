@@ -116,6 +116,8 @@ function EditCell(props) {
     afternoonReservationName,
     afternoonReservationId: afternoonId,
     morningReservationName,
+    morningReservationInfo,
+    afternoonReservationInfo,
     morningReservationId: morningId,
     isFestival,
     theDate
@@ -143,22 +145,16 @@ function EditCell(props) {
   const pm_style = {
     backgroundColor: colorMap[pm_status]
   };
-  const content = (
-    <div>
-      <p>名称：{record.roomName}</p>
-      <p>楼层：{record.floor}层</p>
-      <p>容量：{record.capacity}人</p>
-      <p>品牌：{record.brandName}</p>
-      <p>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
-    </div>
-  );
+
+  const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div> ) : '无预定信息'
+  const content2 = afternoonReservationInfo ? Object.keys(afternoonReservationInfo || {}).map(key => <div>{key}:{afternoonReservationInfo[key]}</div>) : '无预定信息'
   return (
-    <Popover content={content} placement="topLeft" title="培训室详情">
-      <div className="book-day">
+    <div className="book-day">
+      <Popover content={content1} placement="topLeft" title="培训室预定">
         <span
           style={am_style}
           onClick={() => {
-            if(lockState === 2){
+            if (lockState === 2) {
               Modal.confirm({
                 title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
                 okText: '确定',
@@ -174,23 +170,25 @@ function EditCell(props) {
                   record.lockState = 1
                 }
               })
-            } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
-                onClick({
-                  date: moment(1000 * theDate).format(dateFormat),
-                  period: 1,
-                  id: morningId
-                });
+            } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+              onClick({
+                date: moment(1000 * theDate).format(dateFormat),
+                period: 1,
+                id: morningId
+              });
             }
           }}
           className="book-am"
         >
           {morningReservationName}
         </span>
-        <div className="divider" />
+      </Popover>
+      <div className="divider" />
+      <Popover content={content2} placement="topLeft" title="培训室预定">
         <span
           style={pm_style}
           onClick={() => {
-            if(lockState === 2){
+            if (lockState === 2) {
               Modal.confirm({
                 title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
                 okText: '确定',
@@ -206,7 +204,7 @@ function EditCell(props) {
                   record.lockState = 1
                 }
               })
-            } else if(am_status !== HOLIDAY && pm_status !== HOLIDAY) {
+            } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
               onClick({
                 date: moment(1000 * theDate).format(dateFormat),
                 period: 2,
@@ -218,8 +216,8 @@ function EditCell(props) {
         >
           {afternoonReservationName}
         </span>
-      </div>
-    </Popover>
+      </Popover>
+    </div>
   );
 }
 
@@ -286,7 +284,7 @@ export default class Train extends React.Component {
       brandName, // 品牌
       divisionName, // 部门
       subject, // 主题
-      capacity, 
+      capacity,
       teaBreak,
       outLunch,
       remark,
@@ -294,7 +292,7 @@ export default class Train extends React.Component {
     // 选中方格信息（日期，中午，下午，全天）
     const { date, period } = selected_day;
     let { periodOfDay } = selected_train;
-    if(!periodOfDay) {
+    if (!periodOfDay) {
       periodOfDay = period;
     }
     // 个人信息：姓名，邮箱，电话，部门
@@ -362,7 +360,8 @@ export default class Train extends React.Component {
       label: x,
       value: x
     }));
-    const newSubject = (subject || '').replace(`${divisionName||''}-${brandName}-`, '')
+    let divisionName1 = divisionName || division_options.length ? division_options[0].value : ''
+    const newSubject = (subject || '').replace(`${divisionName1 || ''}-${brandName}-`, '')
     const train_info = [
       {
         name: "brandName",
@@ -376,12 +375,12 @@ export default class Train extends React.Component {
         label: "使用部门",
         type: "select",
         options: division_options,
-        value: divisionName,
+        value: divisionName1,
       },
       {
         name: "subject",
         label: "培训主题",
-        value: `${divisionName||''}-${brandName || ''}-${newSubject||''}`,
+        value: `${divisionName1 || ''}-${brandName || ''}-${newSubject || ''}`,
       },
       {
         name: "date",
@@ -479,7 +478,7 @@ export default class Train extends React.Component {
       endDate: range[1].format(dateFormat)
     }).then(result => {
       const data = result.data;
-      if(data.mine) {
+      if (data.mine) {
         data.mine.forEach(item => {
           item.isMine = true;
         })
@@ -534,14 +533,14 @@ export default class Train extends React.Component {
   preWeek = () => {
     const [start, end] = this.state.range;
     this.setState({
-      range: [ start.subtract(1, 'weeks'), end.subtract(1, 'weeks') ]
+      range: [start.subtract(1, 'weeks'), end.subtract(1, 'weeks')]
     });
     this.fetchData([start, end]);
   }
   nextWeek = () => {
     const [start, end] = this.state.range;
     this.setState({
-      range: [ start.add(1, 'weeks'), end.add(1, 'weeks') ]
+      range: [start.add(1, 'weeks'), end.add(1, 'weeks')]
     });
     this.fetchData([start, end]);
   }
@@ -550,7 +549,7 @@ export default class Train extends React.Component {
     return (
       <div className="table-container">
         <div className="date-pick">
-          <Icon type="double-left" className="week-btn next-week" onClick={this.preWeek}/>
+          <Icon type="double-left" className="week-btn next-week" onClick={this.preWeek} />
           <WeekPicker
             format={dateFormat}
             value={this.state.range[0]}
@@ -561,7 +560,7 @@ export default class Train extends React.Component {
           <span>{this.state.range[1].format('YYYY-MM-DD')}</span>
           <Icon type="double-right" className="week-btn next-week" onClick={this.nextWeek} />
         </div>
-        <div className="book-table-container">{ loading ? <Spin className="train-loading"/> : this.renderBookTable()}</div>
+        <div className="book-table-container">{loading ? <Spin className="train-loading" /> : this.renderBookTable()}</div>
       </div>
     );
   }
@@ -573,7 +572,7 @@ export default class Train extends React.Component {
 
   }
   showBookModal = (selected_day, record) => {
-    if(selected_day.id) {
+    if (selected_day.id) {
       Fetch.get(URL.train_item, {
         token: localStorage.getItem("__meeting_token"),
         id: selected_day.id
@@ -596,7 +595,7 @@ export default class Train extends React.Component {
         selected_train: record
       });
     }
-   
+
   };
   renderBookTable() {
     const range = this.getRange().map((x, idx) => {
@@ -605,13 +604,14 @@ export default class Train extends React.Component {
         title: x,
         dataIndex: `scheduleList.${idx}`,
         className: "book-day-container",
+        width: 100,
         render: (text, record) => {
           return (
             <EditCell
               text={text}
               record={record}
               onClick={pick_day => {
-                if(!disable) {
+                if (!disable) {
                   this.showBookModal(pick_day, record)
                 } else {
                   message.error('已经过期，不可预定')
@@ -632,28 +632,38 @@ export default class Train extends React.Component {
       {
         title: "培训室",
         dataIndex: "roomName",
-        width: 100,
+        width: 160,
         fixed: "left",
-        render: (value, item) => { 
-          return <Tooltip title={item.desciption}>{value}</Tooltip>
+        render: (value, record) => {
+          const content = (
+            <div>
+              <p>名称：{record.roomName}</p>
+              <p>楼层：{record.floor}层</p>
+              <p>容量：{record.capacity}人</p>
+              <p>品牌：{record.brandName}</p>
+              <p>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
+            </div>
+          );
+          return <Popover content={content} placement="topLeft" class="training-cursor" title="培训室详情"><span>{value}</span></Popover>
         }
       },
-      {
-        title: "楼层",
-        dataIndex: "floor",
-        width: 100,
-        fixed: "left"
-      },
-      {
-        title: "容纳人数",
-        dataIndex: "capacity",
-        width: 100,
-        fixed: "left"
-      },
+      // {
+      //   title: "楼层",
+      //   dataIndex: "floor",
+      //   width: 100,
+      //   fixed: "left"
+      // },
+      // {
+      //   title: "容纳人数",
+      //   dataIndex: "capacity",
+      //   width: 100,
+      //   fixed: "left"
+      // },
       ...range
     ];
     return (
       <Table
+        size="small"
         scroll={{ x: 1500 }}
         dataSource={this.state.train_list}
         columns={columns}
@@ -675,7 +685,7 @@ export default class Train extends React.Component {
     );
   }
   renderModal() {
-    const { showModal, isEdit} = this.state;
+    const { showModal, isEdit } = this.state;
     const { room_info, train_info, user_info } = this.formInfo;
 
     const room_dom = (
@@ -694,7 +704,7 @@ export default class Train extends React.Component {
         ))}
       </div>
     );
-    if(isEdit) {
+    if (isEdit) {
       // 不允许修改预定时间
       train_info[4].readOnly = true;
     }
@@ -702,7 +712,7 @@ export default class Train extends React.Component {
       <div className="train-contaienr">
         <div className="form-header">培训信息:</div>
         {train_info.map(config => (
-          <FormItem {...config} onChange={this.updateForm} key={config.name}/>
+          <FormItem {...config} onChange={this.updateForm} key={config.name} />
         ))}
       </div>
     );
@@ -738,7 +748,7 @@ export default class Train extends React.Component {
     const { periodOfDay } = this.state.selected_train;
     // formdata无法识别radiobox groupd的值，这里重新赋值
     data.periodOfDay = periodOfDay || selected_day.period;
-    if(isEdit) {
+    if (isEdit) {
       data.id = selected_day.id;
     }
     Fetch.post(isEdit ? URL.train_update : URL.train_create, {
@@ -752,7 +762,7 @@ export default class Train extends React.Component {
         this.fetchData(this.state.range);
       },
       err => {
-        if(err.code === 20011) {
+        if (err.code === 20011) {
           message.error(__("预定时间冲突"), err.message);
         } else {
           message.error(isEdit ? __('修改失败') : __("预订失败"), err.message);

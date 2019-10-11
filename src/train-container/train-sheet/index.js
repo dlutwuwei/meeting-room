@@ -36,6 +36,8 @@ const columns = [{
 
 const brands = JSON.parse(localStorage.getItem('__meeting_brand')|| '[]');
 
+brands.push({"BrandDivisions":[], "id": null, "name":"All"})
+
 const areas = [
     {
         id: '1',

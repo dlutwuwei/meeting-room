@@ -13,6 +13,7 @@ const statusMap = [__('预定中'), __('进行中'), __('已取消'), __('已结
 const period = ['', __('上午'), __('下午'), __('全天')];
 
 const brands = JSON.parse(localStorage.getItem('__meeting_brand') || '[]');
+brands.push({"BrandDivisions":[], "id": null, "name":"All"})
 
 const today = new moment();
 class TrainList extends Component {
