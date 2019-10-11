@@ -3754,6 +3754,13 @@ html {
   line-height: 38px;
 }
 
+.ant-btn-group-lg > .ant-btn.ant-btn-icon-only {
+  width: 40px;
+  height: 40px;
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .ant-btn-group-sm > .ant-btn,
 .ant-btn-group-sm > span > .ant-btn {
   height: 24px;
@@ -3766,6 +3773,13 @@ html {
 .ant-btn-group-sm > .ant-btn > .anticon,
 .ant-btn-group-sm > span > .ant-btn > .anticon {
   font-size: 14px;
+}
+
+.ant-btn-group-sm > .ant-btn.ant-btn-icon-only {
+  width: 24px;
+  height: 24px;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .ant-btn-group .ant-btn + .ant-btn,
