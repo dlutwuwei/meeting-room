@@ -20090,7 +20090,16 @@ textarea.ant-pagination-options-quick-jumper input {
   color: rgba(0, 0, 0, 0.25);
   border-radius: 0;
   cursor: not-allowed;
-}.calendar-container {
+}.calendar-container .ant-fullcalendar-selected-day .ant-fullcalendar-value {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.calendar-container .ant-fullcalendar-today .ant-fullcalendar-value {
+  box-shadow: none;
+}
+
+.calendar-container .calendar-list {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -20101,13 +20110,8 @@ textarea.ant-pagination-options-quick-jumper input {
   width: 100%;
 }
 
-.calendar-container .ant-fullcalendar-selected-day .ant-fullcalendar-value {
-  background: #fff;
-  color: rgba(0, 0, 0, 0.65);
-}
-
-.calendar-container .ant-fullcalendar-today .ant-fullcalendar-value {
-  box-shadow: none;
+.calendar-container .year-select {
+  margin: 10px 0;
 }
 
 .isFestival {
