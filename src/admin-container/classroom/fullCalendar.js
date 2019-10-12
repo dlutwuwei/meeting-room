@@ -31,8 +31,8 @@ class FullCalendar extends Component {
     }
     dateCellRender = (date, i) => {
         const time = date.format('YYYY-MM-DD');
-        if(this.state.data[time] && date.month() === i) {
-            return <div className="isFestival"></div>
+        if(this.state.data[time] && this.state.data[time].isFestival && date.month() === i) {
+            return <div className="isFestival" date={time}></div>
         }
     }
     setFestival = (date, isFestival) => {
@@ -41,9 +41,9 @@ class FullCalendar extends Component {
             theDate: date.format('YYYY-MM-DD')
         }).then(() => {
           this.props.fetchData()
-            message.info(isFestival ? __('取消节假日成功') : __('增加节假日成功'))
+          message.info(isFestival ? __('取消节假日成功') : __('增加节假日成功'))
         }).catch(() => {
-            message.error( __('设置节假日失败'));
+          message.error( __('设置节假日失败'));
         });
     }
     componentDidMount () {

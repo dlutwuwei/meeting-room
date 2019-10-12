@@ -49,7 +49,7 @@ fetch
       fetch.get(getUrl('device'), {
         token: localStorage.getItem('__meeting_token'),
       }),
-    ]).then(([brand, division, device, userInfo]) => {
+    ]).then(([brand, division, device]) => {
       localStorage.setItem('__meeting_brand', JSON.stringify(brand.data.list));
       localStorage.setItem(
         '__meeting_division',
