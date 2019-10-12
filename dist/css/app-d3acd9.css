@@ -18952,6 +18952,32 @@ textarea.ant-pagination-options-quick-jumper input {
   padding: 5px;
 }
 
+.train-modal-container .form-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.train-modal-container .form-container .form-list {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  margin-right: 20px;
+}
+
+.train-modal-container .form-container .train-contaienr {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
 .train-modal-container .form-item {
   display: -webkit-box;
   display: -webkit-flex;
