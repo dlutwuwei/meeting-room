@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { Calendar, message, Modal } from 'antd'
+import { Calendar, message, Modal, Select } from 'antd'
 import moment from 'moment';
 import './fullCalendar.less';
 import fetch from 'lib/fetch';
 
 class FullCalendar extends Component {
     state = {
-        data: {}
+        data: {},
+        year: moment().year()
     }
     onPanelChange = () => {
 
@@ -15,7 +16,7 @@ class FullCalendar extends Component {
         return <div style={{ padding: 10 }}>{i + 1}月</div>
     }
     onDateSelect = (date) => {
-        const isFestival = this.state.data[date.format('YYYY-MM-DD')];
+      const isFestival = this.state.data[date.format('YYYY-MM-DD')];
       Modal.confirm({
         title: isFestival ? `取消设置${date.format('YYYY-MM-DD')}为节假日?` : `设置${date.format('YYYY-MM-DD')}为节假日?`,
         content: '',
@@ -30,7 +31,7 @@ class FullCalendar extends Component {
       });
     }
     dateCellRender = (date, i) => {
-        const time = date.format('YYYY-MM-DD');
+        const time = date.year(this.state.year).format('YYYY-MM-DD');
         if(this.state.data[time] && this.state.data[time].isFestival && date.month() === i) {
             return <div className="isFestival" date={time}></div>
         }
@@ -60,9 +61,19 @@ class FullCalendar extends Component {
             })
         }
     }
+    handleChange = (val) => {
+      this.setState({
+        year: val
+      });
+    }
     render() {
+        const year = moment().year()
         return (
             <div className="calendar-container">
+              <Select className="year-select" defaultValue={year} style={{ width: 120 }} onChange={this.handleChange}>
+                {new Array(20).fill('').map((item, i) => <Option value={i + year}>{i + year}</Option>)}
+              </Select>
+              <div className="calendar-list">
                 {new Array(12).fill('').map((item, i) => <Calendar
                     className="calendar-item"
                     key={i}
@@ -73,6 +84,7 @@ class FullCalendar extends Component {
                     onPanelChange={this.onPanelChange}
                     dateCellRender={(date) => this.dateCellRender(date, i)}
                 ></Calendar>)}
+              </div>
             </div>
         )
     }
