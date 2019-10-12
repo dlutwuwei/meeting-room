@@ -120,14 +120,18 @@ function EditCell(props) {
     afternoonReservationInfo,
     morningReservationId: morningId,
     isFestival,
+    morningLocked,
+    afternoonLocked,
     theDate
   } = text;
   const { lockState, isAllowMeBooking } = record;
   let am_status = AVALIABLE;
   let pm_status = AVALIABLE;
-  if (lockState !== 1) {
-    am_status = LOCKED;
+  if (afternoonLocked) {
     pm_status = LOCKED;
+  }
+  if(morningLocked) {
+    am_status = LOCKED
   }
   if (morningId) {
     am_status = BOOKED;
@@ -148,6 +152,15 @@ function EditCell(props) {
 
   const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div> ) : '无预定信息'
   const content2 = afternoonReservationInfo ? Object.keys(afternoonReservationInfo || {}).map(key => <div>{key}:{afternoonReservationInfo[key]}</div>) : '无预定信息'
+
+  function unlockRoom(parmas, locked, callback) {
+    Fetch.post(locked ? '/api/trainingRoom/openRoom' : '/api/trainingRoom/lockRoom', {
+      token: localStorage.getItem("__meeting_token"),
+      ...parmas
+    }).then(() => {
+      callback && callback()
+    })
+  }
   return (
     <div className="book-day">
       <Popover content={content1} placement="topLeft" title="培训室预定">
@@ -156,10 +169,11 @@ function EditCell(props) {
           onClick={() => {
             if (lockState === 2) {
               Modal.confirm({
-                title: __('解锁培训室'),
+                title: __('解锁、锁定或预定培训室'),
                 okText: '预定',
                 closable: true,
-                cancelText: lockState !== 1 ? '解锁' : '锁定',
+                maskClosable: true,
+                cancelText: morningLocked ? '解锁' : '锁定',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
@@ -168,7 +182,12 @@ function EditCell(props) {
                   });
                 },
                 onCancel: () => {
-                  record.lockState = 1
+                  unlockRoom({
+                    trainingRoomId: record.roomId,
+                    periodOfDay: 1,
+                    theDate: moment(1000 * theDate).format(dateFormat)
+                  }, morningLocked)
+                  text.morningLocked = !morningLocked
                 }
               })
             } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
@@ -191,9 +210,11 @@ function EditCell(props) {
           onClick={() => {
             if (lockState === 2) {
               Modal.confirm({
-                title: __('解锁培训室，点击‘确定’约定培训室，点击‘取消’解锁培训室'),
-                okText: '确定',
-                cancelText: '取消',
+                title: __('解锁,锁定或预定培训室'),
+                okText: '预定',
+                closable: true,
+                maskClosable: true,
+                cancelText: afternoonLocked? '解锁' : '锁定',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
@@ -202,7 +223,12 @@ function EditCell(props) {
                   })
                 },
                 onCancel: () => {
-                  record.lockState = 1
+                  unlockRoom({
+                    trainingRoomId: record.roomId,
+                    periodOfDay: 2,
+                    theDate: moment(1000 * theDate).format(dateFormat)
+                  }, afternoonLocked)
+                  text.afternoonLocked = !afternoonLocked
                 }
               })
             } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
