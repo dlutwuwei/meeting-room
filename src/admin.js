@@ -3,6 +3,7 @@ import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import fetch from 'lib/fetch';
+import * as util from 'lib/util';
 
 import {
     BrowserRouter as Router,
@@ -12,7 +13,6 @@ import {
 import Admin from './admin-container';
 
 
-import * as util from 'lib/util';
 const token = util.getQuery('token');
 
 function getUrl(type) {
@@ -27,8 +27,9 @@ function getUrl(type) {
 }
 
 
+const isTrain = util.getQuery('isTrain');
 
-fetch.get('/api/public/getCurrentUserInfo', {
+fetch.get(isTrain ? '/api/public/getCurrentTrainUserInfo' : '/api/public/getCurrentUserInfo', {
   token: token || localStorage.getItem('__meeting_token')
 }).then(r => {
   localStorage.setItem('__meeting_user_email', r.data.mail);

@@ -253,8 +253,8 @@ export default class Train extends React.Component {
     super(props);
     this.state = {
       range: [
-        moment().week(moment().week()).startOf('week').add(1, 'day'),
-        moment().week(moment().week()).endOf('week').add(1, 'day')
+        moment(),
+        moment().add(1, 'week')
       ],
       train_list: [],
       selected_train: {},
@@ -631,7 +631,7 @@ export default class Train extends React.Component {
         title: x,
         dataIndex: `scheduleList.${idx}`,
         className: "book-day-container",
-        width: 100,
+        width: 150,
         render: (text, record) => {
           return (
             <EditCell
@@ -653,14 +653,16 @@ export default class Train extends React.Component {
       {
         title: "品牌",
         dataIndex: "brandName",
-        width: 100,
-        fixed: "left"
+        width: 160,
+        fixed: "left",
+        align: 'left'
       },
       {
         title: "培训室",
         dataIndex: "roomName",
-        width: 160,
+        width: 200,
         fixed: "left",
+        align: 'left',
         render: (value, record) => {
           const content = (
             <div>
@@ -671,7 +673,7 @@ export default class Train extends React.Component {
               <p>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
             </div>
           );
-          return <Popover content={content} placement="topLeft" class="training-cursor" title="培训室详情"><span>{value}</span></Popover>
+          return <Popover content={content} placement="topLeft" class="training-cursor" title="培训室详情"><span style={{ 'white-space': 'nowrap' }}>{value}</span></Popover>
         }
       },
       // {
@@ -691,7 +693,7 @@ export default class Train extends React.Component {
     return (
       <Table
         size="small"
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1400 }}
         dataSource={this.state.train_list}
         columns={columns}
         rowKey="roomId"
@@ -751,12 +753,15 @@ export default class Train extends React.Component {
         onCancel={this.closeModal}
         okText={"预订"}
         cancelText={"取消"}
+        width={700}
       >
         <div>
           <div className="form-title">{isEdit ? '编辑预定信息' : '培训室预定'}</div>
           <form className="form-container">
-            {room_dom}
-            {user_dom}
+            <div className="form-list">
+              {room_dom}
+              {user_dom}
+            </div>
             {train_dom}
           </form>
         </div>

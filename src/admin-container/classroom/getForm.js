@@ -54,8 +54,8 @@ class CreateModal extends Component {
 
 export default (type, onCreated) => {
     const brands = JSON.parse(localStorage.getItem('__train_brand')|| '[]');
-    const divisions = JSON.parse(localStorage.getItem('__train_division'));
-    const devices = JSON.parse(localStorage.getItem('__train_device'));
+    const divisions = JSON.parse(localStorage.getItem('__train_division') || '[]s');
+    const devices = JSON.parse(localStorage.getItem('__train_device') || '[]');
 
     let areas = [
         {
@@ -534,7 +534,7 @@ export default (type, onCreated) => {
                                     style={{ width: '100%' }}
                                     placeholder={__('请选择设备')}
                                 >
-                                    {devices.map(item => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>))}
+                                    {(devices || []).map(item => (<Option key={item.id} value={'' + item.id}>{item.name}</Option>))}
                                 </Select>
                             )}
                         </FormItem>
@@ -553,6 +553,42 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
+                            label={__('借用价格')}
+                        >
+                            {form.getFieldDecorator('price', {
+                                rules: [{ required: true, message: __('请输入培训室价格') }],
+                                initialValue: values.capacity
+                            })(
+                                <Input placeholder={__('请输入培训室价格')} />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label={__('面积')}
+                        >
+                            {form.getFieldDecorator('area', {
+                                rules: [{ required: true, message: __('请输入面积') }],
+                                initialValue: values.capacity
+                            })(
+                                <Input placeholder={__('请输入面积')} />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label={__('所在楼层')}
+                        >
+                            {form.getFieldDecorator('floor', {
+                                rules: [{ required: true, message: __('请输入所在楼层') }],
+                                initialValue: values.capacity
+                            })(
+                                <Input placeholder={__('请输入所在楼层')} />
+                            )}
+                        </FormItem>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
                             label={__('所属部门')}
                         >
                             {form.getFieldDecorator('divisionId', {
@@ -560,7 +596,7 @@ export default (type, onCreated) => {
                                 initialValue: values.divisionId
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入部门')} >
-                                    { divisions.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                    { (divisions || []).map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
                         </FormItem>

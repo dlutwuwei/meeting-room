@@ -19,7 +19,7 @@ function getColumns(type, removeFromTable, showEditor) {
             },
         });
     }
-    const devices = JSON.parse(localStorage.getItem('__meeting_device'));
+    const devices = JSON.parse(localStorage.getItem('__meeting_device') || '[]');
 
     switch (type) {
         case 'division':
