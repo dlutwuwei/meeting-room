@@ -148,8 +148,8 @@ function EditCell(props) {
     backgroundColor: colorMap[pm_status]
   };
 
-  const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div> ) : '无预定信息'
-  const content2 = afternoonReservationInfo ? Object.keys(afternoonReservationInfo || {}).map(key => <div>{key}:{afternoonReservationInfo[key]}</div>) : '无预定信息'
+  const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div> ) : null
+  const content2 = afternoonReservationInfo ? Object.keys(afternoonReservationInfo || {}).map(key => <div>{key}:{afternoonReservationInfo[key]}</div>) : null
 
   function unlockRoom(parmas, locked, callback) {
     Fetch.post(locked ? '/api/trainingRoom/openRoom' : '/api/trainingRoom/lockRoom', {

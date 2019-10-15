@@ -114,6 +114,7 @@ class TrainList extends Component {
     }, () => {
       const { form } = this.formRef.props;
       form.setFieldsValue({
+        ...item,
         subject: item.subject,
         remark: item.remark || ''
       })
