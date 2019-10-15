@@ -232,7 +232,7 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label="品牌ID"
+                            label="品牌"
                         >
                             {form.getFieldDecorator('brandId', {
                                 rules: [{ required: true, message: __('请输入名称') }],
@@ -261,7 +261,7 @@ export default (type, onCreated) => {
                             label={__('描述')}
                         >
                             {form.getFieldDecorator('remark', {
-                                rules: [{ required: true, message: __('请输入描述') }],
+                                rules: [{ required: false, message: __('请输入描述') }],
                                 initialValue: values.remark
                             })(
                                 <Input placeholder={__('请输入')} />
@@ -399,7 +399,7 @@ export default (type, onCreated) => {
                             label={__('职位')}
                         >
                             {form.getFieldDecorator('jobPosition', {
-                                rules: [{ required: true, message: __('请输入职位') }],
+                                rules: [{ required: false, message: __('请输入职位') }],
                                 initialValue: values.jobPosition
                             })(
                                 <Input style={{ width: 120 }} placeholder={__('请输入职位')} />
@@ -413,7 +413,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('state', {
                                 rules: [{ required: true, message: __('请输入') }],
-                                initialValue: values.state || '1',
+                                initialValue: '' + values.state || '1',
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入区域')} >
                                     <Option key="1" value="1">{__('正常')}</Option>
@@ -449,7 +449,7 @@ export default (type, onCreated) => {
                 };
                 return (
                     <CreateModal
-                        title={ isEdit ? __('编辑会议室') : __('新建会议室')}
+                        title={ isEdit ? __('编辑培训室') : __('新建培训室')}
                         visible={modalVisible}
                         onOk={okHandle}
                         okText={__('确定')}
@@ -459,13 +459,13 @@ export default (type, onCreated) => {
                         <FormItem
                             labelCol={{ span: 5 }}
                             wrapperCol={{ span: 15 }}
-                            label={__('会议室名称')}
+                            label={__('培训室名称')}
                         >
                             {form.getFieldDecorator('name', {
-                                rules: [{ required: true, message: __('请输入会议室名称') }],
+                                rules: [{ required: true, message: __('请输入培训室名称') }],
                                 initialValue: values.name
                             })(
-                                <Input placeholder={__('请输入会议室名称')} />
+                                <Input placeholder={__('请输入培训室名称')} />
                             )}
                         </FormItem>
                         <FormItem
@@ -474,10 +474,10 @@ export default (type, onCreated) => {
                             label={__('英文名称')}
                         >
                             {form.getFieldDecorator('enName', {
-                                rules: [{ required: true, message: __('请输入会议室名称') }],
+                                rules: [{ required: true, message: __('请输入培训室名称') }],
                                 initialValue: values.enName
                             })(
-                                <Input placeholder={__('请输入会议室名称')} />
+                                <Input placeholder={__('请输入培训室名称')} />
                             )}
                         </FormItem>
                         <FormItem
@@ -516,7 +516,7 @@ export default (type, onCreated) => {
                                 initialValue: values.cityId
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入城市')} >
-                                    { areas.map((item) => (<Option key={item.id} value={item.id}>{item.name}</Option>)) }
+                                    { areas.map((item) => (<Option key={item.id} value={+item.id}>{item.name}</Option>)) }
                                 </Select>
                             )}
                         </FormItem>
@@ -557,7 +557,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('price', {
                                 rules: [{ required: true, message: __('请输入培训室价格') }],
-                                initialValue: values.capacity
+                                initialValue: values.price
                             })(
                                 <Input placeholder={__('请输入培训室价格')} />
                             )}
@@ -569,7 +569,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('area', {
                                 rules: [{ required: true, message: __('请输入面积') }],
-                                initialValue: values.capacity
+                                initialValue: values.area
                             })(
                                 <Input placeholder={__('请输入面积')} />
                             )}
@@ -581,7 +581,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('floor', {
                                 rules: [{ required: true, message: __('请输入所在楼层') }],
-                                initialValue: values.capacity
+                                initialValue: values.floor
                             })(
                                 <Input placeholder={__('请输入所在楼层')} />
                             )}
@@ -607,7 +607,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('lockState', {
                                 rules: [{ required: true, message: __('请输入') }],
-                                initialValue: values.lockState,
+                                initialValue: '' + values.lockState,
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入账号状态')} >
                                     <Option key="0" value="1">{__('未锁定')}</Option>

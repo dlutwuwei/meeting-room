@@ -10,10 +10,9 @@ import {
   Icon,
   Checkbox,
   Spin,
-  Tooltip,
   Popover
 } from "antd";
-const { RangePicker, WeekPicker } = DatePicker;
+const { WeekPicker } = DatePicker;
 const Option = Select.Option;
 import Fetch from "../../lib/fetch";
 import classnames from "classnames";
@@ -124,7 +123,6 @@ function EditCell(props) {
     afternoonLocked,
     theDate
   } = text;
-  const { lockState, isAllowMeBooking } = record;
   let am_status = AVALIABLE;
   let pm_status = AVALIABLE;
   if (afternoonLocked) {
@@ -167,7 +165,7 @@ function EditCell(props) {
         <span
           style={am_style}
           onClick={() => {
-            if (lockState === 2) {
+            if (morningLocked) {
               Modal.confirm({
                 title: __('解锁、锁定或预定培训室'),
                 okText: '预定',
@@ -208,7 +206,7 @@ function EditCell(props) {
         <span
           style={pm_style}
           onClick={() => {
-            if (lockState === 2) {
+            if (afternoonLocked) {
               Modal.confirm({
                 title: __('解锁,锁定或预定培训室'),
                 okText: '预定',
@@ -387,22 +385,23 @@ export default class Train extends React.Component {
       label: x,
       value: x
     }));
-    let divisionName1 = divisionName || division_options.length ? division_options[0].value : ''
+
+    let divisionName1 = divisionName || (division_options.length ? division_options[0].value : '')
     const newSubject = (subject || '').replace(`${divisionName1 || ''}-${brandName}-`, '')
     const train_info = [
-      {
-        name: "brandName",
-        label: "使用品牌",
-        type: "select",
-        options: brand_options,
-        value: brandName
-      },
       {
         name: "divisionName",
         label: "使用部门",
         type: "select",
         options: division_options,
         value: divisionName1,
+      },
+      {
+        name: "brandName",
+        label: "使用品牌",
+        type: "select",
+        options: brand_options,
+        value: brandName
       },
       {
         name: "subject",
@@ -670,7 +669,8 @@ export default class Train extends React.Component {
               <p>楼层：{record.floor}层</p>
               <p>容量：{record.capacity}人</p>
               <p>品牌：{record.brandName}</p>
-              <p>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
+              <p>cost：{record.price}</p>
+              <p style={{'white-space': 'nowrap'}}>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
             </div>
           );
           return <Popover content={content} placement="topLeft" class="training-cursor" title="培训室详情"><span style={{ 'white-space': 'nowrap' }}>{value}</span></Popover>

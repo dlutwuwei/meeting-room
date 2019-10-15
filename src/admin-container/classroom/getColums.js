@@ -228,14 +228,14 @@ function getColumns(type, removeFromTable, showEditor) {
                     title:  __('部门'),
                     dataIndex: 'divisionName',
                 },
-                {
-                    title:  __('设备'),
-                    dataIndex: 'deviceNames',
-                    render: (item, record) => {
-                        const ids = record.deviceIds ? record.deviceIds.split(',') : [];
-                        return devices.filter(item => ids.includes(''+item.id)).map(item => (<Tag>{item.name}</Tag>));
-                    }
-                },
+                // {
+                //     title:  __('设备'),
+                //     dataIndex: 'deviceNames',
+                //     render: (item, record) => {
+                //         const ids = record.deviceIds ? record.deviceIds.split(',') : [];
+                //         return devices.filter(item => ids.includes(''+item.id)).map(item => (<Tag>{item.name}</Tag>));
+                //     }
+                // },
                 {
                     title:  __('大小'),
                     dataIndex: 'capacity',
