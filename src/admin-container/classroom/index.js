@@ -47,7 +47,7 @@ export default class BasicList extends PureComponent {
     }
     componentDidMount() {
     }
-    getUrl = (type) => {
+    getUrl = (type, params) => {
         switch (type) {
             case 'device':
                 return '/api/device/getList';
@@ -151,6 +151,13 @@ export default class BasicList extends PureComponent {
             this.fetchData();
         });
     }
+    handleYearChange = (year = moment().year()) => {
+        this.setState({
+            startDate: moment().years(year).format('YYYY-MM-DD')
+        }, () => {
+            this.fetchData();
+        });
+    }
     onPanelChange = () => {
 
     }
@@ -194,7 +201,7 @@ export default class BasicList extends PureComponent {
                 {type === 'festival' && <FullCalendar 
                     data={data}
                     onSelect={this.onSelect}
-                    fetchData={this.fetchData}
+                    fetchData={this.handleYearChange}
                     onPanelChange={this.onPanelChange}
                 />}
             </div>

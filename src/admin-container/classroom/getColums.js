@@ -213,6 +213,10 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
+                    title:  __('部门'),
+                    dataIndex: 'divisionName',
+                },
+                {
                     title:  __('品牌'),
                     dataIndex: 'brandName',
                 },
@@ -223,10 +227,6 @@ function getColumns(type, removeFromTable, showEditor) {
                 {
                     title:  __('城市'),
                     dataIndex: 'cityName'
-                },
-                {
-                    title:  __('部门'),
-                    dataIndex: 'divisionName',
                 },
                 // {
                 //     title:  __('设备'),

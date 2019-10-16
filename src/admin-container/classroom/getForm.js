@@ -413,7 +413,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('state', {
                                 rules: [{ required: true, message: __('请输入') }],
-                                initialValue: '' + values.state || '1',
+                                initialValue:  (values.state && '' + values.state) || '1',
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入区域')} >
                                     <Option key="1" value="1">{__('正常')}</Option>
@@ -607,7 +607,7 @@ export default (type, onCreated) => {
                         >
                             {form.getFieldDecorator('lockState', {
                                 rules: [{ required: true, message: __('请输入') }],
-                                initialValue: '' + values.lockState,
+                                initialValue: values.lockState && '' + values.lockState || '1',
                             })(
                                 <Select style={{ width: 120 }} placeholder={__('请输入账号状态')} >
                                     <Option key="0" value="1">{__('未锁定')}</Option>
