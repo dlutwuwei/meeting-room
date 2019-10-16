@@ -225,6 +225,10 @@ function getColumns(type, removeFromTable, showEditor) {
                     dataIndex: 'name',
                 },
                 {
+                    title:  __('英文名称'),
+                    dataIndex: 'enName',
+                },
+                {
                     title:  __('城市'),
                     dataIndex: 'cityName'
                 },
