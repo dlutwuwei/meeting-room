@@ -19010,6 +19010,20 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .train-loading {
   margin-top: 20px;
+}.info-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.info-container .left,
+.info-container .right {
+  width: 40%;
 }.filter-list {
   display: -webkit-box;
   display: -webkit-flex;
