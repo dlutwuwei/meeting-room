@@ -10,7 +10,8 @@ import {
   Icon,
   Checkbox,
   Spin,
-  Popover
+  Popover,
+  Button
 } from "antd";
 const { WeekPicker } = DatePicker;
 const Option = Select.Option;
@@ -128,7 +129,7 @@ function EditCell(props) {
   if (afternoonLocked) {
     pm_status = LOCKED;
   }
-  if(morningLocked) {
+  if (morningLocked) {
     am_status = LOCKED
   }
   if (morningId) {
@@ -148,7 +149,7 @@ function EditCell(props) {
     backgroundColor: colorMap[pm_status]
   };
 
-  const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div> ) : null
+  const content1 = morningReservationInfo ? Object.keys(morningReservationInfo || {}).map(key => <div>{key}:{morningReservationInfo[key]}</div>) : null
   const content2 = afternoonReservationInfo ? Object.keys(afternoonReservationInfo || {}).map(key => <div>{key}:{afternoonReservationInfo[key]}</div>) : null
 
   function unlockRoom(parmas, locked, callback) {
@@ -159,9 +160,12 @@ function EditCell(props) {
       callback && callback()
     })
   }
+  const visibleConfig1 = content1 ? {} : { visible: false }
+  const visibleConfig2 = content2 ? {} : { visible: false }
+
   return (
     <div className="book-day">
-      <Popover content={content1} placement="topLeft" title="培训室预定">
+      <Popover content={content1} {...visibleConfig1} placement="topLeft" title="培训室预定">
         <span
           style={am_style}
           onClick={() => {
@@ -202,7 +206,7 @@ function EditCell(props) {
         </span>
       </Popover>
       <div className="divider" />
-      <Popover content={content2} placement="topLeft" title="培训室预定">
+      <Popover content={content2} {...visibleConfig2} placement="topLeft" title="培训室预定">
         <span
           style={pm_style}
           onClick={() => {
@@ -212,7 +216,7 @@ function EditCell(props) {
                 okText: '预定',
                 closable: true,
                 maskClosable: true,
-                cancelText: afternoonLocked? '解锁' : '锁定',
+                cancelText: afternoonLocked ? '解锁' : '锁定',
                 onOk: () => {
                   onClick({
                     date: moment(1000 * theDate).format(dateFormat),
@@ -265,7 +269,8 @@ export default class Train extends React.Component {
       divisionMap: {},
       showModal: false,
       form_info: {},
-      loading: false
+      loading: false,
+      confirmNotice: false
     };
     // 获取所有品牌
     Fetch.get(URL.train_brand_list, {
@@ -670,7 +675,7 @@ export default class Train extends React.Component {
               <p>容量：{record.capacity}人</p>
               <p>品牌：{record.brandName}</p>
               <p>cost：{record.price}</p>
-              <p style={{'white-space': 'nowrap'}}>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
+              <p style={{ 'white-space': 'nowrap' }}>设备：{record.deviceNames && record.deviceNames.map(item => item.name).join(' ')}</p>
             </div>
           );
           return <Popover content={content} placement="topLeft" class="training-cursor" title="培训室详情"><span style={{ 'white-space': 'nowrap' }}>{value}</span></Popover>
@@ -713,8 +718,30 @@ export default class Train extends React.Component {
       </React.Fragment>
     );
   }
+  renderNotice() {
+    return (<div>
+      <div> L'Oreal Academy - Room Booking System</div>
+      <div>-General Principle</div>
+      <ul>
+        <li>1.The online booking system will release avilable training rooms on every 20th of the month.
+        Then, each division can book it's own Division training rooms which is available within next
+        3 calendar months. To touch other divisions, only can be in 1 month.
+        -for example:
+        -In Dec 15th, the division user can book division own rooms for the period of Jan1~Mar.31.
+        -Starting from Dec 20th, all the division +LFD training rooms which are still availbale for
+        booking in Jan can be booked by all the other users.
+        Remark:the above mentioned release date could be further discussed upon the trial use feedback)</li>
+        <li>2.The reservation for other division's training room can not be canceled.</li>
+
+        <li>3.The minimum booking period for each training room is half day.
+          -&lt;A.M. 08:30~13:00&gt;
+          -&lt;P.M. 14:00~18:30&gt;
+        </li>
+      </ul>
+    </div>)
+  }
   renderModal() {
-    const { showModal, isEdit } = this.state;
+    const { showModal, isEdit, confirmNotice } = this.state;
     const { room_info, train_info, user_info } = this.formInfo;
 
     const room_dom = (
@@ -751,20 +778,21 @@ export default class Train extends React.Component {
         visible={showModal}
         onOk={this.submit_book}
         onCancel={this.closeModal}
-        okText={"预订"}
-        cancelText={"取消"}
+        okText={confirmNotice ? __("预订") : __('确认')}
+        cancelText={__("取消")}
         width={700}
       >
-        <div>
-          <div className="form-title">{isEdit ? '编辑预定信息' : '培训室预定'}</div>
-          <form className="form-container">
-            <div className="form-list">
-              {room_dom}
-              {user_dom}
-            </div>
-            {train_dom}
-          </form>
-        </div>
+        {!confirmNotice ? this.renderNotice() :
+          <div>
+            <div className="form-title">{isEdit ? '编辑预定信息' : '培训室预定'}</div>
+            <form className="form-container">
+              <div className="form-list">
+                {room_dom}
+                {user_dom}
+              </div>
+              {train_dom}
+            </form>
+          </div>}
       </Modal>
     );
   }
@@ -774,9 +802,16 @@ export default class Train extends React.Component {
     });
   };
   submit_book = () => {
+
+    const { isEdit, selected_day, confirmNotice } = this.state;
+    if(!confirmNotice) {
+      this.setState({
+        confirmNotice: true
+      })
+      return;
+    }
     const data = this.getFormData();
 
-    const { isEdit, selected_day } = this.state;
     const { periodOfDay } = this.state.selected_train;
     // formdata无法识别radiobox groupd的值，这里重新赋值
     data.periodOfDay = periodOfDay || selected_day.period;

@@ -71,6 +71,11 @@ class Usage extends Component {
     componentDidMount () {
         this.load(1, {});
     }
+    componentWillReceiveProps (nextProps) {
+        if(nextProps.match.params.type !== this.props.match.params.type) {
+            this.load(1, {})
+        }
+    }
     load(page, params) {
         let {
             startDate,
@@ -98,15 +103,15 @@ class Usage extends Component {
             this.setState({
                 loading: true
             });
-            const { page, pageSize, totalPage } = r.data;
+            // const { page, pageSize, totalPage } = r.data;
             this.setState({
                 loading: false,
-                data: r.data.list,
-                pagination: {
-                    pageSize,
-                    current: page,
-                    total: totalPage * pageSize
-                }
+                data: r.data,
+                // pagination: {
+                //     pageSize,
+                //     current: page,
+                //     total: totalPage * pageSize
+                // }
             });
 
         }).catch(() => {
