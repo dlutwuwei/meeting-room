@@ -2,6 +2,16 @@ import { Button, Modal, Form, Input, Radio } from 'antd';
 import React from "react";
 import './edit.less';
 
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 6 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 18 },
+  },
+};
 const EditForm = Form.create({ name: 'form_in_modal' })(
   // eslint-disable-next-line
   class extends React.Component {
@@ -17,14 +27,14 @@ const EditForm = Form.create({ name: 'form_in_modal' })(
           onCancel={onCancel}
           onOk={onCreate}
         >
-          <Form layout="horizontal">
+          <Form layout="horizontal" {...formItemLayout}>
             <Form.Item label="会议主题">
               {getFieldDecorator('subject', {
                 rules: [{ required: true, message: '输入会议主题' }],
               })(<Input />)}
             </Form.Item>
             <Form.Item label="备注">
-              {getFieldDecorator('remark')(<Input type="textarea" />)}
+              {getFieldDecorator('remark')(<Input.TextArea type="textarea" />)}
             </Form.Item>
             <div className="info-container">
               <div className="left">

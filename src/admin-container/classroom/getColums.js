@@ -39,7 +39,7 @@ function getColumns(type, removeFromTable, showEditor) {
             }
             columns = [
                 {
-                    title: '品牌ID',
+                    title: '品牌',
                     dataIndex: 'brandId'
                 },
                 {

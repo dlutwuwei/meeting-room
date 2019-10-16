@@ -798,7 +798,8 @@ export default class Train extends React.Component {
   }
   closeModal = () => {
     this.setState({
-      showModal: false
+      showModal: false,
+      confirmNotice: false
     });
   };
   submit_book = () => {

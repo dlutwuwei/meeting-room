@@ -18819,6 +18819,10 @@ textarea.ant-pagination-options-quick-jumper input {
   cursor: pointer;
 }
 
+.train-container .stage-container {
+  overflow-y: auto;
+}
+
 .train-container .stage-container .stage-content {
   background: #fff;
 }
@@ -19023,7 +19027,7 @@ textarea.ant-pagination-options-quick-jumper input {
 
 .info-container .left,
 .info-container .right {
-  width: 40%;
+  width: 48%;
 }.filter-list {
   display: -webkit-box;
   display: -webkit-flex;
