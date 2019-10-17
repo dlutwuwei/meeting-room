@@ -108,7 +108,7 @@ export class FormItem extends React.Component {
 }
 
 function EditCell(props) {
-  const { text, onClick, record } = props;
+  const { text, onClick, record, update } = props;
   if (text == null) {
     return null;
   }
@@ -190,6 +190,7 @@ function EditCell(props) {
                     theDate: moment(1000 * theDate).format(dateFormat)
                   }, morningLocked)
                   text.morningLocked = !morningLocked
+                  update()
                 }
               })
             } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
@@ -231,6 +232,7 @@ function EditCell(props) {
                     theDate: moment(1000 * theDate).format(dateFormat)
                   }, afternoonLocked)
                   text.afternoonLocked = !afternoonLocked
+                  update()
                 }
               })
             } else if (am_status !== HOLIDAY && pm_status !== HOLIDAY) {
@@ -641,6 +643,11 @@ export default class Train extends React.Component {
             <EditCell
               text={text}
               record={record}
+              update={() => {
+                this.setState({
+                  train_list: this.state.train_list
+                })
+              }}
               onClick={pick_day => {
                 if (!disable) {
                   this.showBookModal(pick_day, record)
